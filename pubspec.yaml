@@ -1,0 +1,16 @@
+name: riverpod_mutations_annotation
+description: The annotation for riverpod_mutations_generator
+version: 1.0.0
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: ^3.0.0
+
+# Add regular dependencies here.
+dependencies:
+  meta: ^1.11.0
+  # path: ^1.8.0
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
