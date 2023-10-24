@@ -20,7 +20,7 @@ dev_dependencies:
 
 ```dart
 @riverpod
-class Todo extends _$Example {
+class Todo extends _$Todo {
   Future<List<Todo>> build() => fetchTodoList();
 
   @mutation
