@@ -1,13 +1,13 @@
 name: riverpod_mutations_annotation
 description: The annotation for riverpod_mutations_generator
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/TekExplorer/riverpod_mutations_annotation
 
 environment:
   sdk: ^3.0.0
 
 dependencies:
-  meta: ^1.11.0
+  meta: ^1.0.0
   riverpod: ^2.0.0
 
 dev_dependencies:
