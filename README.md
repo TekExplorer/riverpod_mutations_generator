@@ -43,7 +43,9 @@ return Consumer(
     // here's the fancy part
     AddTodoMutation addTodo = ref.watch(exampleProvider.addTodo);
 
-    // this will allow you to track the same method multiple times, exactly like a family. note: the parameter was removed from `removeTodo()` as shown. This particular value is now stored in the object in `removeTodo.params.id`
+    // this will allow you to track the same method multiple times, exactly like a family.
+    // note: the parameter was removed from `removeTodo()` as shown.
+    // This particular value is now stored in the object in `removeTodo.params.id`
     RemoveTodoMutation removeTodo = ref.watch(exampleProvider.removeTodo(id: 4));
 
     return Row(
@@ -59,7 +61,7 @@ return Consumer(
             AddTodoMutationSuccess() => Icon(IconData.check),
             AddTodoMutationFailure(:final error) => IconButton(IconData.info, onPressed: () => showErrorDialog(error)),
           },
-        );
+        ),
         RemoveButton(
           // Notice, the parameter was removed, as it's already stored in the object in `removeTodo.params.id`
           onTap: removeTodo is RemoveTodoMutationLoading ? null : () => removeTodo(),
