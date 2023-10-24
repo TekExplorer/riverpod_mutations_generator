@@ -3,6 +3,6 @@
 /// More dartdocs go here.
 library;
 
-export 'src/riverpod_mutations_annotation_base.dart';
+export 'package:riverpod/riverpod.dart' show Refreshable, Provider;
 
-// TODO: Export any libraries intended for clients of this package.
+export 'src/riverpod_mutations_annotation_base.dart';
