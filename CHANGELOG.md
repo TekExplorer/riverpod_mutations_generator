@@ -2,7 +2,7 @@
 
 ## 1.0.1
 
-Fixed a bug where a `@mutationKey` failed when the surrounding parameter was not a family
+Fixed a bug where a `@mutationKey` failed when the surrounding provider was not a family
 
 ## 1.0.0
 
