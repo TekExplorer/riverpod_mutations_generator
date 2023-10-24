@@ -101,24 +101,11 @@ extension ${_class.name}MutationExtension on ${_class.name}Provider {
     }
     final pascalName = method.name.pascalCase;
 
-    if (buildMethod.parameters.length == 0) {
-      addToProviderExtension(
-          'Refreshable<${method.name.pascalCase}Mutation> get ${method.name} => _${method.name}Provider;');
-      return '''
-final _${method.name}Provider = Provider${maybeAutoDispose}((ref) {
-  final notifier = ref.watch(${notifierProviderName}.notifier);
-  return ${pascalName}Mutation(
-    (newState) => ref.state = newState,
-    notifier.${method.name},
-  );
-});
-''';
-    }
     final annotatedParameters =
         method.parameters.where(mutationKeyTypeChecker.hasAnnotationOf);
 
-    final bool hasAnnotatedPositionalParameters =
-        annotatedParameters.where((element) => element.isPositional).isNotEmpty;
+    // final bool hasAnnotatedPositionalParameters =
+    //     annotatedParameters.where((element) => element.isPositional).isNotEmpty;
 
     final familyParametersUsage = Util.parametersUsage(
       buildMethod.parameters,
@@ -138,6 +125,22 @@ final _${method.name}Provider = Provider${maybeAutoDispose}((ref) {
       removeRequired: true,
     );
 
+    // bland
+    if (buildMethod.parameters.length == 0 && annotatedParameters.isEmpty) {
+      addToProviderExtension(
+          'Refreshable<${method.name.pascalCase}Mutation> get ${method.name} => _${method.name}Provider;');
+      return '''
+final _${method.name}Provider = Provider${maybeAutoDispose}((ref) {
+  final notifier = ref.watch(${notifierProviderName}.notifier);
+  return ${pascalName}Mutation(
+    (newState) => ref.state = newState,
+    notifier.${method.name},
+  );
+});
+''';
+    }
+
+    // normal family
     if (annotatedParameters.isEmpty) {
       addToProviderExtension(
           'Refreshable<${pascalName}Mutation> get ${method.name} => _${method.name}Provider(_params);');
@@ -164,25 +167,46 @@ final _${method.name}Provider = Provider${maybeAutoDispose}.family((ref, _${pasc
       removeRequired: false,
       extraComma: false,
     );
-    addToProviderExtension(
-        'Refreshable<${method.name.pascalCase}Mutation> ${method.name}($_annotatedParametersString) => _${method.name}Provider(((${annotatedParametersUsage}),_params));');
 
-    final maybeApplyParams =
-        hasAnnotatedPositionalParameters ? r'..params = _params.$1' : '';
-    return '''
-// Could have extras in the future when @mutationKey gets added. for now identical to the class one.
-typedef ${pascalName}FamilyParameters = (${annotatedParametersString});
-typedef ${pascalName}FamilyBuilderParameters = (${buildMethodParameters});
+    final buffer = StringBuffer();
+    buffer.writeln(
+        'typedef ${pascalName}FamilyParameters = (${annotatedParametersString});');
 
-typedef _${pascalName}FamilyProviderParameter = (${pascalName}FamilyParameters, ${pascalName}FamilyBuilderParameters);
+    if (buildMethod.parameters.isEmpty) {
+      addToProviderExtension(
+          'Refreshable<${method.name.pascalCase}Mutation> ${method.name}($_annotatedParametersString) => _${method.name}Provider((${annotatedParametersUsage}));');
 
-final _${method.name}Provider = Provider${maybeAutoDispose}.family((ref, _${pascalName}FamilyProviderParameter _params) {
-  final notifier = ref.watch(${notifierProviderName}(${familyParametersUsage}).notifier);
-  return ${method.name.pascalCase}Mutation(
-    (newState) => ref.state = newState${maybeApplyParams},
-    notifier.${method.name},
-  )${maybeApplyParams};
-});
-''';
+      buffer.writeAll([
+        'final _${method.name}Provider = Provider${maybeAutoDispose}.family((ref, ${pascalName}FamilyParameters _params) {',
+        '  final notifier = ref.watch(${notifierProviderName}.notifier);',
+        '  return ${method.name.pascalCase}Mutation(',
+        '    (newState) => ref.state = newState..params = _params,',
+        '    notifier.${method.name},',
+        '  )..params = _params;',
+        '});',
+      ]);
+    } else {
+      addToProviderExtension(
+          'Refreshable<${method.name.pascalCase}Mutation> ${method.name}($_annotatedParametersString) => _${method.name}Provider(((${annotatedParametersUsage}),_params));');
+
+      final maybeApplyParams =
+          // hasAnnotatedPositionalParameters ? r'..params = _params.$1' : '';
+          annotatedParameters.isNotEmpty ? r'..params = _params.$1' : '';
+
+      buffer.writeAll([
+        'typedef ${pascalName}FamilyBuilderParameters = (${buildMethodParameters});',
+        'typedef _${pascalName}FamilyProviderParameter = (${pascalName}FamilyParameters, ${pascalName}FamilyBuilderParameters);',
+        '',
+        'final _${method.name}Provider = Provider${maybeAutoDispose}.family((ref, _${pascalName}FamilyProviderParameter _params) {',
+        '  final notifier = ref.watch(${notifierProviderName}(${familyParametersUsage}).notifier);',
+        '  return ${method.name.pascalCase}Mutation(',
+        '    (newState) => ref.state = newState${maybeApplyParams},',
+        '    notifier.${method.name},',
+        '  )${maybeApplyParams};',
+        '});',
+      ]);
+    }
+
+    return buffer.toString();
   }
 }

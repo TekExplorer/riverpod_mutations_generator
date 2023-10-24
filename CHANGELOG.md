@@ -1,5 +1,9 @@
 # Riverpod Mutations Generator
 
+## 1.0.1
+
+Fixed a bug where a `@mutationKey` failed when the surrounding parameter was not a family
+
 ## 1.0.0
 
 Refactor to have less bad generator code.
