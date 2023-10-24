@@ -1,6 +1,6 @@
 # Riverpod Mutations Generator
 
-Hello! This is an attempt to cover the gap left behind by the lack of mutation support in riverpod.
+Hello! This is an attempt to cover the gap left behind by the lack of mutation support in riverpod. See https://github.com/rrousselGit/riverpod/issues/1660
 
 Try it out like so!
 
