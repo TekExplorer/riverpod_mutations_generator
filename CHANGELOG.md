@@ -1,5 +1,9 @@
 # Riverpod Mutations Generator
 
+## 1.0.2
+
+Expand dependencies to allow greater compatibility with other packages
+
 ## 1.0.1
 
 Fixed a bug where a `@mutationKey` failed when the surrounding provider was not a family
