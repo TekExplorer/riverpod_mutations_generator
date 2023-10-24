@@ -61,7 +61,7 @@ return Consumer(
             AddTodoMutationSuccess() => Icon(IconData.check),
             AddTodoMutationFailure(:final error) => IconButton(IconData.info, onPressed: () => showErrorDialog(error)),
           },
-        );
+        ),
         RemoveButton(
           // Notice, the parameter was removed, as it's already stored in the object in `removeTodo.params.id`
           onTap: removeTodo is RemoveTodoMutationLoading ? null : () => removeTodo(),
