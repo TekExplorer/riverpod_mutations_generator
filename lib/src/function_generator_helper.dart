@@ -20,6 +20,13 @@ ${mutationClassesFromFunction(function)}
 
   static String providerForFunction(FunctionElement function) {
     final String accessName = function.name;
+    final bool mutationKeepAlive = mutationTypeChecker
+        .firstAnnotationOf(function)!
+        .getField('keepAlive')!
+        .toBoolValue()!;
+
+    final String maybeAutoDispose = mutationKeepAlive ? '' : '.autoDispose';
+
     // switch (function) {
     //   // TODO: test if this works right
     //   FunctionElement(isStatic: true) =>
@@ -28,7 +35,7 @@ ${mutationClassesFromFunction(function)}
     // };
     if (!function.parameters.any(mutationKeyTypeChecker.hasAnnotationOf)) {
       return '''
-final ${function.name}Provider = Provider.autoDispose((ref) {
+final ${function.name}Provider = Provider${maybeAutoDispose}((ref) {
   return ${function.name.pascalCase}Mutation(
     (newState) => ref.state = newState,
     ${accessName},
@@ -44,7 +51,7 @@ final ${function.name}Provider = Provider.autoDispose((ref) {
 
     return '''
 typedef ${function.name.pascalCase}FamilyParameters = (${familyParameters});
-final ${function.name}Provider = Provider.autoDispose.family((ref, ${function.name.pascalCase}FamilyParameters params) {
+final ${function.name}Provider = Provider${maybeAutoDispose}.family((ref, ${function.name.pascalCase}FamilyParameters params) {
   return ${function.name.pascalCase}Mutation(
     (newState) => ref.state = newState..params = params,
     ${accessName},

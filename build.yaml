@@ -29,7 +29,7 @@ targets:
 builders:
   riverpod_mutations_generator:
     target: ":riverpod_mutations_generator"
-    import: "package:riverpod_mutations_generator/builder.dart"
+    import: "package:riverpod_mutations_generator/riverpod_mutations_generator.dart"
     builder_factories: ["riverpodMutationsBuilder"]
     build_extensions: {".dart": [".riverpod_mutations.g.part"]}
     auto_apply: dependents

@@ -157,9 +157,9 @@ final class ${name}MutationFailure extends ${name}Mutation {
 ''';
 }
 
-extension<T> on List<T> {
-  T get second => this.elementAt(1);
-}
+// extension<T> on List<T> {
+//   T get second => this.elementAt(1);
+// }
 
 extension on ExecutableElement {
   bool get isAsync => returnType.isAsync;

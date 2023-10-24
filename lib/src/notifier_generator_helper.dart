@@ -85,6 +85,13 @@ extension ${_class.name}MutationExtension on ${_class.name}Provider {
     MethodElement method,
     void Function(String line) addToProviderExtension,
   ) {
+    final bool mutationKeepAlive = mutationTypeChecker
+        .firstAnnotationOf(method)!
+        .getField('keepAlive')!
+        .toBoolValue()!;
+
+    final String maybeAutoDispose = mutationKeepAlive ? '' : '.autoDispose';
+
     final _class = method.enclosingElement as ClassElement;
     final notifierProviderName = '${_class.name.camelCase}Provider';
 
@@ -98,7 +105,7 @@ extension ${_class.name}MutationExtension on ${_class.name}Provider {
       addToProviderExtension(
           'Refreshable<${method.name.pascalCase}Mutation> get ${method.name} => _${method.name}Provider;');
       return '''
-final _${method.name}Provider = Provider.autoDispose((ref) {
+final _${method.name}Provider = Provider${maybeAutoDispose}((ref) {
   final notifier = ref.watch(${notifierProviderName}.notifier);
   return ${pascalName}Mutation(
     (newState) => ref.state = newState,
@@ -138,7 +145,7 @@ final _${method.name}Provider = Provider.autoDispose((ref) {
 // Could have extras in the future when @mutationKey gets added. for now identical to the class one.
 typedef _${pascalName}FamilyParameters = (${buildMethodParameters});
 
-final _${method.name}Provider = Provider.autoDispose.family((ref, _${pascalName}FamilyParameters _params) {
+final _${method.name}Provider = Provider${maybeAutoDispose}.family((ref, _${pascalName}FamilyParameters _params) {
   final notifier = ref.watch(${notifierProviderName}(${familyParametersUsage}).notifier);
   return ${method.name.pascalCase}Mutation(
     (newState) => ref.state = newState,
@@ -169,7 +176,7 @@ typedef ${pascalName}FamilyBuilderParameters = (${buildMethodParameters});
 
 typedef _${pascalName}FamilyProviderParameter = (${pascalName}FamilyParameters, ${pascalName}FamilyBuilderParameters);
 
-final _${method.name}Provider = Provider.autoDispose.family((ref, _${pascalName}FamilyProviderParameter _params) {
+final _${method.name}Provider = Provider${maybeAutoDispose}.family((ref, _${pascalName}FamilyProviderParameter _params) {
   final notifier = ref.watch(${notifierProviderName}(${familyParametersUsage}).notifier);
   return ${method.name.pascalCase}Mutation(
     (newState) => ref.state = newState${maybeApplyParams},

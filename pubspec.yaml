@@ -25,6 +25,7 @@ dependencies:
   riverpod_mutations_annotation: ^1.0.0
 
 dev_dependencies:
+  lints: ^3.0.0
   build_runner: ^2.1.7
   build_test: ^2.2.1
   build_verify: ^3.0.0
