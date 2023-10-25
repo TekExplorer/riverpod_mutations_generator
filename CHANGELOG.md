@@ -1,5 +1,9 @@
 # Riverpod Mutations Generator
 
+## 1.0.3-dev.1
+
+Fixed an issue where a private notifier generated a private extension
+
 ## 1.0.3-dev
 
 Added super-interfaces for all mutation classes to inherit

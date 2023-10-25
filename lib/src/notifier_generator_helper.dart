@@ -53,7 +53,9 @@ class NotifierGeneratorHelper {
 
     final maybeAutoDispose = isRiverpodKeepAlive ? '' : 'AutoDispose';
 
-    final extensionClassName = _class.name.replaceFirst(RegExp(r'^_'), '');
+    final extensionClassName =
+        _class.name.startsWith('_') ? _class.name.substring(1) : _class.name;
+
     if (!isFamily) {
       final _on =
           '${maybeAutoDispose}${returnType.isAsync ? 'Async' : ''}NotifierProvider<${_class.name}, ${returnType.unwrapped}>';
@@ -74,8 +76,8 @@ extension ${extensionClassName}MutationExtension on ${_on} {
 
     return '''
 typedef ${extensionClassName}FamilyParams = (${familyParamsDef});
-extension ${_class.name}MutationExtension on ${_class.name}Provider {
-  ${_class.name}FamilyParams get _params => (${familyParamsUsage});
+extension ${extensionClassName}MutationExtension on ${_class.name}Provider {
+  ${extensionClassName}FamilyParams get _params => (${familyParamsUsage});
 
   ${lines.join('  \n')}
 }
