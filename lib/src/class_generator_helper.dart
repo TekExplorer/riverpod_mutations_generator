@@ -56,19 +56,19 @@ class ClassGeneratorHelper {
     final callSignature = 'call(${rawTypedParameters})';
     final methodCaller = '_fn(${_caller.join(', ')})';
 
-    final shouldConst = annotatedParameters.isEmpty;
+    final mutationBase = isAsync ? 'AsyncMutation' : 'SyncMutation';
 
     return '''
 typedef ${name}Signature = ${methodSignature};
 typedef ${name}StateSetter = void Function(${name}Mutation newState);
   
-sealed class ${name}Mutation {
-  ${shouldConst ? 'const ' : ''}factory ${name}Mutation(
+sealed class ${name}Mutation with ${mutationBase} {
+  factory ${name}Mutation(
     ${name}StateSetter updateState,
     ${name}Signature fn,
   ) = ${name}MutationIdle._;
   
-  ${shouldConst ? 'const ' : ''}${name}Mutation._(this._updateState, this._fn);
+  ${name}Mutation._(this._updateState, this._fn);
   
   final ${name}StateSetter _updateState;
   final ${name}Signature _fn;
@@ -90,21 +90,19 @@ sealed class ${name}Mutation {
   }
 }
 
-${_class(name: name, kind: 'Idle', const_: shouldConst)}
+${_class(name: name, kind: 'Idle')}
 
-${isAsync ? _class(name: name, kind: 'Loading', const_: shouldConst) : ''}
+${isAsync ? _class(name: name, kind: 'Loading') : ''}
 
-${_class(name: name, kind: 'Success', const_: shouldConst)}
+${_class(name: name, kind: 'Success')}
 
-${_failureClass(name: name, const_: shouldConst)}
+${_failureClass(name: name)}
 ''';
   }
 
-  static String _class(
-          {required String name, required String kind, bool const_ = true}) =>
-      '''
-final class ${name}Mutation${kind} extends ${name}Mutation {
-  ${const_ ? 'const ' : ''} ${name}Mutation${kind}._(
+  static String _class({required String name, required String kind}) => '''
+final class ${name}Mutation${kind} extends ${name}Mutation with Mutation${kind} {
+  ${name}Mutation${kind}._(
     super._updateState,
     super._fn, {
     this.error,
@@ -127,9 +125,9 @@ final class ${name}Mutation${kind} extends ${name}Mutation {
 }
 ''';
 
-  static String _failureClass({required String name, bool const_ = true}) => '''
-final class ${name}MutationFailure extends ${name}Mutation {
-  ${const_ ? 'const ' : ''}${name}MutationFailure._(
+  static String _failureClass({required String name}) => '''
+final class ${name}MutationFailure extends ${name}Mutation with MutationFailure {
+  ${name}MutationFailure._(
     super._updateState,
     super._fn, {
     required this.error,

@@ -53,11 +53,12 @@ class NotifierGeneratorHelper {
 
     final maybeAutoDispose = isRiverpodKeepAlive ? '' : 'AutoDispose';
 
+    final extensionClassName = _class.name.replaceFirst(RegExp(r'^_'), '');
     if (!isFamily) {
       final _on =
           '${maybeAutoDispose}${returnType.isAsync ? 'Async' : ''}NotifierProvider<${_class.name}, ${returnType.unwrapped}>';
       return '''
-extension ${_class.name}MutationExtension on ${_on} {
+extension ${extensionClassName}MutationExtension on ${_on} {
   ${lines.join('  \n')}
 }
 ''';
@@ -72,7 +73,7 @@ extension ${_class.name}MutationExtension on ${_on} {
     );
 
     return '''
-typedef ${_class.name}FamilyParams = (${familyParamsDef});
+typedef ${extensionClassName}FamilyParams = (${familyParamsDef});
 extension ${_class.name}MutationExtension on ${_class.name}Provider {
   ${_class.name}FamilyParams get _params => (${familyParamsUsage});
 
@@ -125,10 +126,12 @@ extension ${_class.name}MutationExtension on ${_class.name}Provider {
       removeRequired: true,
     );
 
+    final extensionName = method.name.replaceFirst(RegExp(r'^_'), '');
+
     // bland
     if (buildMethod.parameters.length == 0 && annotatedParameters.isEmpty) {
       addToProviderExtension(
-          'Refreshable<${method.name.pascalCase}Mutation> get ${method.name} => _${method.name}Provider;');
+          'Refreshable<${method.name.pascalCase}Mutation> get ${extensionName} => _${method.name}Provider;');
       return '''
 final _${method.name}Provider = Provider${maybeAutoDispose}((ref) {
   final notifier = ref.watch(${notifierProviderName}.notifier);
@@ -143,7 +146,7 @@ final _${method.name}Provider = Provider${maybeAutoDispose}((ref) {
     // normal family
     if (annotatedParameters.isEmpty) {
       addToProviderExtension(
-          'Refreshable<${pascalName}Mutation> get ${method.name} => _${method.name}Provider(_params);');
+          'Refreshable<${pascalName}Mutation> get ${extensionName} => _${method.name}Provider(_params);');
       return '''
 // Could have extras in the future when @mutationKey gets added. for now identical to the class one.
 typedef _${pascalName}FamilyParameters = (${buildMethodParameters});
@@ -174,7 +177,7 @@ final _${method.name}Provider = Provider${maybeAutoDispose}.family((ref, _${pasc
 
     if (buildMethod.parameters.isEmpty) {
       addToProviderExtension(
-          'Refreshable<${method.name.pascalCase}Mutation> ${method.name}($_annotatedParametersString) => _${method.name}Provider((${annotatedParametersUsage}));');
+          'Refreshable<${method.name.pascalCase}Mutation> ${extensionName}($_annotatedParametersString) => _${method.name}Provider((${annotatedParametersUsage}));');
 
       buffer.writeAll([
         'final _${method.name}Provider = Provider${maybeAutoDispose}.family((ref, ${pascalName}FamilyParameters _params) {',
@@ -187,7 +190,7 @@ final _${method.name}Provider = Provider${maybeAutoDispose}.family((ref, _${pasc
       ]);
     } else {
       addToProviderExtension(
-          'Refreshable<${method.name.pascalCase}Mutation> ${method.name}($_annotatedParametersString) => _${method.name}Provider(((${annotatedParametersUsage}),_params));');
+          'Refreshable<${method.name.pascalCase}Mutation> ${extensionName}($_annotatedParametersString) => _${method.name}Provider(((${annotatedParametersUsage}),_params));');
 
       final maybeApplyParams =
           // hasAnnotatedPositionalParameters ? r'..params = _params.$1' : '';

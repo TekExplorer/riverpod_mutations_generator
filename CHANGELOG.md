@@ -1,5 +1,9 @@
 # Riverpod Mutations Generator
 
+## 1.0.3-dev
+
+Added super-interfaces for all mutation classes to inherit
+
 ## 1.0.2
 
 Expand dependencies to allow greater compatibility with other packages
