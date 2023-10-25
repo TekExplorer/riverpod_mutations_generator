@@ -1,6 +1,6 @@
 # Riverpod Mutations Generator
 
-Hello! This is an attempt to cover the gap left behind by the lack of mutation support in riverpod. See https://github.com/rrousselGit/riverpod/issues/1660
+Hello! This is an attempt to cover the gap left behind by the lack of mutation support in riverpod. See <https://github.com/rrousselGit/riverpod/issues/1660>
 
 Try it out like so!
 
@@ -8,12 +8,12 @@ First, import both this and `riverpod_mutations_annotation`
 
 ```yaml
 dependencies:
+  riverpod: ^2.4.4 # Your proffered riverpod package 
   riverpod_annotation: ^2.2.0  
   riverpod_mutations_annotation: ^1.0.0
 
 dev_dependencies:
   build_runner: ^2.3.3
-  riverpod: ^2.4.4
   riverpod_generator: ^2.3.5
   riverpod_mutations_generator: ^1.0.0
 ```
