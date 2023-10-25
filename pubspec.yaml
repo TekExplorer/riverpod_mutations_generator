@@ -1,6 +1,6 @@
 name: riverpod_mutations_generator
 description: A code generator for Riverpod Mutations. This covers the hole left in Riverpod today.
-version: 1.0.3-dev.1
+version: 1.0.3-dev.2
 repository: https://github.com/TekExplorer/riverpod_mutations_generator
 
 environment:
@@ -18,7 +18,7 @@ dependencies:
   recase: ^4.1.0
   # riverpod_analyzer_utils: ^0.4.1
   riverpod_annotation: ^2.2.1
-  riverpod_mutations_annotation: ^1.0.2-dev
+  riverpod_mutations_annotation: ^1.0.2-dev.1
 
 dev_dependencies:
   lints: ^3.0.0

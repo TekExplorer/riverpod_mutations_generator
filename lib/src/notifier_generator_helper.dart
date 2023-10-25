@@ -97,6 +97,7 @@ extension ${extensionClassName}MutationExtension on ${_class.name}Provider {
 
     final _class = method.enclosingElement as ClassElement;
     final notifierProviderName = '${_class.name.camelCase}Provider';
+    final dependencies = ', dependencies: [$notifierProviderName]';
 
     final buildMethod = _class.getMethod('build');
     if (buildMethod == null) {
@@ -141,7 +142,7 @@ final _${method.name}Provider = Provider${maybeAutoDispose}((ref) {
     (newState) => ref.state = newState,
     notifier.${method.name},
   );
-});
+}${dependencies});
 ''';
     }
 
@@ -159,7 +160,7 @@ final _${method.name}Provider = Provider${maybeAutoDispose}.family((ref, _${pasc
     (newState) => ref.state = newState,
     notifier.${method.name},
   );
-});
+}${dependencies});
 ''';
     }
     final annotatedParametersUsage = Util.parametersUsage(
@@ -188,7 +189,7 @@ final _${method.name}Provider = Provider${maybeAutoDispose}.family((ref, _${pasc
         '    (newState) => ref.state = newState..params = _params,',
         '    notifier.${method.name},',
         '  )..params = _params;',
-        '});',
+        '}${dependencies});',
       ]);
     } else {
       addToProviderExtension(
@@ -208,7 +209,7 @@ final _${method.name}Provider = Provider${maybeAutoDispose}.family((ref, _${pasc
         '    (newState) => ref.state = newState${maybeApplyParams},',
         '    notifier.${method.name},',
         '  )${maybeApplyParams};',
-        '});',
+        '}${dependencies});',
       ]);
     }
 

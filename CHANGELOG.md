@@ -1,5 +1,9 @@
 # Riverpod Mutations Generator
 
+## 1.0.3-dev.2
+
+Add dependencies to the mutation providers
+
 ## 1.0.3-dev.1
 
 Fixed an issue where a private notifier generated a private extension
