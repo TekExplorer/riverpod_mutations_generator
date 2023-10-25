@@ -1,5 +1,9 @@
 # Riverpod Mutations Annotation
 
+## 1.0.2-dev.1
+
+Unseal AsyncMutation and SyncMutation
+
 ## 1.0.2-dev
 
 Added super-interfaces for all mutation classes to inherit

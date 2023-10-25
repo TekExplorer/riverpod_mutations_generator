@@ -3,14 +3,14 @@ sealed class MutationBase {
   StackTrace? get stackTrace;
 }
 
-sealed class SyncMutation implements MutationBase {
+abstract mixin class SyncMutation implements MutationBase {
   @override
   Object? get error;
   @override
   StackTrace? get stackTrace;
 }
 
-sealed class AsyncMutation implements MutationBase {
+abstract mixin class AsyncMutation implements MutationBase {
   @override
   Object? get error;
   @override
