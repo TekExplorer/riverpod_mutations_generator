@@ -1,19 +1,19 @@
-sealed class MutationBase {
+// sealed class MutationBase {
+//   Object? get error;
+//   StackTrace? get stackTrace;
+// }
+
+abstract mixin class SyncMutation /*implements MutationBase */ {
+  // @override
   Object? get error;
+  // @override
   StackTrace? get stackTrace;
 }
 
-abstract mixin class SyncMutation implements MutationBase {
-  @override
+abstract mixin class AsyncMutation /*implements MutationBase */ {
+  // @override
   Object? get error;
-  @override
-  StackTrace? get stackTrace;
-}
-
-abstract mixin class AsyncMutation implements MutationBase {
-  @override
-  Object? get error;
-  @override
+  // @override
   StackTrace? get stackTrace;
 }
 

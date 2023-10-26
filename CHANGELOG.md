@@ -1,5 +1,18 @@
 # Riverpod Mutations Annotation
 
+<!-- ## 1.0.2
+
+Add super-interfaces for all mutation classes to inherit
+
+- `AsyncMutation`: `MutationIdle`, `MutationSuccess`, `MutationFailure`, `MutationLoading`
+- `SyncMutation`: `MutationIdle`, `MutationSuccess`, `MutationFailure` -->
+
+## 1.0.2-dev.2
+
+Removed `MutationBase`
+
+- Really should just make extensions on `AsyncMutation` or `SyncMutation` directly, as an `isLoading` extension has no use on a `SyncMutation` which does not have a loading state
+
 ## 1.0.2-dev.1
 
 Unseal AsyncMutation and SyncMutation
