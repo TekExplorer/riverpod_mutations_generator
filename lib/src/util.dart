@@ -9,8 +9,11 @@ const riverpodTypeChecker = TypeChecker.fromRuntime(Riverpod);
 const mutationTypeChecker = TypeChecker.fromRuntime(Mutation);
 
 class Util {
-  static ({String unwrapped, String? outerType, bool isAsync}) unwrapType(
-      String type) {
+  static ({
+    String unwrapped,
+    String? outerType,
+    bool isAsync,
+  }) unwrapType(String type) {
     if (type.startsWith('Future<') ||
         type.startsWith('FutureOr<') ||
         type.startsWith('Stream<')) {
