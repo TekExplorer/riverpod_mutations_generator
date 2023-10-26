@@ -5,6 +5,18 @@ import 'package:test/test.dart';
 
 part 'generator_test.g.dart';
 
+@mutation
+Future<String> login(String username, String password) async {
+  return '';
+}
+
+class E {
+  @mutation
+  static Future<String> login2(String username, String password) async {
+    return '';
+  }
+}
+
 @riverpod
 class Demo extends _$Demo {
   @override

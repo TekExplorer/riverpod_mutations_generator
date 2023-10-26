@@ -71,10 +71,9 @@ sealed class ${name}Mutation with ${mutationBase} {
   factory ${name}Mutation(
     ${name}StateSetter updateState,
     ${name}Signature fn,
-    ${returnsValue ? '${returnValueType} result,' : ''}
   ) = ${name}MutationIdle._;
   
-  ${name}Mutation._(this._updateState, this._fn, ${returnsValue ? 'this.result' : ''});
+  ${name}Mutation._(this._updateState, this._fn);
   
   final ${name}StateSetter _updateState;
   final ${name}Signature _fn;

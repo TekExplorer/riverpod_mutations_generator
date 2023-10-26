@@ -41,18 +41,18 @@ final _addTodoProvider = Provider.autoDispose((ref) {
     (newState) => ref.state = newState,
     notifier.addTodo,
   );
-});
+}, dependencies: [todoListProvider]);
 
 typedef AddTodoSignature = Future<void> Function(Todo newTodo);
 typedef AddTodoStateSetter = void Function(AddTodoMutation newState);
 
-sealed class AddTodoMutation {
-  const factory AddTodoMutation(
+sealed class AddTodoMutation with AsyncMutation {
+  factory AddTodoMutation(
     AddTodoStateSetter updateState,
     AddTodoSignature fn,
   ) = AddTodoMutationIdle._;
 
-  const AddTodoMutation._(this._updateState, this._fn);
+  AddTodoMutation._(this._updateState, this._fn);
 
   final AddTodoStateSetter _updateState;
   final AddTodoSignature _fn;
@@ -71,8 +71,8 @@ sealed class AddTodoMutation {
   }
 }
 
-final class AddTodoMutationIdle extends AddTodoMutation {
-  const AddTodoMutationIdle._(
+final class AddTodoMutationIdle extends AddTodoMutation with MutationIdle {
+  AddTodoMutationIdle._(
     super._updateState,
     super._fn, {
     this.error,
@@ -94,8 +94,9 @@ final class AddTodoMutationIdle extends AddTodoMutation {
   final StackTrace? stackTrace;
 }
 
-final class AddTodoMutationLoading extends AddTodoMutation {
-  const AddTodoMutationLoading._(
+final class AddTodoMutationLoading extends AddTodoMutation
+    with MutationLoading {
+  AddTodoMutationLoading._(
     super._updateState,
     super._fn, {
     this.error,
@@ -117,8 +118,9 @@ final class AddTodoMutationLoading extends AddTodoMutation {
   final StackTrace? stackTrace;
 }
 
-final class AddTodoMutationSuccess extends AddTodoMutation {
-  const AddTodoMutationSuccess._(
+final class AddTodoMutationSuccess extends AddTodoMutation
+    with MutationSuccess {
+  AddTodoMutationSuccess._(
     super._updateState,
     super._fn, {
     this.error,
@@ -140,8 +142,9 @@ final class AddTodoMutationSuccess extends AddTodoMutation {
   final StackTrace? stackTrace;
 }
 
-final class AddTodoMutationFailure extends AddTodoMutation {
-  const AddTodoMutationFailure._(
+final class AddTodoMutationFailure extends AddTodoMutation
+    with MutationFailure {
+  AddTodoMutationFailure._(
     super._updateState,
     super._fn, {
     required this.error,
@@ -177,11 +180,11 @@ final _removeTodoProvider =
     (newState) => ref.state = newState..params = _params,
     notifier.removeTodo,
   )..params = _params;
-});
+}, dependencies: [todoListProvider]);
 typedef RemoveTodoSignature = Future<void> Function({required int id});
 typedef RemoveTodoStateSetter = void Function(RemoveTodoMutation newState);
 
-sealed class RemoveTodoMutation {
+sealed class RemoveTodoMutation with AsyncMutation {
   factory RemoveTodoMutation(
     RemoveTodoStateSetter updateState,
     RemoveTodoSignature fn,
@@ -210,7 +213,8 @@ sealed class RemoveTodoMutation {
   }
 }
 
-final class RemoveTodoMutationIdle extends RemoveTodoMutation {
+final class RemoveTodoMutationIdle extends RemoveTodoMutation
+    with MutationIdle {
   RemoveTodoMutationIdle._(
     super._updateState,
     super._fn, {
@@ -233,7 +237,8 @@ final class RemoveTodoMutationIdle extends RemoveTodoMutation {
   final StackTrace? stackTrace;
 }
 
-final class RemoveTodoMutationLoading extends RemoveTodoMutation {
+final class RemoveTodoMutationLoading extends RemoveTodoMutation
+    with MutationLoading {
   RemoveTodoMutationLoading._(
     super._updateState,
     super._fn, {
@@ -256,7 +261,8 @@ final class RemoveTodoMutationLoading extends RemoveTodoMutation {
   final StackTrace? stackTrace;
 }
 
-final class RemoveTodoMutationSuccess extends RemoveTodoMutation {
+final class RemoveTodoMutationSuccess extends RemoveTodoMutation
+    with MutationSuccess {
   RemoveTodoMutationSuccess._(
     super._updateState,
     super._fn, {
@@ -279,7 +285,8 @@ final class RemoveTodoMutationSuccess extends RemoveTodoMutation {
   final StackTrace? stackTrace;
 }
 
-final class RemoveTodoMutationFailure extends RemoveTodoMutation {
+final class RemoveTodoMutationFailure extends RemoveTodoMutation
+    with MutationFailure {
   RemoveTodoMutationFailure._(
     super._updateState,
     super._fn, {

@@ -199,18 +199,18 @@ final _changeProvider = Provider.autoDispose((ref) {
     (newState) => ref.state = newState,
     notifier.change,
   );
-});
+}, dependencies: [demoProvider]);
 
 typedef ChangeSignature = Future<void> Function(int i);
 typedef ChangeStateSetter = void Function(ChangeMutation newState);
 
-sealed class ChangeMutation {
-  const factory ChangeMutation(
+sealed class ChangeMutation with AsyncMutation {
+  factory ChangeMutation(
     ChangeStateSetter updateState,
     ChangeSignature fn,
   ) = ChangeMutationIdle._;
 
-  const ChangeMutation._(this._updateState, this._fn);
+  ChangeMutation._(this._updateState, this._fn);
 
   final ChangeStateSetter _updateState;
   final ChangeSignature _fn;
@@ -229,8 +229,8 @@ sealed class ChangeMutation {
   }
 }
 
-final class ChangeMutationIdle extends ChangeMutation {
-  const ChangeMutationIdle._(
+final class ChangeMutationIdle extends ChangeMutation with MutationIdle {
+  ChangeMutationIdle._(
     super._updateState,
     super._fn, {
     this.error,
@@ -251,8 +251,8 @@ final class ChangeMutationIdle extends ChangeMutation {
   final StackTrace? stackTrace;
 }
 
-final class ChangeMutationLoading extends ChangeMutation {
-  const ChangeMutationLoading._(
+final class ChangeMutationLoading extends ChangeMutation with MutationLoading {
+  ChangeMutationLoading._(
     super._updateState,
     super._fn, {
     this.error,
@@ -274,8 +274,8 @@ final class ChangeMutationLoading extends ChangeMutation {
   final StackTrace? stackTrace;
 }
 
-final class ChangeMutationSuccess extends ChangeMutation {
-  const ChangeMutationSuccess._(
+final class ChangeMutationSuccess extends ChangeMutation with MutationSuccess {
+  ChangeMutationSuccess._(
     super._updateState,
     super._fn, {
     this.error,
@@ -297,8 +297,8 @@ final class ChangeMutationSuccess extends ChangeMutation {
   final StackTrace? stackTrace;
 }
 
-final class ChangeMutationFailure extends ChangeMutation {
-  const ChangeMutationFailure._(
+final class ChangeMutationFailure extends ChangeMutation with MutationFailure {
+  ChangeMutationFailure._(
     super._updateState,
     super._fn, {
     required this.error,
@@ -345,19 +345,19 @@ final _changeFamilyProvider =
     (newState) => ref.state = newState,
     notifier.changeFamily,
   );
-});
+}, dependencies: [demoFamilyProvider]);
 
 typedef ChangeFamilySignature = Future<void> Function(int i, String? e,
     {required bool b, num n});
 typedef ChangeFamilyStateSetter = void Function(ChangeFamilyMutation newState);
 
-sealed class ChangeFamilyMutation {
-  const factory ChangeFamilyMutation(
+sealed class ChangeFamilyMutation with AsyncMutation {
+  factory ChangeFamilyMutation(
     ChangeFamilyStateSetter updateState,
     ChangeFamilySignature fn,
   ) = ChangeFamilyMutationIdle._;
 
-  const ChangeFamilyMutation._(this._updateState, this._fn);
+  ChangeFamilyMutation._(this._updateState, this._fn);
 
   final ChangeFamilyStateSetter _updateState;
   final ChangeFamilySignature _fn;
@@ -377,8 +377,9 @@ sealed class ChangeFamilyMutation {
   }
 }
 
-final class ChangeFamilyMutationIdle extends ChangeFamilyMutation {
-  const ChangeFamilyMutationIdle._(
+final class ChangeFamilyMutationIdle extends ChangeFamilyMutation
+    with MutationIdle {
+  ChangeFamilyMutationIdle._(
     super._updateState,
     super._fn, {
     this.error,
@@ -400,8 +401,9 @@ final class ChangeFamilyMutationIdle extends ChangeFamilyMutation {
   final StackTrace? stackTrace;
 }
 
-final class ChangeFamilyMutationLoading extends ChangeFamilyMutation {
-  const ChangeFamilyMutationLoading._(
+final class ChangeFamilyMutationLoading extends ChangeFamilyMutation
+    with MutationLoading {
+  ChangeFamilyMutationLoading._(
     super._updateState,
     super._fn, {
     this.error,
@@ -423,8 +425,9 @@ final class ChangeFamilyMutationLoading extends ChangeFamilyMutation {
   final StackTrace? stackTrace;
 }
 
-final class ChangeFamilyMutationSuccess extends ChangeFamilyMutation {
-  const ChangeFamilyMutationSuccess._(
+final class ChangeFamilyMutationSuccess extends ChangeFamilyMutation
+    with MutationSuccess {
+  ChangeFamilyMutationSuccess._(
     super._updateState,
     super._fn, {
     this.error,
@@ -446,8 +449,9 @@ final class ChangeFamilyMutationSuccess extends ChangeFamilyMutation {
   final StackTrace? stackTrace;
 }
 
-final class ChangeFamilyMutationFailure extends ChangeFamilyMutation {
-  const ChangeFamilyMutationFailure._(
+final class ChangeFamilyMutationFailure extends ChangeFamilyMutation
+    with MutationFailure {
+  ChangeFamilyMutationFailure._(
     super._updateState,
     super._fn, {
     required this.error,
@@ -471,4 +475,153 @@ final class ChangeFamilyMutationFailure extends ChangeFamilyMutation {
 
   @override
   final StackTrace stackTrace;
+}
+
+final loginProvider = Provider.autoDispose((ref) {
+  return LoginMutation(
+    (newState) => ref.state = newState,
+    login,
+  );
+});
+
+typedef LoginSignature = Future<String> Function(
+    String username, String password);
+typedef LoginStateSetter = void Function(LoginMutation newState);
+
+sealed class LoginMutation with AsyncMutation {
+  factory LoginMutation(
+    LoginStateSetter updateState,
+    LoginSignature fn,
+  ) = LoginMutationIdle._;
+
+  LoginMutation._(this._updateState, this._fn);
+
+  final LoginStateSetter _updateState;
+  final LoginSignature _fn;
+
+  Object? get error;
+  StackTrace? get stackTrace;
+
+  String? get result;
+
+  Future<void> call(String username, String password) async {
+    _updateState(LoginMutationLoading.from(this));
+    try {
+      final res = await _fn(username, password);
+      _updateState(LoginMutationSuccess.from(this, res));
+    } catch (e, s) {
+      _updateState(LoginMutationFailure.from(this, error: e, stackTrace: s));
+    }
+  }
+}
+
+final class LoginMutationIdle extends LoginMutation with MutationIdle {
+  LoginMutationIdle._(
+    super._updateState,
+    super._fn, {
+    this.error,
+    this.stackTrace,
+    this.result,
+  }) : super._();
+
+  factory LoginMutationIdle.from(LoginMutation other) => LoginMutationIdle._(
+        other._updateState,
+        other._fn,
+        error: other.error,
+        stackTrace: other.stackTrace,
+        result: other.result,
+      );
+
+  @override
+  final Object? error;
+
+  @override
+  final StackTrace? stackTrace;
+
+  final String? result;
+}
+
+final class LoginMutationLoading extends LoginMutation with MutationLoading {
+  LoginMutationLoading._(
+    super._updateState,
+    super._fn, {
+    this.error,
+    this.stackTrace,
+    this.result,
+  }) : super._();
+
+  factory LoginMutationLoading.from(LoginMutation other) =>
+      LoginMutationLoading._(
+        other._updateState,
+        other._fn,
+        error: other.error,
+        stackTrace: other.stackTrace,
+        result: other.result,
+      );
+
+  @override
+  final Object? error;
+
+  @override
+  final StackTrace? stackTrace;
+
+  final String? result;
+}
+
+final class LoginMutationSuccess extends LoginMutation with MutationSuccess {
+  LoginMutationSuccess._(
+    super._updateState,
+    super._fn, {
+    this.error,
+    this.stackTrace,
+    required this.result,
+  }) : super._();
+
+  factory LoginMutationSuccess.from(LoginMutation other, String result) =>
+      LoginMutationSuccess._(
+        other._updateState,
+        other._fn,
+        error: other.error,
+        stackTrace: other.stackTrace,
+        result: result,
+      );
+
+  @override
+  final Object? error;
+
+  @override
+  final StackTrace? stackTrace;
+
+  final String result;
+}
+
+final class LoginMutationFailure extends LoginMutation with MutationFailure {
+  LoginMutationFailure._(
+    super._updateState,
+    super._fn, {
+    required this.error,
+    required this.stackTrace,
+    this.result,
+  }) : super._();
+
+  factory LoginMutationFailure.from(
+    LoginMutation other, {
+    required Object error,
+    required StackTrace stackTrace,
+  }) =>
+      LoginMutationFailure._(
+        other._updateState,
+        other._fn,
+        error: error,
+        stackTrace: stackTrace,
+        result: other.result,
+      );
+
+  @override
+  final Object error;
+
+  @override
+  final StackTrace stackTrace;
+
+  final String? result;
 }

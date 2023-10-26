@@ -1,5 +1,9 @@
 # Riverpod Mutations Generator
 
+## 1.0.3-dev.4
+
+Fix a bug regarding `.result` breaking classes
+
 ## 1.0.3-dev.3
 
 Support returned values from a notifier method with `.result`
