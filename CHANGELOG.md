@@ -1,5 +1,14 @@
 # Riverpod Mutations Annotation
 
+## 1.0.3
+
+Add super-interfaces for mutation classes that have values
+
+- `MutationResult<T>`
+- `MutationSuccessResult<T>`
+
+Remove duplicated code
+
 ## 1.0.2
 
 Add super-interfaces for all mutation classes to inherit
