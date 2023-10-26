@@ -1,11 +1,11 @@
 # Riverpod Mutations Annotation
 
-<!-- ## 1.0.2
+## 1.0.2
 
 Add super-interfaces for all mutation classes to inherit
 
 - `AsyncMutation`: `MutationIdle`, `MutationSuccess`, `MutationFailure`, `MutationLoading`
-- `SyncMutation`: `MutationIdle`, `MutationSuccess`, `MutationFailure` -->
+- `SyncMutation`: `MutationIdle`, `MutationSuccess`, `MutationFailure`
 
 ## 1.0.2-dev.2
 
