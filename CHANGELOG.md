@@ -1,5 +1,12 @@
 # Riverpod Mutations Generator
 
+## 1.0.3
+
+Add super-interfaces to all mutation classes
+
+- `AsyncMutation`: `MutationIdle`, `MutationSuccess`, `MutationFailure`, `MutationLoading`
+- `SyncMutation`: `MutationIdle`, `MutationSuccess`, `MutationFailure`
+
 ## 1.0.3-dev.4
 
 Fix a bug regarding `.result` breaking classes
