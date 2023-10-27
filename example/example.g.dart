@@ -61,8 +61,8 @@ sealed class AddTodoMutation with AsyncMutation {
   StackTrace? get stackTrace;
 
   Future<void> call(Todo newTodo) async {
-    _updateState(AddTodoMutationLoading.from(this));
     try {
+      _updateState(AddTodoMutationLoading.from(this));
       await _fn(newTodo);
       _updateState(AddTodoMutationSuccess.from(this));
     } catch (e, s) {
@@ -202,8 +202,8 @@ sealed class RemoveTodoMutation with AsyncMutation {
   late final RemoveTodoFamilyParameters params;
 
   Future<void> call() async {
-    _updateState(RemoveTodoMutationLoading.from(this));
     try {
+      _updateState(RemoveTodoMutationLoading.from(this));
       await _fn(id: params.id);
       _updateState(RemoveTodoMutationSuccess.from(this));
     } catch (e, s) {

@@ -4,13 +4,15 @@ import 'package:collection/collection.dart';
 import 'package:recase/recase.dart';
 import 'package:riverpod_mutations_generator/src/util.dart';
 
+String _if(bool conditional, String string, [String other = '']) =>
+    conditional ? string : other;
+
 class ClassGeneratorHelper {
   static String mutationClasses(ExecutableElement executable) {
     final name = executable.name.pascalCase;
 
     final isAsync = executable.isAsync;
 
-    final callReturnType = isAsync ? 'Future<void>' : 'void';
     // if (unwrappedReturnType != 'void') {
     //   // has a return type:
     // }
@@ -40,6 +42,10 @@ class ClassGeneratorHelper {
     // support value returns
     final _methodReturnType = Util.unwrapType(executable.returnType.toString());
     final returnValueType = _methodReturnType.unwrapped;
+    if (returnValueType.endsWith('?'))
+      // TODO: make the distinction with an `final Object? _actual;` for nullable returns only
+      print(
+          'riverpod_mutations_generator makes no distinction between no result and a null result. (${executable})');
     final returnsValue = returnValueType != 'void';
 
     final _caller = executable.parameters.map((element) {
@@ -63,11 +69,14 @@ class ClassGeneratorHelper {
 
     final mutationBase = isAsync ? 'AsyncMutation' : 'SyncMutation';
 
+    // TODO: eager FutureOr
+    final isFutureOr = executable.returnType.isDartAsyncFutureOr;
+
     return '''
 typedef ${name}Signature = ${methodSignature};
 typedef ${name}StateSetter = void Function(${name}Mutation newState);
   
-sealed class ${name}Mutation with ${mutationBase} {
+sealed class ${name}Mutation with ${mutationBase}${returnsValue ? ', MutationResult<${returnValueType}>' : ''} {
   factory ${name}Mutation(
     ${name}StateSetter updateState,
     ${name}Signature fn,
@@ -84,13 +93,12 @@ sealed class ${name}Mutation with ${mutationBase} {
   ${annotatedParameters.isNotEmpty ? '/// This stores the @mutationKey parameters for this method. This may change.' : ''}
   ${annotatedParameters.isNotEmpty ? 'late final ${executable.name.pascalCase}FamilyParameters params;' : ''}
 
-  ${returnsValue ? '${returnValueType}? get result;' : ''}
-
-  ${callReturnType} $callSignature ${isAsync ? 'async' : ''}{
-    ${isAsync ? '_updateState(${name}MutationLoading.from(this));' : ''}
+  ${isAsync ? 'Future<void>' : 'void'} $callSignature ${isAsync ? 'async' : ''}{
     try {
-      ${returnsValue ? 'final res = ' : ''}${isAsync ? 'await' : ''} ${methodCaller};
-      _updateState(${name}MutationSuccess.from(this${returnsValue ? ', res' : ''}));
+      ${_if(isFutureOr, 'final futureOr = ${methodCaller};')}
+      ${_if(isAsync, '${_if(isFutureOr, 'if (futureOr is Future) ')} _updateState(${name}MutationLoading.from(this));')}
+      ${_if(returnsValue, 'final res = ')}${_if(isAsync, 'await')} ${_if(isFutureOr, 'futureOr', methodCaller)};
+      _updateState(${name}MutationSuccess.from(this${_if(returnsValue, ', res')}));
     } catch (e, s) {
       _updateState(${name}MutationFailure.from(this, error: e, stackTrace: s));
     }
@@ -99,7 +107,7 @@ sealed class ${name}Mutation with ${mutationBase} {
 
 ${_class(name: name, kind: 'Idle', returnValueType: returnsValue ? returnValueType : null)}
 
-${isAsync ? _class(name: name, kind: 'Loading', returnValueType: returnsValue ? returnValueType : null) : ''}
+${_if(isAsync, _class(name: name, kind: 'Loading', returnValueType: returnsValue ? returnValueType : null))}
 
 ${_successClass(name: name, returnValueType: returnsValue ? returnValueType : null)}
 
@@ -119,7 +127,7 @@ ${_failureClass(name: name, returnValueType: returnsValue ? returnValueType : nu
     super._fn, {
     this.error,
     this.stackTrace,
-    ${returnValueType != null ? 'this.result,' : ''}
+    ${_if(returnValueType != null, 'this.result,')}
   }) : super._();
   
   factory ${name}Mutation${kind}.from(${name}Mutation other) =>
@@ -128,7 +136,7 @@ ${_failureClass(name: name, returnValueType: returnsValue ? returnValueType : nu
         other._fn,
         error: other.error,
         stackTrace: other.stackTrace,
-        ${returnValueType != null ? 'result: other.result,' : ''}
+        ${_if(returnValueType != null, 'result: other.result,')}
       );
   
   @override
@@ -137,7 +145,10 @@ ${_failureClass(name: name, returnValueType: returnsValue ? returnValueType : nu
   @override
   final StackTrace? stackTrace;
   
-  ${returnValueType != null ? 'final ${'${returnValueType}?'.replaceAll('??', '?')} result;' : ''}
+
+  ${_if(returnValueType != null, '@override')}
+  ${_if(returnValueType != null, '// ignore: inference_failure_on_uninitialized_variable')}
+  ${_if(returnValueType != null, 'final result;')}
 }
 ''';
 
@@ -146,22 +157,22 @@ ${_failureClass(name: name, returnValueType: returnsValue ? returnValueType : nu
     required String? returnValueType,
   }) =>
       '''
-  final class ${name}MutationSuccess extends ${name}Mutation with MutationSuccess {
+  final class ${name}MutationSuccess extends ${name}Mutation with ${returnValueType == null ? 'MutationSuccess' : 'MutationSuccessResult<${returnValueType}>'} {
   ${name}MutationSuccess._(
     super._updateState,
     super._fn, {
     this.error,
     this.stackTrace,
-    ${returnValueType != null ? 'required this.result,' : ''}
+    ${_if(returnValueType != null, 'required this.result,')}
   }) : super._();
   
-  factory ${name}MutationSuccess.from(${name}Mutation other${returnValueType != null ? ', ${returnValueType} result' : ''}) =>
+  factory ${name}MutationSuccess.from(${name}Mutation other${_if(returnValueType != null, ', ${returnValueType} result')}) =>
       ${name}MutationSuccess._(
         other._updateState,
         other._fn,
         error: other.error,
         stackTrace: other.stackTrace,
-        ${returnValueType != null ? 'result: result,' : ''}
+        ${_if(returnValueType != null, 'result: result,')}
       );
   
   @override
@@ -170,7 +181,7 @@ ${_failureClass(name: name, returnValueType: returnsValue ? returnValueType : nu
   @override
   final StackTrace? stackTrace;
   
-  ${returnValueType != null ? 'final ${returnValueType} result;' : ''}
+  ${_if(returnValueType != null, '@override final ${returnValueType} result;')}
 }
 ''';
 
@@ -185,7 +196,7 @@ final class ${name}MutationFailure extends ${name}Mutation with MutationFailure 
     super._fn, {
     required this.error,
     required this.stackTrace,
-    ${returnValueType != null ? 'this.result,' : ''}
+    ${_if(returnValueType != null, 'this.result,')}
   }) : super._();
 
   factory ${name}MutationFailure.from(
@@ -198,7 +209,7 @@ final class ${name}MutationFailure extends ${name}Mutation with MutationFailure 
         other._fn,
         error: error,
         stackTrace: stackTrace,
-        ${returnValueType != null ? 'result: other.result,' : ''}
+        ${_if(returnValueType != null, 'result: other.result,')}
       );
 
   @override
@@ -207,7 +218,9 @@ final class ${name}MutationFailure extends ${name}Mutation with MutationFailure 
   @override
   final StackTrace stackTrace;
 
-  ${returnValueType != null ? 'final ${'${returnValueType}?'.replaceAll('??', '?')} result;' : ''}
+  ${_if(returnValueType != null, '@override')}
+  ${_if(returnValueType != null, '// ignore: inference_failure_on_uninitialized_variable')}
+  ${_if(returnValueType != null, 'final result;')}
 }
 ''';
 }

@@ -1,5 +1,14 @@
 # Riverpod Mutations Generator
 
+## 1.0.4-dev
+
+Support eager `FutureOr` returns (ie. `FutureOr<String> getValue() => 'Eager'`) which skips MutationLoading
+
+Add result super-interfaces `MutationResult<T>` and `MutationSuccessResult<T>` (which implements `MutationResult<T>`)
+
+- This allows you to make extensions on mutations that have results, allowing you to do things like `bool get hasValue => value != null;`
+- Notice, this does not handle nullable return types.
+
 ## 1.0.3
 
 Add super-interfaces to all mutation classes
