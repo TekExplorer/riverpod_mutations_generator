@@ -6,7 +6,7 @@ part of 'generator_test.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$demoHash() => r'a1d920d65643bd4adfe6d8ef983b81dbd6bf1da0';
+String _$demoHash() => r'28cf41092719540180c6163951fb1508be9b605e';
 
 /// See also [Demo].
 @ProviderFor(Demo)
@@ -191,6 +191,9 @@ class _DemoFamilyProviderElement
 
 extension DemoMutationExtension on AutoDisposeAsyncNotifierProvider<Demo, int> {
   Refreshable<ChangeMutation> get change => _changeProvider;
+  Refreshable<NullableMutation> get nullable => _nullableProvider;
+  Refreshable<FutureOrMutation> get futureOr => _futureOrProvider;
+  Refreshable<NormalMutation> get normal => _normalProvider;
 }
 
 final _changeProvider = Provider.autoDispose((ref) {
@@ -219,8 +222,8 @@ sealed class ChangeMutation with AsyncMutation {
   StackTrace? get stackTrace;
 
   Future<void> call(int i) async {
-    _updateState(ChangeMutationLoading.from(this));
     try {
+      _updateState(ChangeMutationLoading.from(this));
       await _fn(i);
       _updateState(ChangeMutationSuccess.from(this));
     } catch (e, s) {
@@ -324,6 +327,455 @@ final class ChangeMutationFailure extends ChangeMutation with MutationFailure {
   final StackTrace stackTrace;
 }
 
+final _nullableProvider = Provider.autoDispose((ref) {
+  final notifier = ref.watch(demoProvider.notifier);
+  return NullableMutation(
+    (newState) => ref.state = newState,
+    notifier.nullable,
+  );
+}, dependencies: [demoProvider]);
+
+typedef NullableSignature = Future<String?> Function();
+typedef NullableStateSetter = void Function(NullableMutation newState);
+
+sealed class NullableMutation with AsyncMutation, MutationResult<String?> {
+  factory NullableMutation(
+    NullableStateSetter updateState,
+    NullableSignature fn,
+  ) = NullableMutationIdle._;
+
+  NullableMutation._(this._updateState, this._fn);
+
+  final NullableStateSetter _updateState;
+  final NullableSignature _fn;
+
+  Object? get error;
+  StackTrace? get stackTrace;
+
+  Future<void> call() async {
+    try {
+      _updateState(NullableMutationLoading.from(this));
+      final res = await _fn();
+      _updateState(NullableMutationSuccess.from(this, res));
+    } catch (e, s) {
+      _updateState(NullableMutationFailure.from(this, error: e, stackTrace: s));
+    }
+  }
+}
+
+final class NullableMutationIdle extends NullableMutation with MutationIdle {
+  NullableMutationIdle._(
+    super._updateState,
+    super._fn, {
+    this.error,
+    this.stackTrace,
+    this.result,
+  }) : super._();
+
+  factory NullableMutationIdle.from(NullableMutation other) =>
+      NullableMutationIdle._(
+        other._updateState,
+        other._fn,
+        error: other.error,
+        stackTrace: other.stackTrace,
+        result: other.result,
+      );
+
+  @override
+  final Object? error;
+
+  @override
+  final StackTrace? stackTrace;
+
+  @override
+  // ignore: inference_failure_on_uninitialized_variable
+  final result;
+}
+
+final class NullableMutationLoading extends NullableMutation
+    with MutationLoading {
+  NullableMutationLoading._(
+    super._updateState,
+    super._fn, {
+    this.error,
+    this.stackTrace,
+    this.result,
+  }) : super._();
+
+  factory NullableMutationLoading.from(NullableMutation other) =>
+      NullableMutationLoading._(
+        other._updateState,
+        other._fn,
+        error: other.error,
+        stackTrace: other.stackTrace,
+        result: other.result,
+      );
+
+  @override
+  final Object? error;
+
+  @override
+  final StackTrace? stackTrace;
+
+  @override
+  // ignore: inference_failure_on_uninitialized_variable
+  final result;
+}
+
+final class NullableMutationSuccess extends NullableMutation
+    with MutationSuccessResult<String?> {
+  NullableMutationSuccess._(
+    super._updateState,
+    super._fn, {
+    this.error,
+    this.stackTrace,
+    required this.result,
+  }) : super._();
+
+  factory NullableMutationSuccess.from(
+          NullableMutation other, String? result) =>
+      NullableMutationSuccess._(
+        other._updateState,
+        other._fn,
+        error: other.error,
+        stackTrace: other.stackTrace,
+        result: result,
+      );
+
+  @override
+  final Object? error;
+
+  @override
+  final StackTrace? stackTrace;
+
+  @override
+  final String? result;
+}
+
+final class NullableMutationFailure extends NullableMutation
+    with MutationFailure {
+  NullableMutationFailure._(
+    super._updateState,
+    super._fn, {
+    required this.error,
+    required this.stackTrace,
+    this.result,
+  }) : super._();
+
+  factory NullableMutationFailure.from(
+    NullableMutation other, {
+    required Object error,
+    required StackTrace stackTrace,
+  }) =>
+      NullableMutationFailure._(
+        other._updateState,
+        other._fn,
+        error: error,
+        stackTrace: stackTrace,
+        result: other.result,
+      );
+
+  @override
+  final Object error;
+
+  @override
+  final StackTrace stackTrace;
+
+  @override
+  // ignore: inference_failure_on_uninitialized_variable
+  final result;
+}
+
+final _futureOrProvider = Provider.autoDispose((ref) {
+  final notifier = ref.watch(demoProvider.notifier);
+  return FutureOrMutation(
+    (newState) => ref.state = newState,
+    notifier.futureOr,
+  );
+}, dependencies: [demoProvider]);
+
+typedef FutureOrSignature = FutureOr<String> Function();
+typedef FutureOrStateSetter = void Function(FutureOrMutation newState);
+
+sealed class FutureOrMutation with AsyncMutation, MutationResult<String> {
+  factory FutureOrMutation(
+    FutureOrStateSetter updateState,
+    FutureOrSignature fn,
+  ) = FutureOrMutationIdle._;
+
+  FutureOrMutation._(this._updateState, this._fn);
+
+  final FutureOrStateSetter _updateState;
+  final FutureOrSignature _fn;
+
+  Object? get error;
+  StackTrace? get stackTrace;
+
+  Future<void> call() async {
+    try {
+      final futureOr = _fn();
+      if (futureOr is Future) _updateState(FutureOrMutationLoading.from(this));
+      final res = await futureOr;
+      _updateState(FutureOrMutationSuccess.from(this, res));
+    } catch (e, s) {
+      _updateState(FutureOrMutationFailure.from(this, error: e, stackTrace: s));
+    }
+  }
+}
+
+final class FutureOrMutationIdle extends FutureOrMutation with MutationIdle {
+  FutureOrMutationIdle._(
+    super._updateState,
+    super._fn, {
+    this.error,
+    this.stackTrace,
+    this.result,
+  }) : super._();
+
+  factory FutureOrMutationIdle.from(FutureOrMutation other) =>
+      FutureOrMutationIdle._(
+        other._updateState,
+        other._fn,
+        error: other.error,
+        stackTrace: other.stackTrace,
+        result: other.result,
+      );
+
+  @override
+  final Object? error;
+
+  @override
+  final StackTrace? stackTrace;
+
+  @override
+  // ignore: inference_failure_on_uninitialized_variable
+  final result;
+}
+
+final class FutureOrMutationLoading extends FutureOrMutation
+    with MutationLoading {
+  FutureOrMutationLoading._(
+    super._updateState,
+    super._fn, {
+    this.error,
+    this.stackTrace,
+    this.result,
+  }) : super._();
+
+  factory FutureOrMutationLoading.from(FutureOrMutation other) =>
+      FutureOrMutationLoading._(
+        other._updateState,
+        other._fn,
+        error: other.error,
+        stackTrace: other.stackTrace,
+        result: other.result,
+      );
+
+  @override
+  final Object? error;
+
+  @override
+  final StackTrace? stackTrace;
+
+  @override
+  // ignore: inference_failure_on_uninitialized_variable
+  final result;
+}
+
+final class FutureOrMutationSuccess extends FutureOrMutation
+    with MutationSuccessResult<String> {
+  FutureOrMutationSuccess._(
+    super._updateState,
+    super._fn, {
+    this.error,
+    this.stackTrace,
+    required this.result,
+  }) : super._();
+
+  factory FutureOrMutationSuccess.from(FutureOrMutation other, String result) =>
+      FutureOrMutationSuccess._(
+        other._updateState,
+        other._fn,
+        error: other.error,
+        stackTrace: other.stackTrace,
+        result: result,
+      );
+
+  @override
+  final Object? error;
+
+  @override
+  final StackTrace? stackTrace;
+
+  @override
+  final String result;
+}
+
+final class FutureOrMutationFailure extends FutureOrMutation
+    with MutationFailure {
+  FutureOrMutationFailure._(
+    super._updateState,
+    super._fn, {
+    required this.error,
+    required this.stackTrace,
+    this.result,
+  }) : super._();
+
+  factory FutureOrMutationFailure.from(
+    FutureOrMutation other, {
+    required Object error,
+    required StackTrace stackTrace,
+  }) =>
+      FutureOrMutationFailure._(
+        other._updateState,
+        other._fn,
+        error: error,
+        stackTrace: stackTrace,
+        result: other.result,
+      );
+
+  @override
+  final Object error;
+
+  @override
+  final StackTrace stackTrace;
+
+  @override
+  // ignore: inference_failure_on_uninitialized_variable
+  final result;
+}
+
+final _normalProvider = Provider.autoDispose((ref) {
+  final notifier = ref.watch(demoProvider.notifier);
+  return NormalMutation(
+    (newState) => ref.state = newState,
+    notifier.normal,
+  );
+}, dependencies: [demoProvider]);
+
+typedef NormalSignature = Future<void> Function();
+typedef NormalStateSetter = void Function(NormalMutation newState);
+
+sealed class NormalMutation with AsyncMutation {
+  factory NormalMutation(
+    NormalStateSetter updateState,
+    NormalSignature fn,
+  ) = NormalMutationIdle._;
+
+  NormalMutation._(this._updateState, this._fn);
+
+  final NormalStateSetter _updateState;
+  final NormalSignature _fn;
+
+  Object? get error;
+  StackTrace? get stackTrace;
+
+  Future<void> call() async {
+    try {
+      _updateState(NormalMutationLoading.from(this));
+      await _fn();
+      _updateState(NormalMutationSuccess.from(this));
+    } catch (e, s) {
+      _updateState(NormalMutationFailure.from(this, error: e, stackTrace: s));
+    }
+  }
+}
+
+final class NormalMutationIdle extends NormalMutation with MutationIdle {
+  NormalMutationIdle._(
+    super._updateState,
+    super._fn, {
+    this.error,
+    this.stackTrace,
+  }) : super._();
+
+  factory NormalMutationIdle.from(NormalMutation other) => NormalMutationIdle._(
+        other._updateState,
+        other._fn,
+        error: other.error,
+        stackTrace: other.stackTrace,
+      );
+
+  @override
+  final Object? error;
+
+  @override
+  final StackTrace? stackTrace;
+}
+
+final class NormalMutationLoading extends NormalMutation with MutationLoading {
+  NormalMutationLoading._(
+    super._updateState,
+    super._fn, {
+    this.error,
+    this.stackTrace,
+  }) : super._();
+
+  factory NormalMutationLoading.from(NormalMutation other) =>
+      NormalMutationLoading._(
+        other._updateState,
+        other._fn,
+        error: other.error,
+        stackTrace: other.stackTrace,
+      );
+
+  @override
+  final Object? error;
+
+  @override
+  final StackTrace? stackTrace;
+}
+
+final class NormalMutationSuccess extends NormalMutation with MutationSuccess {
+  NormalMutationSuccess._(
+    super._updateState,
+    super._fn, {
+    this.error,
+    this.stackTrace,
+  }) : super._();
+
+  factory NormalMutationSuccess.from(NormalMutation other) =>
+      NormalMutationSuccess._(
+        other._updateState,
+        other._fn,
+        error: other.error,
+        stackTrace: other.stackTrace,
+      );
+
+  @override
+  final Object? error;
+
+  @override
+  final StackTrace? stackTrace;
+}
+
+final class NormalMutationFailure extends NormalMutation with MutationFailure {
+  NormalMutationFailure._(
+    super._updateState,
+    super._fn, {
+    required this.error,
+    required this.stackTrace,
+  }) : super._();
+
+  factory NormalMutationFailure.from(
+    NormalMutation other, {
+    required Object error,
+    required StackTrace stackTrace,
+  }) =>
+      NormalMutationFailure._(
+        other._updateState,
+        other._fn,
+        error: error,
+        stackTrace: stackTrace,
+      );
+
+  @override
+  final Object error;
+
+  @override
+  final StackTrace stackTrace;
+}
+
 typedef DemoFamilyFamilyParams = (Object key,);
 
 extension DemoFamilyMutationExtension on DemoFamilyProvider {
@@ -366,8 +818,8 @@ sealed class ChangeFamilyMutation with AsyncMutation {
   StackTrace? get stackTrace;
 
   Future<void> call(int i, String? e, {required bool b, num n = 1}) async {
-    _updateState(ChangeFamilyMutationLoading.from(this));
     try {
+      _updateState(ChangeFamilyMutationLoading.from(this));
       await _fn(i, e, b: b, n: n);
       _updateState(ChangeFamilyMutationSuccess.from(this));
     } catch (e, s) {
@@ -488,7 +940,7 @@ typedef LoginSignature = Future<String> Function(
     String username, String password);
 typedef LoginStateSetter = void Function(LoginMutation newState);
 
-sealed class LoginMutation with AsyncMutation {
+sealed class LoginMutation with AsyncMutation, MutationResult<String> {
   factory LoginMutation(
     LoginStateSetter updateState,
     LoginSignature fn,
@@ -502,11 +954,9 @@ sealed class LoginMutation with AsyncMutation {
   Object? get error;
   StackTrace? get stackTrace;
 
-  String? get result;
-
   Future<void> call(String username, String password) async {
-    _updateState(LoginMutationLoading.from(this));
     try {
+      _updateState(LoginMutationLoading.from(this));
       final res = await _fn(username, password);
       _updateState(LoginMutationSuccess.from(this, res));
     } catch (e, s) {
@@ -538,7 +988,9 @@ final class LoginMutationIdle extends LoginMutation with MutationIdle {
   @override
   final StackTrace? stackTrace;
 
-  final String? result;
+  @override
+  // ignore: inference_failure_on_uninitialized_variable
+  final result;
 }
 
 final class LoginMutationLoading extends LoginMutation with MutationLoading {
@@ -565,10 +1017,13 @@ final class LoginMutationLoading extends LoginMutation with MutationLoading {
   @override
   final StackTrace? stackTrace;
 
-  final String? result;
+  @override
+  // ignore: inference_failure_on_uninitialized_variable
+  final result;
 }
 
-final class LoginMutationSuccess extends LoginMutation with MutationSuccess {
+final class LoginMutationSuccess extends LoginMutation
+    with MutationSuccessResult<String> {
   LoginMutationSuccess._(
     super._updateState,
     super._fn, {
@@ -592,6 +1047,7 @@ final class LoginMutationSuccess extends LoginMutation with MutationSuccess {
   @override
   final StackTrace? stackTrace;
 
+  @override
   final String result;
 }
 
@@ -623,5 +1079,7 @@ final class LoginMutationFailure extends LoginMutation with MutationFailure {
   @override
   final StackTrace stackTrace;
 
-  final String? result;
+  @override
+  // ignore: inference_failure_on_uninitialized_variable
+  final result;
 }

@@ -10,13 +10,6 @@ Future<String> login(String username, String password) async {
   return '';
 }
 
-class E {
-  @mutation
-  static Future<String> login2(String username, String password) async {
-    return '';
-  }
-}
-
 @riverpod
 class Demo extends _$Demo {
   @override
@@ -26,6 +19,17 @@ class Demo extends _$Demo {
   Future<void> change(int i) async {
     state = AsyncData(i);
   }
+
+  @mutation
+  Future<String?> nullable() async {
+    return null;
+  }
+
+  @mutation
+  FutureOr<String> futureOr() => '';
+
+  @mutation
+  Future<void> normal() async {}
 }
 
 @riverpod
