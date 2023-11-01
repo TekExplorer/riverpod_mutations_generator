@@ -4,6 +4,9 @@ import 'package:riverpod_mutations_generator/src/class_generator_helper.dart';
 
 import 'util.dart';
 
+String _if(bool conditional, String string, [String other = '']) =>
+    conditional ? string : other;
+
 class NotifierGeneratorHelper {
   static String mutationsForClass(ClassElement _class) {
     final annotatedMethods =
@@ -41,7 +44,8 @@ class NotifierGeneratorHelper {
       throw StateError('Build Method was null for $_class');
     }
 
-    final returnType = Util.unwrapType(buildMethod.returnType.toString());
+    final returnType = Util.unwrapType(
+        buildMethod.returnType.getDisplayString(withNullability: true));
 
     final isFamily = buildMethod.parameters.length > 0;
     final _riverpodAnnotatedClass = riverpodTypeChecker.annotationsOf(_class);
@@ -96,7 +100,13 @@ extension ${extensionClassName}MutationExtension on ${_class.name}Provider {
     final String maybeAutoDispose = mutationKeepAlive ? '' : '.autoDispose';
 
     final _class = method.enclosingElement as ClassElement;
-    final notifierProviderName = '${_class.name.camelCase}Provider';
+
+    final _withoutUnderscore =
+        _class.name.startsWith('_') ? _class.name.substring(0) : _class.name;
+    final _maybeUnderscore = _if(_class.isPrivate, '_');
+
+    final notifierProviderName =
+        '${_maybeUnderscore}${_withoutUnderscore.camelCase}Provider';
     final dependencies = ', dependencies: [$notifierProviderName]';
 
     final buildMethod = _class.getMethod('build');

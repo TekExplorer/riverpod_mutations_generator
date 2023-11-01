@@ -41,11 +41,11 @@ class Util {
     final constructedPositionalRequired =
         parameters.where((element) => element.isRequiredPositional).join(', ');
 
-    final constructedPositionalOptional = parameters
-        .where((element) => element.isOptionalPositional)
-        .map((e) =>
-            '${e.type} ${e.name}${removeDefaults ? '' : ' = ${e.defaultValueCode}'}')
-        .join(', ');
+    final constructedPositionalOptional =
+        parameters.where((element) => element.isOptionalPositional).map((e) {
+      final typeName = e.type.getDisplayString(withNullability: true);
+      return '${typeName} ${e.name}${removeDefaults ? '' : ' = ${e.defaultValueCode}'}';
+    }).join(', ');
 
     final constructedNamed =
         parameters.where((element) => element.isNamed).map((e) {
@@ -56,7 +56,9 @@ class Util {
           ? ' = ${e.defaultValueCode}'
           : '';
 
-      return '${maybeRequired}${e.type} ${e.name}${maybeDefault}';
+      // deal with InvalidType apparently
+      final typeName = e.type.getDisplayString(withNullability: true);
+      return '${maybeRequired}${typeName} ${e.name}${maybeDefault}';
     }).join(', ');
 
     final containsNamed = parameters.any((element) => element.isNamed);

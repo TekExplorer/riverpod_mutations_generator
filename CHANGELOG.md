@@ -1,6 +1,8 @@
 # Riverpod Mutations Generator
 
-## 1.0.4-dev
+## 1.0.4
+
+Fixed a couple bugs in generation
 
 Support eager `FutureOr` returns (ie. `FutureOr<String> getValue() => 'Eager'`) which skips MutationLoading
 
