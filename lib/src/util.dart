@@ -43,7 +43,8 @@ class Util {
 
     final constructedPositionalOptional =
         parameters.where((element) => element.isOptionalPositional).map((e) {
-      final typeName = e.type.getDisplayString(withNullability: true);
+      // FIXME: InvalidType ?!?!
+      final typeName = e.type.element?.displayName;
       return '${typeName} ${e.name}${removeDefaults ? '' : ' = ${e.defaultValueCode}'}';
     }).join(', ');
 

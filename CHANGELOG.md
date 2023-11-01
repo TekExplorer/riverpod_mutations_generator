@@ -1,5 +1,9 @@
 # Riverpod Mutations Generator
 
+## 1.0.5
+
+Hopefully fix instances where the generator produces `InvalidType`
+
 ## 1.0.4
 
 Fixed a couple bugs in generation
