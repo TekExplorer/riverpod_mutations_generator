@@ -1,4 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_mutations_annotation/riverpod_mutations_annotation.dart';
@@ -44,7 +46,7 @@ class Util {
     final constructedPositionalOptional =
         parameters.where((element) => element.isOptionalPositional).map((e) {
       // FIXME: InvalidType ?!?!
-      final typeName = e.type.element?.name;
+      final typeName = e.type.typeName;
       return '${typeName} ${e.name}${removeDefaults ? '' : ' = ${e.defaultValueCode}'}';
     }).join(', ');
 
@@ -58,7 +60,8 @@ class Util {
           : '';
 
       // deal with InvalidType apparently
-      final typeName = e.type.element?.name;
+      final typeName = e.type.typeName;
+
       return '${maybeRequired}${typeName} ${e.name}${maybeDefault}';
     }).join(', ');
 
@@ -98,5 +101,14 @@ class Util {
           return '${prefix}${nameOnly ? _name : _dollarNotation}';
         }).join(', ') +
         ',';
+  }
+}
+
+extension on DartType {
+  String get typeName {
+    var _typeName = element!.displayName;
+    final nullable = nullabilitySuffix == NullabilitySuffix.question;
+    if (nullable) _typeName += '?';
+    return _typeName;
   }
 }

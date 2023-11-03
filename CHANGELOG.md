@@ -1,5 +1,9 @@
 # Riverpod Mutations Generator
 
+## 1.0.8
+
+*Don't* break nullable parameters
+
 ## 1.0.7
 
 Once more, let's not forget the *other* spot that needed the fix.
