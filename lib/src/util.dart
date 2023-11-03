@@ -58,7 +58,7 @@ class Util {
           : '';
 
       // deal with InvalidType apparently
-      final typeName = e.type.getDisplayString(withNullability: true);
+      final typeName = e.type.element?.name;
       return '${maybeRequired}${typeName} ${e.name}${maybeDefault}';
     }).join(', ');
 

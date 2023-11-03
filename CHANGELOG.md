@@ -1,5 +1,9 @@
 # Riverpod Mutations Generator
 
+## 1.0.7
+
+Once more, let's not forget the *other* spot that needed the fix.
+
 ## 1.0.6
 
 Turn the metaphorical wrench a few more times. (fix `InvalidType` again)
