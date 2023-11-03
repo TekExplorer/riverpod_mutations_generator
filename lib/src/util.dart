@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -46,7 +45,7 @@ class Util {
     final constructedPositionalOptional =
         parameters.where((element) => element.isOptionalPositional).map((e) {
       // FIXME: InvalidType ?!?!
-      final typeName = e.type.typeName;
+      final typeName = e.type.usableTypeName;
       return '${typeName} ${e.name}${removeDefaults ? '' : ' = ${e.defaultValueCode}'}';
     }).join(', ');
 
@@ -60,7 +59,7 @@ class Util {
           : '';
 
       // deal with InvalidType apparently
-      final typeName = e.type.typeName;
+      final typeName = e.type.usableTypeName;
 
       return '${maybeRequired}${typeName} ${e.name}${maybeDefault}';
     }).join(', ');
@@ -105,10 +104,13 @@ class Util {
 }
 
 extension on DartType {
-  String get typeName {
-    var _typeName = element!.displayName;
-    final nullable = nullabilitySuffix == NullabilitySuffix.question;
-    if (nullable) _typeName += '?';
-    return _typeName;
+  String get usableTypeName {
+    // print([
+    //   'this: ' + toString(),
+    //   'getDisplayString: ' + (getDisplayString(withNullability: true)),
+    //   'name: ' + (element!.name!),
+    //   'displayName: ' + (element!.displayName),
+    // ].join('\n'));
+    return getDisplayString(withNullability: true);
   }
 }

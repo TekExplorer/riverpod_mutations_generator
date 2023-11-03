@@ -1,5 +1,9 @@
 # Riverpod Mutations Generator
 
+## 1.0.9
+
+Go back to a previous method with the hope it breaks less (as keeps happening *immediately* after publishing - of course - not before)
+
 ## 1.0.8
 
 *Don't* break nullable parameters
