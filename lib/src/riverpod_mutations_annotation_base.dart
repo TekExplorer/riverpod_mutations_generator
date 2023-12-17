@@ -11,17 +11,13 @@ final class Mutation {
   final bool keepAlive;
 }
 
-// @Target({TargetKind.method})
-@Target({TargetKind.method, TargetKind.function})
 const mutation = Mutation();
 
 @experimental
 @Target({TargetKind.parameter})
 final class MutationKey {
-  const MutationKey(/*{this.name = ''}*/);
-  //final String name;
+  const MutationKey();
 }
 
 @experimental
-@Target({TargetKind.parameter})
 const mutationKey = MutationKey();
