@@ -2,7 +2,7 @@
 
 ## 1.0.4
 
- Export `ProviderListenable`
+Export `ProviderListenable`
 
 ## 1.0.3
 
