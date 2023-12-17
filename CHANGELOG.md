@@ -1,5 +1,9 @@
 # Riverpod Mutations Annotation
 
+## 1.0.4
+
+ Export `ProviderListenable`
+
 ## 1.0.3
 
 Add super-interfaces for mutation classes that have values
