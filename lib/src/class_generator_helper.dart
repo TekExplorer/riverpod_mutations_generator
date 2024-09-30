@@ -37,11 +37,11 @@ class ClassGeneratorHelper {
 
 // full methodSignature as a type. cannot have default values
     final methodSignature =
-        '${executable.returnType.getDisplayString(withNullability: true)} Function(${typedParameters})';
+        '${executable.returnType.getDisplayString()} Function(${typedParameters})';
 
     // support value returns
     final _methodReturnType = Util.unwrapType(
-      executable.returnType.getDisplayString(withNullability: true),
+      executable.returnType.getDisplayString(),
     );
     final returnValueType = _methodReturnType.unwrapped;
     if (returnValueType.endsWith('?'))
