@@ -1,10 +1,8 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
-import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/dart/element/type_system.dart';
 import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_mutations_annotation/riverpod_mutations_annotation.dart';
+import 'package:riverpod_mutations_generator/src/extensions.dart';
 import 'package:source_gen/source_gen.dart';
 
 const mutationKeyTypeChecker = TypeChecker.fromRuntime(MutationKey);
@@ -102,68 +100,5 @@ class Util {
           return '${prefix}${nameOnly ? _name : _dollarNotation}';
         }).join(', ') +
         ',';
-  }
-}
-
-extension DartTypeXX on DartType {
-  static TypeSystem typeSystemOf(Element element) =>
-      element.library!.typeSystem;
-
-  bool get hasQuestionMark => nullabilitySuffix == NullabilitySuffix.question;
-
-  bool get isNullable {
-    if (element case final element?) {
-      return typeSystemOf(element).isNullable(this);
-    }
-    return map(
-      Void: (type) => false,
-      never: (type) => false,
-      dynamic: (type) => true,
-      invalid: (type) => true,
-      //
-      record: (type) => type.hasQuestionMark,
-      function: (type) => type.hasQuestionMark,
-      //
-      orElse: (type) => type.hasQuestionMark,
-    );
-  }
-
-  T map<T>({
-    T Function(DynamicType type)? dynamic,
-    T Function(InvalidType type)? invalid,
-    T Function(NeverType type)? never,
-    T Function(InterfaceType type)? interface,
-    T Function(TypeParameterType type)? typeParameter,
-    T Function(FunctionType type)? function,
-    T Function(VoidType type)? Void,
-    T Function(RecordType type)? record,
-    required T Function(DartType type) orElse,
-  }) {
-    final self = this;
-    return switch (self) {
-      DynamicType() => (dynamic ?? orElse)(self),
-      InvalidType() => (invalid ?? orElse)(self),
-      NeverType() => (never ?? orElse)(self),
-      InterfaceType() => (interface ?? orElse)(self),
-      TypeParameterType() => (typeParameter ?? orElse)(self),
-      // ParameterizedType() => (parameterized ?? orElse)(self), // InterfaceType
-      FunctionType() => (function ?? orElse)(self),
-      VoidType() => (Void ?? orElse)(self),
-      RecordType() => (record ?? orElse)(self),
-      DartType() => orElse(self),
-    };
-  }
-}
-
-extension DartTypeToString on DartType {
-  bool get isAsync =>
-      isDartAsyncFuture || isDartAsyncFutureOr || isDartAsyncStream;
-
-  String get typeToString {
-    try {
-      return typeNameOf(this);
-    } catch (e) {
-      return this.getDisplayString();
-    }
   }
 }

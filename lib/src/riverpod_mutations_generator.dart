@@ -11,6 +11,7 @@ import 'package:code_builder/code_builder.dart' as c;
 import 'package:collection/collection.dart';
 import 'package:recase/recase.dart';
 import 'package:riverpod_mutations_generator/src/class_gen.dart';
+import 'package:riverpod_mutations_generator/src/extensions.dart';
 import 'package:riverpod_mutations_generator/src/util.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -145,7 +146,8 @@ void makeMutationsForClass(e.ClassElement notifier, c.LibraryBuilder lib) {
       t.url =
           'package:riverpod_mutations_annotation/riverpod_mutations_annotation.dart';
       t.types.add(mutation.returnType.innerFutureType.toRef);
-      t.types.add(mutation.type.asVoidedReturn.withoutMutationKeys.toRef);
+      t.types.add(
+          mutation.type.asVoidedReturn.withoutMutationKeys.withoutMutRef.toRef);
 
       t.types.add(c.RecordType((m) {
         for (final parameter in mutationKeyParameters) {
@@ -168,8 +170,32 @@ void makeMutationsForClass(e.ClassElement notifier, c.LibraryBuilder lib) {
     );
     final createClosure = c.Method((m) {
       m.lambda = true;
-      m.requiredParameters.add(c.Parameter((p) => p.name = 'ref'));
-      m.requiredParameters.add(c.Parameter((p) => p.name = 'args'));
+      m.requiredParameters.add(c.Parameter((p) => p.name = '_ref'));
+      m.requiredParameters.add(c.Parameter((p) => p.name = '_args'));
+
+      final ref = c.refer('_ref');
+      final mutate = ref.property('mutate');
+
+      final args = c.refer('_args');
+      final notifierKeys = args.property('notifierKeys');
+      final mutKeys = args.property('mutKeys');
+
+      final c.Expression actualNotifier = switch (isNotifierFamily) {
+        false => notifierVar,
+        true => notifierVar.call([
+            for (final param
+                in buildMethod.parameters.where((param) => param.isPositional))
+              notifierKeys.property(param.name)
+          ], {
+            for (final param
+                in buildMethod.parameters.where((param) => param.isNamed))
+              param.name: notifierKeys.property(param.name)
+          }),
+      }
+          .property('notifier');
+
+      final mutationFn =
+          ref.property('read').call([actualNotifier]).property(mutation.name);
 
       m.body = c.Method((m) {
         final mutationParameters = mutation.parameters
@@ -177,43 +203,22 @@ void makeMutationsForClass(e.ClassElement notifier, c.LibraryBuilder lib) {
 
         for (final param
             in mutationParameters.where((p) => p.isRequiredPositional)) {
-          m.requiredParameters.add(param.toParameter);
+          if (param.name != 'ref') m.requiredParameters.add(param.toParameter);
         }
         for (final param
             in mutationParameters.where((p) => !p.isRequiredPositional)) {
           m.optionalParameters.add(param.toParameter);
         }
-        final ref = c.refer('ref');
-        final mutate = ref.property('mutate');
-
-        final args = c.refer('args');
-        final notifierKeys = args.property('notifierKeys');
-        final mutKeys = args.property('mutKeys');
 
         m.body = mutate.call([
           c.Method((m) {
-            c.Expression madeNotifier = notifierVar;
-
-            if (isNotifierFamily) {
-              madeNotifier = notifierVar.call([
-                for (final param in buildMethod.parameters
-                    .where((param) => param.isPositional))
-                  notifierKeys.property(param.name)
-              ], {
-                for (final param
-                    in buildMethod.parameters.where((param) => param.isNamed))
-                  param.name: notifierKeys.property(param.name)
-              });
-            }
-
-            final readNotifier =
-                ref.property('read').call([madeNotifier.property('notifier')]);
-
-            m.body = readNotifier.property(mutation.name).call([
+            m.body = mutationFn.call([
               for (final param
                   in mutation.parameters.where((param) => param.isPositional))
                 if (mutationKeyTypeChecker.hasAnnotationOf(param))
                   mutKeys.property(param.name)
+                else if (param.name == 'ref')
+                  ref
                 else
                   c.refer(param.name)
             ], {
@@ -234,126 +239,6 @@ void makeMutationsForClass(e.ClassElement notifier, c.LibraryBuilder lib) {
     lib.body.add(providerVar.statement);
   }
   lib.body.add(extension.build());
-}
-
-extension on e.DartType {
-  c.Reference get toRef {
-    return map(
-      Void: (type) => type.toRef,
-      dynamic: (type) => type.toRef,
-      invalid: (type) => type.toRef,
-      never: (type) => type.toRef,
-      interface: (type) => type.toRef,
-      record: (type) => type.toRef,
-      function: (type) => type.toRef,
-      orElse: (type) => c.refer(type.typeToString),
-    );
-  }
-
-  List<e.DartType> get typeArguments => map(
-        orElse: (type) => [],
-        interface: (type) => type.typeArguments,
-      );
-
-  e.DartType get innerFutureType {
-    if (!isAsync) return this;
-    return typeArguments.firstOrNull ?? this;
-  }
-}
-
-extension on e.DynamicType {
-  c.TypeReference get toRef => c.TypeReference((t) => t.symbol = 'dynamic');
-}
-
-extension on e.InvalidType {
-  c.TypeReference get toRef =>
-      c.TypeReference((t) => t.symbol = 'dynamic/*invalid*/');
-}
-
-extension on e.VoidType {
-  c.TypeReference get toRef => c.TypeReference((t) => t.symbol = 'void');
-}
-
-extension on e.NeverType {
-  c.TypeReference get toRef => c.TypeReference((t) {
-        t.isNullable = isNullable;
-        t.symbol = 'Never';
-      });
-}
-
-extension on e.InterfaceType {
-  c.TypeReference get toRef => c.TypeReference((t) {
-        t.isNullable = isNullable;
-        t.symbol = element.name;
-        t.types.addAll([for (final arg in typeArguments) arg.toRef]);
-      });
-}
-
-extension on e.FunctionType {
-  e.FunctionTypeImpl Function({
-    NullabilitySuffix? nullabilitySuffix,
-    Iterable<e.ParameterElement>? parameters,
-    e.DartType? returnType,
-    Iterable<e.TypeParameterElement>? typeFormals,
-    e.InstantiatedTypeAliasElement? alias,
-  }) get copyWith => ({
-        Iterable<e.TypeParameterElement>? typeFormals,
-        Iterable<e.ParameterElement>? parameters,
-        e.DartType? returnType,
-        NullabilitySuffix? nullabilitySuffix,
-        Object? alias = const Object(),
-      }) =>
-          e.FunctionTypeImpl(
-            nullabilitySuffix: nullabilitySuffix ?? this.nullabilitySuffix,
-            parameters: parameters?.toList() ?? this.parameters,
-            returnType: returnType ?? this.returnType,
-            typeFormals: typeFormals?.toList() ?? this.typeFormals,
-            alias: alias == const Object()
-                ? this.alias
-                : alias as e.InstantiatedTypeAliasElement?,
-          );
-
-  e.FunctionType withReturnType(e.DartType type) => copyWith(returnType: type);
-
-  e.FunctionType get asVoidedReturn => withReturnType(e.VoidTypeImpl.instance);
-  e.FunctionType get withoutMutationKeys => copyWith(
-        parameters: parameters.whereNot(mutationKeyTypeChecker.hasAnnotationOf),
-      );
-
-  c.FunctionType get toRef => c.FunctionType((f) {
-        f.returnType = returnType.toRef;
-        for (final param in parameters) {
-          if (param.isRequiredPositional)
-            f.requiredParameters.add(param.type.toRef);
-          else if (param.isOptionalPositional)
-            f.optionalParameters.add(param.type.toRef);
-          else if (param.isRequiredNamed)
-            f.namedRequiredParameters[param.name] = param.type.toRef;
-          else if (param.isOptionalNamed)
-            f.namedParameters[param.name] = param.type.toRef;
-        }
-      });
-}
-
-extension on e.RecordType {
-  c.RecordType get toRef => c.RecordType((r) {
-        for (final field in positionalFields) {
-          r.positionalFieldTypes.add(field.type.toRef);
-        }
-        for (final field in namedFields) {
-          r.namedFieldTypes[field.name] = field.type.toRef;
-        }
-      });
-}
-
-extension on e.ParameterElement {
-  c.Parameter get toParameter => c.Parameter((p) {
-        p.name = name;
-        p.type = type.toRef;
-        if (defaultValueCode case final code?) p.defaultTo = c.Code(code);
-        p.named = isNamed;
-        p.required = isRequiredNamed;
-      });
 }
 
 extension on String {

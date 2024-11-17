@@ -6,7 +6,7 @@ part of 'generator_test.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$demoHash() => r'28cf41092719540180c6163951fb1508be9b605e';
+String _$demoHash() => r'd73b926efe1b906f92bc67a2bb0361b389dd082a';
 
 /// See also [Demo].
 @ProviderFor(Demo)
@@ -188,36 +188,43 @@ class _DemoFamilyProviderElement
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
 
 // **************************************************************************
-// Generator: Gen
+// RiverpodMutationsGenerator
 // **************************************************************************
 
 final _changeDemo = MutFamily<void, void Function(int), (), ()>((
-  ref,
-  args,
+  _ref,
+  _args,
 ) =>
     (int i) {
-      ref.mutate(() => ref.read(demoProvider.notifier).change(i));
+      _ref.mutate(() => _ref.read(demoProvider.notifier).change(i));
     });
 final _nullableDemo = MutFamily<String?, void Function(), (), ()>((
-  ref,
-  args,
+  _ref,
+  _args,
 ) =>
     () {
-      ref.mutate(() => ref.read(demoProvider.notifier).nullable());
+      _ref.mutate(() => _ref.read(demoProvider.notifier).nullable());
     });
 final _futureOrDemo = MutFamily<String, void Function(), (), ()>((
-  ref,
-  args,
+  _ref,
+  _args,
 ) =>
     () {
-      ref.mutate(() => ref.read(demoProvider.notifier).futureOr());
+      _ref.mutate(() => _ref.read(demoProvider.notifier).futureOr());
     });
 final _normalDemo = MutFamily<void, void Function(), (), ()>((
-  ref,
-  args,
+  _ref,
+  _args,
 ) =>
     () {
-      ref.mutate(() => ref.read(demoProvider.notifier).normal());
+      _ref.mutate(() => _ref.read(demoProvider.notifier).normal());
+    });
+final _withRefDemo = MutFamily<void, void Function(), (), ()>((
+  _ref,
+  _args,
+) =>
+    () {
+      _ref.mutate(() => _ref.read(demoProvider.notifier).withRef(_ref));
     });
 
 extension DemoMutations on AutoDisposeAsyncNotifierProvider<Demo, dynamic> {
@@ -238,6 +245,10 @@ extension DemoMutations on AutoDisposeAsyncNotifierProvider<Demo, dynamic> {
         notifierKeys: args,
         mutKeys: (),
       );
+  MutProvider<void, void Function(), (), ()> get withRef => _withRefDemo(
+        notifierKeys: args,
+        mutKeys: (),
+      );
 }
 
 final _changeFamilyDemoFamily = MutFamily<
@@ -250,8 +261,8 @@ final _changeFamilyDemoFamily = MutFamily<
     }),
     (),
     ({Object key})>((
-  ref,
-  args,
+  _ref,
+  _args,
 ) =>
     (
       int i,
@@ -259,8 +270,8 @@ final _changeFamilyDemoFamily = MutFamily<
       required bool b,
       num n = 1,
     }) {
-      ref.mutate(() => ref
-          .read(demoFamilyProvider(args.notifierKeys.key).notifier)
+      _ref.mutate(() => _ref
+          .read(demoFamilyProvider(_args.notifierKeys.key).notifier)
           .changeFamily(
             i,
             e,

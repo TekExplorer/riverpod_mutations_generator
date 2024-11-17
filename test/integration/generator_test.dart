@@ -30,6 +30,9 @@ class Demo extends _$Demo {
 
   @mutation
   Future<void> normal() async {}
+
+  @mutation
+  Future<void> withRef(MutRef ref) async {}
 }
 
 @riverpod
