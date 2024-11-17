@@ -22,293 +22,40 @@ final todoListProvider =
 
 typedef _$TodoList = AutoDisposeAsyncNotifier<List<Todo>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
 
 // **************************************************************************
-// RiverpodMutationsGenerator
+// Generator: Gen
 // **************************************************************************
 
-extension TodoListMutationExtension
-    on AutoDisposeAsyncNotifierProvider<TodoList, List<Todo>> {
-  Refreshable<AddTodoMutation> get addTodo => _addTodoProvider;
-  Refreshable<RemoveTodoMutation> removeTodo({required int id}) =>
-      _removeTodoProvider((id: id,));
-}
+final _addTodoTodoList = MutFamily<void, void Function(Todo), (), ()>((
+  ref,
+  args,
+) =>
+    (Todo newTodo) {
+      ref.mutate(() => ref.read(todoListProvider.notifier).addTodo(newTodo));
+    });
+final _removeTodoTodoList = MutFamily<void, void Function(), ({int id}), ()>((
+  ref,
+  args,
+) =>
+    () {
+      ref.mutate(() =>
+          ref.read(todoListProvider.notifier).removeTodo(id: args.mutKeys.id));
+    });
 
-final _addTodoProvider = Provider.autoDispose((ref) {
-  final notifier = ref.watch(todoListProvider.notifier);
-  return AddTodoMutation(
-    (newState) => ref.state = newState,
-    notifier.addTodo,
-  );
-}, dependencies: [todoListProvider]);
-
-typedef AddTodoSignature = Future<void> Function(Todo newTodo);
-typedef AddTodoStateSetter = void Function(AddTodoMutation newState);
-
-sealed class AddTodoMutation with AsyncMutation {
-  factory AddTodoMutation(
-    AddTodoStateSetter updateState,
-    AddTodoSignature fn,
-  ) = AddTodoMutationIdle._;
-
-  AddTodoMutation._(this._updateState, this._fn);
-
-  final AddTodoStateSetter _updateState;
-  final AddTodoSignature _fn;
-
-  Object? get error;
-  StackTrace? get stackTrace;
-
-  Future<void> call(Todo newTodo) async {
-    try {
-      _updateState(AddTodoMutationLoading.from(this));
-      await _fn(newTodo);
-      _updateState(AddTodoMutationSuccess.from(this));
-    } catch (e, s) {
-      _updateState(AddTodoMutationFailure.from(this, error: e, stackTrace: s));
-    }
-  }
-}
-
-final class AddTodoMutationIdle extends AddTodoMutation with MutationIdle {
-  AddTodoMutationIdle._(
-    super._updateState,
-    super._fn, {
-    this.error,
-    this.stackTrace,
-  }) : super._();
-
-  factory AddTodoMutationIdle.from(AddTodoMutation other) =>
-      AddTodoMutationIdle._(
-        other._updateState,
-        other._fn,
-        error: other.error,
-        stackTrace: other.stackTrace,
+extension TodoListMutations
+    on AutoDisposeAsyncNotifierProvider<TodoList, dynamic> {
+  () get args => ();
+  MutProvider<void, void Function(Todo), (), ()> get addTodo =>
+      _addTodoTodoList(
+        notifierKeys: args,
+        mutKeys: (),
       );
-
-  @override
-  final Object? error;
-
-  @override
-  final StackTrace? stackTrace;
-}
-
-final class AddTodoMutationLoading extends AddTodoMutation
-    with MutationLoading {
-  AddTodoMutationLoading._(
-    super._updateState,
-    super._fn, {
-    this.error,
-    this.stackTrace,
-  }) : super._();
-
-  factory AddTodoMutationLoading.from(AddTodoMutation other) =>
-      AddTodoMutationLoading._(
-        other._updateState,
-        other._fn,
-        error: other.error,
-        stackTrace: other.stackTrace,
+  MutProvider<void, void Function(), ({int id}), ()> removeTodo(
+          {required int id}) =>
+      _removeTodoTodoList(
+        notifierKeys: args,
+        mutKeys: (id: id),
       );
-
-  @override
-  final Object? error;
-
-  @override
-  final StackTrace? stackTrace;
-}
-
-final class AddTodoMutationSuccess extends AddTodoMutation
-    with MutationSuccess {
-  AddTodoMutationSuccess._(
-    super._updateState,
-    super._fn, {
-    this.error,
-    this.stackTrace,
-  }) : super._();
-
-  factory AddTodoMutationSuccess.from(AddTodoMutation other) =>
-      AddTodoMutationSuccess._(
-        other._updateState,
-        other._fn,
-        error: other.error,
-        stackTrace: other.stackTrace,
-      );
-
-  @override
-  final Object? error;
-
-  @override
-  final StackTrace? stackTrace;
-}
-
-final class AddTodoMutationFailure extends AddTodoMutation
-    with MutationFailure {
-  AddTodoMutationFailure._(
-    super._updateState,
-    super._fn, {
-    required this.error,
-    required this.stackTrace,
-  }) : super._();
-
-  factory AddTodoMutationFailure.from(
-    AddTodoMutation other, {
-    required Object error,
-    required StackTrace stackTrace,
-  }) =>
-      AddTodoMutationFailure._(
-        other._updateState,
-        other._fn,
-        error: error,
-        stackTrace: stackTrace,
-      );
-
-  @override
-  final Object error;
-
-  @override
-  final StackTrace stackTrace;
-}
-
-typedef RemoveTodoFamilyParameters = ({
-  int id,
-});
-final _removeTodoProvider =
-    Provider.autoDispose.family((ref, RemoveTodoFamilyParameters _params) {
-  final notifier = ref.watch(todoListProvider.notifier);
-  return RemoveTodoMutation(
-    (newState) => ref.state = newState..params = _params,
-    notifier.removeTodo,
-  )..params = _params;
-}, dependencies: [todoListProvider]);
-typedef RemoveTodoSignature = Future<void> Function({required int id});
-typedef RemoveTodoStateSetter = void Function(RemoveTodoMutation newState);
-
-sealed class RemoveTodoMutation with AsyncMutation {
-  factory RemoveTodoMutation(
-    RemoveTodoStateSetter updateState,
-    RemoveTodoSignature fn,
-  ) = RemoveTodoMutationIdle._;
-
-  RemoveTodoMutation._(this._updateState, this._fn);
-
-  final RemoveTodoStateSetter _updateState;
-  final RemoveTodoSignature _fn;
-
-  Object? get error;
-  StackTrace? get stackTrace;
-
-  /// This stores the @mutationKey parameters for this method. This may change.
-  late final RemoveTodoFamilyParameters params;
-
-  Future<void> call() async {
-    try {
-      _updateState(RemoveTodoMutationLoading.from(this));
-      await _fn(id: params.id);
-      _updateState(RemoveTodoMutationSuccess.from(this));
-    } catch (e, s) {
-      _updateState(
-          RemoveTodoMutationFailure.from(this, error: e, stackTrace: s));
-    }
-  }
-}
-
-final class RemoveTodoMutationIdle extends RemoveTodoMutation
-    with MutationIdle {
-  RemoveTodoMutationIdle._(
-    super._updateState,
-    super._fn, {
-    this.error,
-    this.stackTrace,
-  }) : super._();
-
-  factory RemoveTodoMutationIdle.from(RemoveTodoMutation other) =>
-      RemoveTodoMutationIdle._(
-        other._updateState,
-        other._fn,
-        error: other.error,
-        stackTrace: other.stackTrace,
-      );
-
-  @override
-  final Object? error;
-
-  @override
-  final StackTrace? stackTrace;
-}
-
-final class RemoveTodoMutationLoading extends RemoveTodoMutation
-    with MutationLoading {
-  RemoveTodoMutationLoading._(
-    super._updateState,
-    super._fn, {
-    this.error,
-    this.stackTrace,
-  }) : super._();
-
-  factory RemoveTodoMutationLoading.from(RemoveTodoMutation other) =>
-      RemoveTodoMutationLoading._(
-        other._updateState,
-        other._fn,
-        error: other.error,
-        stackTrace: other.stackTrace,
-      );
-
-  @override
-  final Object? error;
-
-  @override
-  final StackTrace? stackTrace;
-}
-
-final class RemoveTodoMutationSuccess extends RemoveTodoMutation
-    with MutationSuccess {
-  RemoveTodoMutationSuccess._(
-    super._updateState,
-    super._fn, {
-    this.error,
-    this.stackTrace,
-  }) : super._();
-
-  factory RemoveTodoMutationSuccess.from(RemoveTodoMutation other) =>
-      RemoveTodoMutationSuccess._(
-        other._updateState,
-        other._fn,
-        error: other.error,
-        stackTrace: other.stackTrace,
-      );
-
-  @override
-  final Object? error;
-
-  @override
-  final StackTrace? stackTrace;
-}
-
-final class RemoveTodoMutationFailure extends RemoveTodoMutation
-    with MutationFailure {
-  RemoveTodoMutationFailure._(
-    super._updateState,
-    super._fn, {
-    required this.error,
-    required this.stackTrace,
-  }) : super._();
-
-  factory RemoveTodoMutationFailure.from(
-    RemoveTodoMutation other, {
-    required Object error,
-    required StackTrace stackTrace,
-  }) =>
-      RemoveTodoMutationFailure._(
-        other._updateState,
-        other._fn,
-        error: error,
-        stackTrace: stackTrace,
-      );
-
-  @override
-  final Object error;
-
-  @override
-  final StackTrace stackTrace;
 }

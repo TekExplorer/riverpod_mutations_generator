@@ -47,7 +47,7 @@ class Util {
     final constructedPositionalOptional =
         parameters.where((element) => element.isOptionalPositional).map((e) {
       // FIXME: InvalidType ?!?!
-      final typeName = e.type.usableTypeName;
+      final typeName = e.type.typeToString;
       return '${typeName} ${e.name}${removeDefaults ? '' : ' = ${e.defaultValueCode}'}';
     }).join(', ');
 
@@ -61,7 +61,7 @@ class Util {
           : '';
 
       // deal with InvalidType apparently
-      final typeName = e.type.usableTypeName;
+      final typeName = e.type.typeToString;
 
       return '${maybeRequired}${typeName} ${e.name}${maybeDefault}';
     }).join(', ');
@@ -105,17 +105,7 @@ class Util {
   }
 }
 
-extension on DartType {
-  String get usableTypeName {
-    // print([
-    //   'this: ' + toString(),
-    //   'getDisplayString: ' + (getDisplayString(withNullability: true)),
-    //   'name: ' + (element!.name!),
-    //   'displayName: ' + (element!.displayName),
-    // ].join('\n'));
-    return getDisplayString(withNullability: true);
-  }
-
+extension DartTypeXX on DartType {
   static TypeSystem typeSystemOf(Element element) =>
       element.library!.typeSystem;
 
@@ -162,5 +152,18 @@ extension on DartType {
       RecordType() => (record ?? orElse)(self),
       DartType() => orElse(self),
     };
+  }
+}
+
+extension DartTypeToString on DartType {
+  bool get isAsync =>
+      isDartAsyncFuture || isDartAsyncFutureOr || isDartAsyncStream;
+
+  String get typeToString {
+    try {
+      return typeNameOf(this);
+    } catch (e) {
+      return this.getDisplayString();
+    }
   }
 }

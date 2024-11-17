@@ -74,15 +74,15 @@ void main() {
     expect(demoProviderSub.read(), isA<AsyncData<int>>());
     expect(demoProviderSub.read(), AsyncData<int>(0));
 
-    expect(demoProviderChangeSub.read(), isA<ChangeMutationIdle>());
+    expect(demoProviderChangeSub.read().state, Mut.idle);
 
-    demoProviderChangeSub.read().call(3);
-    expect(demoProviderChangeSub.read(), isA<ChangeMutationLoading>());
+    demoProviderChangeSub.read().action(3);
+    expect(demoProviderChangeSub.read().state, Mut.idleLoading);
     // await container.pump();
 
     await container.pump();
 
-    expect(demoProviderChangeSub.read(), isA<ChangeMutationSuccess>());
+    expect(demoProviderChangeSub.read().state, isA<MutSuccess<void>>());
     expect(demoProviderSub.read(), isA<AsyncData<int>>());
     expect(demoProviderSub.read(), AsyncData<int>(3));
 
@@ -92,7 +92,7 @@ void main() {
     final demoProviderChangeSub2 =
         container.listen(demoProvider.change, (previous, next) {});
 
-    expect(demoProviderChangeSub2.read(), isA<ChangeMutationIdle>());
+    expect(demoProviderChangeSub2.read().state, Mut.idle);
     expect(demoProviderSub.read(), isA<AsyncData<int>>(), reason: 'unchanged');
     expect(demoProviderSub.read(), AsyncData<int>(3), reason: 'unchanged');
   });

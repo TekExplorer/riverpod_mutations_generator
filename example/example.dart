@@ -43,24 +43,22 @@ class TodoList extends _$TodoList {
   }
 }
 
-void example(AutoDisposeRef ref) {
+@riverpod
+void example(Ref ref) {
   // normal usage
   final todoList = ref.watch(todoListProvider);
 
-  final addTodo = ref.watch(todoListProvider.addTodo);
+  final (addedTodo, addTodo) = ref.watch(todoListProvider.addTodo);
 
-  switch (addTodo) {
-    case AddTodoMutationIdle():
-      print('Idle/Initial');
-
-    case AddTodoMutationLoading():
+  switch (addedTodo) {
+    case Mut(isLoading: true):
       print('Loading...');
-
-    case AddTodoMutationSuccess():
+    case MutIdle():
+      print('Idle/Initial');
+    case MutError<void>(:final error):
+      print(error.$1.toString());
+    case MutSuccess<void>():
       print('Success!');
-
-    case AddTodoMutationFailure(:final error):
-      print(error.toString());
   }
 
   addTodo(Todo(1, 'newTodo'));
@@ -68,7 +66,5 @@ void example(AutoDisposeRef ref) {
   final removeTodo = ref.watch(todoListProvider.removeTodo(id: 1));
 
   // the parameter marked by @mutationKey was removed, as it's stored
-  removeTodo();
-
-  final int storedId = removeTodo.params.id;
+  removeTodo.action();
 }
