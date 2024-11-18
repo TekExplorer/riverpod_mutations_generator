@@ -191,43 +191,47 @@ class _DemoFamilyProviderElement
 // RiverpodMutationsGenerator
 // **************************************************************************
 
-final _changeDemo = MutFamily<void, void Function(int), (), ()>((
-  _ref,
-  _args,
-) =>
-    (int i) {
-      _ref.mutate(() => _ref.read(demoProvider.notifier).change(i));
-    });
-final _nullableDemo = MutFamily<String?, void Function(), (), ()>((
-  _ref,
-  _args,
-) =>
-    () {
-      _ref.mutate(() => _ref.read(demoProvider.notifier).nullable());
-    });
-final _futureOrDemo = MutFamily<String, void Function(), (), ()>((
-  _ref,
-  _args,
-) =>
-    () {
-      _ref.mutate(() => _ref.read(demoProvider.notifier).futureOr());
-    });
-final _normalDemo = MutFamily<void, void Function(), (), ()>((
-  _ref,
-  _args,
-) =>
-    () {
-      _ref.mutate(() => _ref.read(demoProvider.notifier).normal());
-    });
-final _withRefDemo = MutFamily<void, void Function(), (), ()>((
-  _ref,
-  _args,
-) =>
-    () {
-      _ref.mutate(() => _ref.read(demoProvider.notifier).withRef(_ref));
-    });
-
 extension DemoMutations on AutoDisposeAsyncNotifierProvider<Demo, dynamic> {
+  static final _changeDemo = MutFamily<void, void Function(int), (), ()>((
+    _ref,
+    _args,
+  ) =>
+      (int i) {
+        _ref.mutate(() => _ref.read(demoProvider.notifier).change(i));
+      });
+
+  static final _nullableDemo = MutFamily<String?, void Function(), (), ()>((
+    _ref,
+    _args,
+  ) =>
+      () {
+        _ref.mutate(() => _ref.read(demoProvider.notifier).nullable());
+      });
+
+  static final _futureOrDemo = MutFamily<String, void Function(), (), ()>((
+    _ref,
+    _args,
+  ) =>
+      () {
+        _ref.mutate(() => _ref.read(demoProvider.notifier).futureOr());
+      });
+
+  static final _normalDemo = MutFamily<void, void Function(), (), ()>((
+    _ref,
+    _args,
+  ) =>
+      () {
+        _ref.mutate(() => _ref.read(demoProvider.notifier).normal());
+      });
+
+  static final _withRefDemo = MutFamily<void, void Function(), (), ()>((
+    _ref,
+    _args,
+  ) =>
+      () {
+        _ref.mutate(() => _ref.read(demoProvider.notifier).withRef(_ref));
+      });
+
   () get args => ();
   MutProvider<void, void Function(int), (), ()> get change => _changeDemo(
         notifierKeys: args,
@@ -251,36 +255,36 @@ extension DemoMutations on AutoDisposeAsyncNotifierProvider<Demo, dynamic> {
       );
 }
 
-final _changeFamilyDemoFamily = MutFamily<
-    void,
-    void Function(
-      int,
-      String?, {
-      required bool b,
-      num n,
-    }),
-    (),
-    ({Object key})>((
-  _ref,
-  _args,
-) =>
-    (
-      int i,
-      String? e, {
-      required bool b,
-      num n = 1,
-    }) {
-      _ref.mutate(() => _ref
-          .read(demoFamilyProvider(_args.notifierKeys.key).notifier)
-          .changeFamily(
-            i,
-            e,
-            b: b,
-            n: n,
-          ));
-    });
-
 extension DemoFamilyMutations on DemoFamilyFamily {
+  static final _changeFamilyDemoFamily = MutFamily<
+      void,
+      void Function(
+        int,
+        String?, {
+        required bool b,
+        num n,
+      }),
+      (),
+      ({Object key})>((
+    _ref,
+    _args,
+  ) =>
+      (
+        int i,
+        String? e, {
+        required bool b,
+        num n = 1,
+      }) {
+        _ref.mutate(() => _ref
+            .read(demoFamilyProvider(_args.notifierKeys.key).notifier)
+            .changeFamily(
+              i,
+              e,
+              b: b,
+              n: n,
+            ));
+      });
+
   ({Object key}) get args => (key: Object);
   MutProvider<
       void,

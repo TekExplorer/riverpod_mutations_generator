@@ -44,25 +44,28 @@ typedef _$TodoList = AutoDisposeAsyncNotifier<List<Todo>>;
 // RiverpodMutationsGenerator
 // **************************************************************************
 
-final _addTodoTodoList = MutFamily<void, void Function(Todo), (), ()>((
-  _ref,
-  _args,
-) =>
-    (Todo newTodo) {
-      _ref.mutate(() => _ref.read(todoListProvider.notifier).addTodo(newTodo));
-    });
-final _removeTodoTodoList = MutFamily<void, void Function(), ({int id}), ()>((
-  _ref,
-  _args,
-) =>
-    () {
-      _ref.mutate(() => _ref
-          .read(todoListProvider.notifier)
-          .removeTodo(id: _args.mutKeys.id));
-    });
-
 extension TodoListMutations
     on AutoDisposeAsyncNotifierProvider<TodoList, dynamic> {
+  static final _addTodoTodoList = MutFamily<void, void Function(Todo), (), ()>((
+    _ref,
+    _args,
+  ) =>
+      (Todo newTodo) {
+        _ref.mutate(
+            () => _ref.read(todoListProvider.notifier).addTodo(newTodo));
+      });
+
+  static final _removeTodoTodoList =
+      MutFamily<void, void Function(), ({int id}), ()>((
+    _ref,
+    _args,
+  ) =>
+          () {
+            _ref.mutate(() => _ref
+                .read(todoListProvider.notifier)
+                .removeTodo(id: _args.mutKeys.id));
+          });
+
   () get args => ();
   MutProvider<void, void Function(Todo), (), ()> get addTodo =>
       _addTodoTodoList(

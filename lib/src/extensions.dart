@@ -1,21 +1,14 @@
-// ignore_for_file: unused_import
-
-import 'dart:async';
-
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_system.dart';
 import 'package:analyzer/src/dart/element/type.dart';
-import 'package:build/src/builder/build_step.dart';
 import 'package:code_builder/code_builder.dart' as c;
 import 'package:collection/collection.dart';
-import 'package:recase/recase.dart';
-import 'package:riverpod_mutations_generator/src/class_gen.dart';
 import 'package:riverpod_mutations_generator/src/util.dart';
 import 'package:source_gen/source_gen.dart';
 
-extension DartTypeXX on DartType {
+extension DartTypeX on DartType {
   static TypeSystem typeSystemOf(Element element) =>
       element.library!.typeSystem;
 
@@ -26,11 +19,12 @@ extension DartTypeXX on DartType {
       return typeSystemOf(element).isNullable(this);
     }
     return map(
-      Void: (type) => false,
-      never: (type) => false,
+      never: (type) => type.hasQuestionMark,
+      Void: (type) => true,
       dynamic: (type) => true,
       invalid: (type) => true,
       //
+      interface: (type) => typeSystemOf(type.element).isNullable(type),
       record: (type) => type.hasQuestionMark,
       function: (type) => type.hasQuestionMark,
       //
