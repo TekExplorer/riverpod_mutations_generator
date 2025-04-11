@@ -20,7 +20,7 @@ final demoProvider = AutoDisposeAsyncNotifierProvider<Demo, int>.internal(
 );
 
 typedef _$Demo = AutoDisposeAsyncNotifier<int>;
-String _$demoFamilyHash() => r'03aa4b6e590c92199ae7c18c85792d9c5a9ffadd';
+String _$demoFamilyHash() => r'e479991a6aab77284092ad566ca45c3a530b7890';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -44,10 +44,10 @@ class _SystemHash {
 }
 
 abstract class _$DemoFamily extends BuildlessAutoDisposeAsyncNotifier<int> {
-  late final Object key;
+  late final bool key;
 
   FutureOr<int> build(
-    Object key,
+    bool key,
   );
 }
 
@@ -62,7 +62,7 @@ class DemoFamilyFamily extends Family<AsyncValue<int>> {
 
   /// See also [DemoFamily].
   DemoFamilyProvider call(
-    Object key,
+    bool key,
   ) {
     return DemoFamilyProvider(
       key,
@@ -98,7 +98,7 @@ class DemoFamilyProvider
     extends AutoDisposeAsyncNotifierProviderImpl<DemoFamily, int> {
   /// See also [DemoFamily].
   DemoFamilyProvider(
-    Object key,
+    bool key,
   ) : this._internal(
           () => DemoFamily()..key = key,
           from: demoFamilyProvider,
@@ -123,7 +123,7 @@ class DemoFamilyProvider
     required this.key,
   }) : super.internal();
 
-  final Object key;
+  final bool key;
 
   @override
   FutureOr<int> runNotifierBuild(
@@ -173,7 +173,7 @@ class DemoFamilyProvider
 // ignore: unused_element
 mixin DemoFamilyRef on AutoDisposeAsyncNotifierProviderRef<int> {
   /// The parameter `key` of this provider.
-  Object get key;
+  bool get key;
 }
 
 class _DemoFamilyProviderElement
@@ -182,7 +182,7 @@ class _DemoFamilyProviderElement
   _DemoFamilyProviderElement(super.provider);
 
   @override
-  Object get key => (origin as DemoFamilyProvider).key;
+  bool get key => (origin as DemoFamilyProvider).key;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
@@ -191,101 +191,47 @@ class _DemoFamilyProviderElement
 // RiverpodMutationsGenerator
 // **************************************************************************
 
-extension DemoMutations on AutoDisposeAsyncNotifierProvider<Demo, dynamic> {
-  static final _changeDemo = MutFamily<void, void Function(int), (), ()>((
-    _ref,
-    _args,
-  ) =>
-      (int i) {
-        _ref.mutate(() => _ref.read(demoProvider.notifier).change(i));
-      });
-
-  static final _nullableDemo = MutFamily<String?, void Function(), (), ()>((
-    _ref,
-    _args,
-  ) =>
-      () {
-        _ref.mutate(() => _ref.read(demoProvider.notifier).nullable());
-      });
-
-  static final _futureOrDemo = MutFamily<String, void Function(), (), ()>((
-    _ref,
-    _args,
-  ) =>
-      () {
-        _ref.mutate(() => _ref.read(demoProvider.notifier).futureOr());
-      });
-
-  static final _normalDemo = MutFamily<void, void Function(), (), ()>((
-    _ref,
-    _args,
-  ) =>
-      () {
-        _ref.mutate(() => _ref.read(demoProvider.notifier).normal());
-      });
-
-  static final _withRefDemo = MutFamily<void, void Function(), (), ()>((
-    _ref,
-    _args,
-  ) =>
-      () {
-        _ref.mutate(() => _ref.read(demoProvider.notifier).withRef(_ref));
-      });
-
-  () get args => ();
-  MutProvider<void, void Function(int), (), ()> get change => _changeDemo(
-        notifierKeys: args,
-        mutKeys: (),
+extension DemoMutations on AsyncNotifierProviderBase<Demo, dynamic> {
+  MutProvider<void, void Function(int)> get change =>
+      MutProvider<void, void Function(int)>(
+        (_ref) =>
+            (int i) => _ref.mutate(() => _ref.read(this.notifier).change(i)),
+        keys: (),
+        source: this,
+        method: 'change',
       );
-  MutProvider<String?, void Function(), (), ()> get nullable => _nullableDemo(
-        notifierKeys: args,
-        mutKeys: (),
+  MutProvider<String?, void Function()> get nullable =>
+      MutProvider<String?, void Function()>(
+        (_ref) => () => _ref.mutate(() => _ref.read(this.notifier).nullable()),
+        keys: (),
+        source: this,
+        method: 'nullable',
       );
-  MutProvider<String, void Function(), (), ()> get futureOr => _futureOrDemo(
-        notifierKeys: args,
-        mutKeys: (),
+  MutProvider<String, void Function()> get futureOr =>
+      MutProvider<String, void Function()>(
+        (_ref) => () => _ref.mutate(() => _ref.read(this.notifier).futureOr()),
+        keys: (),
+        source: this,
+        method: 'futureOr',
       );
-  MutProvider<void, void Function(), (), ()> get normal => _normalDemo(
-        notifierKeys: args,
-        mutKeys: (),
+  MutProvider<void, void Function()> get normal =>
+      MutProvider<void, void Function()>(
+        (_ref) => () => _ref.mutate(() => _ref.read(this.notifier).normal()),
+        keys: (),
+        source: this,
+        method: 'normal',
       );
-  MutProvider<void, void Function(), (), ()> get withRef => _withRefDemo(
-        notifierKeys: args,
-        mutKeys: (),
+  MutProvider<void, void Function()> get withRef =>
+      MutProvider<void, void Function()>(
+        (_ref) =>
+            () => _ref.mutate(() => _ref.read(this.notifier).withRef(_ref)),
+        keys: (),
+        source: this,
+        method: 'withRef',
       );
 }
 
-extension DemoFamilyMutations on DemoFamilyFamily {
-  static final _changeFamilyDemoFamily = MutFamily<
-      void,
-      void Function(
-        int,
-        String?, {
-        required bool b,
-        num n,
-      }),
-      (),
-      ({Object key})>((
-    _ref,
-    _args,
-  ) =>
-      (
-        int i,
-        String? e, {
-        required bool b,
-        num n = 1,
-      }) {
-        _ref.mutate(() => _ref
-            .read(demoFamilyProvider(_args.notifierKeys.key).notifier)
-            .changeFamily(
-              i,
-              e,
-              b: b,
-              n: n,
-            ));
-      });
-
-  ({Object key}) get args => (key: Object);
+extension DemoFamilyMutations on DemoFamilyProvider {
   MutProvider<
       void,
       void Function(
@@ -293,10 +239,52 @@ extension DemoFamilyMutations on DemoFamilyFamily {
         String?, {
         required bool b,
         num n,
-      }),
-      (),
-      ({Object key})> get changeFamily => _changeFamilyDemoFamily(
-        notifierKeys: args,
-        mutKeys: (),
+      })> get changeFamily => MutProvider<
+          void,
+          void Function(
+            int,
+            String?, {
+            required bool b,
+            num n,
+          })>(
+        (_ref) => (
+          int i,
+          String? e, {
+          required bool b,
+          num n = 1,
+        }) =>
+            _ref.mutate(() => _ref.read(this.notifier).changeFamily(
+                  i,
+                  e,
+                  b: b,
+                  n: n,
+                )),
+        keys: (),
+        source: this,
+        method: 'changeFamily',
       );
 }
+
+MutProvider<
+    String,
+    void Function(
+      String,
+      String,
+    )> get loginMut => MutProvider<
+        String,
+        void Function(
+          String,
+          String,
+        )>(
+      (_ref) => (
+        String username,
+        String password,
+      ) =>
+          _ref.mutate(() => login(
+                username,
+                password,
+              )),
+      keys: (),
+      source: null,
+      method: login,
+    );

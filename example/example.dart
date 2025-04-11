@@ -55,8 +55,8 @@ void example(Ref ref) {
       print('Loading...');
     case MutIdle():
       print('Idle/Initial');
-    case MutError<void>(:final error):
-      print(error.$1.toString());
+    case MutError(:final error):
+      print(error.toString());
     case MutSuccess<void>():
       print('Success!');
   }

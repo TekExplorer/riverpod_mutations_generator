@@ -6,7 +6,7 @@ part of 'example.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$exampleHash() => r'0add584e92f9c88db43c195c0608c1ef551fbe32';
+String _$exampleHash() => r'18862360dafc310b852fc0c530d5269e4099886d';
 
 /// See also [example].
 @ProviderFor(example)
@@ -44,38 +44,21 @@ typedef _$TodoList = AutoDisposeAsyncNotifier<List<Todo>>;
 // RiverpodMutationsGenerator
 // **************************************************************************
 
-extension TodoListMutations
-    on AutoDisposeAsyncNotifierProvider<TodoList, dynamic> {
-  static final _addTodoTodoList = MutFamily<void, void Function(Todo), (), ()>((
-    _ref,
-    _args,
-  ) =>
-      (Todo newTodo) {
-        _ref.mutate(
-            () => _ref.read(todoListProvider.notifier).addTodo(newTodo));
-      });
-
-  static final _removeTodoTodoList =
-      MutFamily<void, void Function(), ({int id}), ()>((
-    _ref,
-    _args,
-  ) =>
-          () {
-            _ref.mutate(() => _ref
-                .read(todoListProvider.notifier)
-                .removeTodo(id: _args.mutKeys.id));
-          });
-
-  () get args => ();
-  MutProvider<void, void Function(Todo), (), ()> get addTodo =>
-      _addTodoTodoList(
-        notifierKeys: args,
-        mutKeys: (),
+extension TodoListMutations on AsyncNotifierProviderBase<TodoList, dynamic> {
+  MutProvider<void, void Function(Todo)> get addTodo =>
+      MutProvider<void, void Function(Todo)>(
+        (_ref) => (Todo newTodo) =>
+            _ref.mutate(() => _ref.read(this.notifier).addTodo(newTodo)),
+        keys: (),
+        source: this,
+        method: 'addTodo',
       );
-  MutProvider<void, void Function(), ({int id}), ()> removeTodo(
-          {required int id}) =>
-      _removeTodoTodoList(
-        notifierKeys: args,
-        mutKeys: (id: id),
+  MutProvider<void, void Function()> removeTodo({required int id}) =>
+      MutProvider<void, void Function()>(
+        (_ref) => () =>
+            _ref.mutate(() => _ref.read(this.notifier).removeTodo(id: id)),
+        keys: (id: id),
+        source: this,
+        method: 'removeTodo',
       );
 }

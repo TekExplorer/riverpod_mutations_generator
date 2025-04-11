@@ -38,7 +38,7 @@ class Demo extends _$Demo {
 @riverpod
 class DemoFamily extends _$DemoFamily {
   @override
-  FutureOr<int> build(Object key) => 0;
+  FutureOr<int> build(bool key) => 0;
 
   @mutation
   Future<void> changeFamily(int i, String? e,
@@ -80,7 +80,7 @@ void main() {
     expect(demoProviderChangeSub.read().state, Mut.idle);
 
     demoProviderChangeSub.read().action(3);
-    expect(demoProviderChangeSub.read().state, Mut.idleLoading);
+    expect(demoProviderChangeSub.read().state, MutIdle.loading);
     // await container.pump();
 
     await container.pump();

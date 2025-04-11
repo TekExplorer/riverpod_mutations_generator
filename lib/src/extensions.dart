@@ -2,11 +2,13 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_system.dart';
+import 'package:analyzer/dart/element/type_visitor.dart';
 import 'package:analyzer/src/dart/element/type.dart';
 import 'package:code_builder/code_builder.dart' as c;
 import 'package:collection/collection.dart';
 import 'package:riverpod_mutations_generator/src/util.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:source_helper/source_helper.dart';
 
 extension DartTypeX on DartType {
   static TypeSystem typeSystemOf(Element element) =>
@@ -14,49 +16,7 @@ extension DartTypeX on DartType {
 
   bool get hasQuestionMark => nullabilitySuffix == NullabilitySuffix.question;
 
-  bool get isNullable {
-    if (element case final element?) {
-      return typeSystemOf(element).isNullable(this);
-    }
-    return map(
-      never: (type) => type.hasQuestionMark,
-      Void: (type) => true,
-      dynamic: (type) => true,
-      invalid: (type) => true,
-      //
-      interface: (type) => typeSystemOf(type.element).isNullable(type),
-      record: (type) => type.hasQuestionMark,
-      function: (type) => type.hasQuestionMark,
-      //
-      orElse: (type) => type.hasQuestionMark,
-    );
-  }
-
-  T map<T>({
-    T Function(DynamicType type)? dynamic,
-    T Function(InvalidType type)? invalid,
-    T Function(NeverType type)? never,
-    T Function(InterfaceType type)? interface,
-    T Function(TypeParameterType type)? typeParameter,
-    T Function(FunctionType type)? function,
-    T Function(VoidType type)? Void,
-    T Function(RecordType type)? record,
-    required T Function(DartType type) orElse,
-  }) {
-    final self = this;
-    return switch (self) {
-      DynamicType() => (dynamic ?? orElse)(self),
-      InvalidType() => (invalid ?? orElse)(self),
-      NeverType() => (never ?? orElse)(self),
-      InterfaceType() => (interface ?? orElse)(self),
-      TypeParameterType() => (typeParameter ?? orElse)(self),
-      // ParameterizedType() => (parameterized ?? orElse)(self), // InterfaceType
-      FunctionType() => (function ?? orElse)(self),
-      VoidType() => (Void ?? orElse)(self),
-      RecordType() => (record ?? orElse)(self),
-      DartType() => orElse(self),
-    };
-  }
+  bool get isNullable => isNullableType;
 }
 
 extension DartTypeToString on DartType {
@@ -74,22 +34,23 @@ extension DartTypeToString on DartType {
 
 extension CodeBuilderDartTypeX on DartType {
   c.Reference get toRef {
-    return map(
-      Void: (type) => type.toRef,
-      dynamic: (type) => type.toRef,
-      invalid: (type) => type.toRef,
-      never: (type) => type.toRef,
-      interface: (type) => type.toRef,
-      record: (type) => type.toRef,
-      function: (type) => type.toRef,
-      orElse: (type) => c.refer(type.typeToString),
-    );
+    return accept(TypeMapper(
+      visitDynamicType: (type) => DynamicTypeToRef(type).toRef,
+      visitFunctionType: (type) => FunctionTypeToRef(type).toRef,
+      visitInterfaceType: (type) => InterfaceTypeToRef(type).toRef,
+      visitInvalidType: (type) => InvalidTypeToRef(type).toRef,
+      visitNeverType: (type) => NeverTypeToRef(type).toRef,
+      visitRecordType: (type) => RecordTypeToRef(type).toRef,
+      visitTypeParameterType: (type) => c.refer(type.element.name),
+      visitVoidType: (type) => VoidTypeToRef(type).toRef,
+    ));
   }
 
-  List<DartType> get typeArguments => map(
-        orElse: (type) => [],
-        interface: (type) => type.typeArguments,
-      );
+  List<DartType> get typeArguments => switch (this) {
+        ParameterizedType type => type.typeArguments,
+        FunctionType type => type.typeArguments,
+        _ => [],
+      };
 
   DartType get innerFutureType {
     if (!isAsync) return this;
@@ -196,4 +157,80 @@ extension ParameterElementToParameter on ParameterElement {
         p.named = isNamed;
         p.required = isRequiredNamed;
       });
+}
+
+class TypeMapper<T> extends TypeVisitor<T> {
+  TypeMapper({
+    required T Function(DynamicType type) visitDynamicType,
+    required T Function(FunctionType type) visitFunctionType,
+    required T Function(InterfaceType type) visitInterfaceType,
+    required T Function(InvalidType type) visitInvalidType,
+    required T Function(NeverType type) visitNeverType,
+    required T Function(RecordType type) visitRecordType,
+    required T Function(TypeParameterType type) visitTypeParameterType,
+    required T Function(VoidType type) visitVoidType,
+  })  : _visitDynamicType = visitDynamicType,
+        _visitFunctionType = visitFunctionType,
+        _visitInterfaceType = visitInterfaceType,
+        _visitInvalidType = visitInvalidType,
+        _visitNeverType = visitNeverType,
+        _visitRecordType = visitRecordType,
+        _visitTypeParameterType = visitTypeParameterType,
+        _visitVoidType = visitVoidType;
+
+  static TypeMapper<T?> optional<T>({
+    T Function(DynamicType type)? visitDynamicType,
+    T Function(FunctionType type)? visitFunctionType,
+    T Function(InterfaceType type)? visitInterfaceType,
+    T Function(InvalidType type)? visitInvalidType,
+    T Function(NeverType type)? visitNeverType,
+    T Function(RecordType type)? visitRecordType,
+    T Function(TypeParameterType type)? visitTypeParameterType,
+    T Function(VoidType type)? visitVoidType,
+  }) {
+    return TypeMapper(
+      visitDynamicType: visitDynamicType ?? (_) => null,
+      visitFunctionType: visitFunctionType ?? (_) => null,
+      visitInterfaceType: visitInterfaceType ?? (_) => null,
+      visitInvalidType: visitInvalidType ?? (_) => null,
+      visitNeverType: visitNeverType ?? (_) => null,
+      visitRecordType: visitRecordType ?? (_) => null,
+      visitTypeParameterType: visitTypeParameterType ?? (_) => null,
+      visitVoidType: visitVoidType ?? (_) => null,
+    );
+  }
+
+  final T Function(DynamicType type) _visitDynamicType;
+  final T Function(FunctionType type) _visitFunctionType;
+  final T Function(InterfaceType type) _visitInterfaceType;
+  final T Function(InvalidType type) _visitInvalidType;
+  final T Function(NeverType type) _visitNeverType;
+  final T Function(RecordType type) _visitRecordType;
+  final T Function(TypeParameterType type) _visitTypeParameterType;
+  final T Function(VoidType type) _visitVoidType;
+
+  @override
+  T visitDynamicType(DynamicType type) => _visitDynamicType(type);
+
+  @override
+  T visitFunctionType(FunctionType type) => _visitFunctionType(type);
+
+  @override
+  T visitInterfaceType(InterfaceType type) => _visitInterfaceType(type);
+
+  @override
+  T visitInvalidType(InvalidType type) => _visitInvalidType(type);
+
+  @override
+  T visitNeverType(NeverType type) => _visitNeverType(type);
+
+  @override
+  T visitRecordType(RecordType type) => _visitRecordType(type);
+
+  @override
+  T visitTypeParameterType(TypeParameterType type) =>
+      _visitTypeParameterType(type);
+
+  @override
+  T visitVoidType(VoidType type) => _visitVoidType(type);
 }
