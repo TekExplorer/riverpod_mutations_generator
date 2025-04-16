@@ -1,17 +1,13 @@
-// DO NOT MOVE/RENAME
-
 import 'package:meta/meta.dart';
 import 'package:meta/meta_meta.dart';
 
-// @Target({TargetKind.method})
 @Target({TargetKind.method, TargetKind.function})
 final class Mutation {
-  const Mutation({this.keepAlive = false});
-
-  final bool keepAlive;
+  const Mutation();
 }
 
 const mutation = Mutation();
+// const mut = mutation;
 
 @experimental
 @Target({TargetKind.parameter})
@@ -21,3 +17,5 @@ final class MutationKey {
 
 @experimental
 const mutationKey = MutationKey();
+// @experimental
+// const mutKey = mutationKey;
