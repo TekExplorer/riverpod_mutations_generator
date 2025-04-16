@@ -1,5 +1,16 @@
 # Riverpod Mutations Annotation
 
+## 2.0.0-dev.0
+
+Replaced the 4 mutation types with Mut with MutIdle, MutError, and MutSuccess.
+An isLoading field indicates a loading state instead of a separate state.
+
+No distinction between a sync or async mutation
+
+The mutation type is now a record of `(Mut<State>, Action extends Function)` instead of a generated callable class.
+
+the provider is also much simpler now, no need to know about mut keys or notifier keys, just pass the the provider in, the mutation keys, and the name of the method for equality to take over.
+
 ## 1.0.4
 
 Export `ProviderListenable`
