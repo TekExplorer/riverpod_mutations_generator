@@ -265,26 +265,21 @@ extension DemoFamilyMutations on DemoFamilyProvider {
       );
 }
 
-MutProvider<
+final loginMut = MutProvider<
     String,
     void Function(
       String,
       String,
-    )> get loginMut => MutProvider<
-        String,
-        void Function(
-          String,
-          String,
-        )>(
-      (_ref) => (
-        String username,
-        String password,
-      ) =>
-          _ref.mutate(() => login(
-                username,
-                password,
-              )),
-      keys: (),
-      source: null,
-      method: login,
-    );
+    )>(
+  (_ref) => (
+    String username,
+    String password,
+  ) =>
+      _ref.mutate(() => login(
+            username,
+            password,
+          )),
+  keys: (),
+  source: null,
+  method: login,
+);

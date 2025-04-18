@@ -38,11 +38,11 @@ class RiverpodMutationsGenerator extends sourceGen.Generator {
     }
 
     for (final function in functions) {
-      handleExecutable(function, lib);
+      handleFunction(function, lib);
     }
 
     // for (final function in staticFunctions) {
-    //   handleExecutable(function, lib);
+    //   handleStaticMethod(function, lib);
     // }
 
     final emitter = DartEmitter(
@@ -57,8 +57,12 @@ class RiverpodMutationsGenerator extends sourceGen.Generator {
     NotifierHandler(notifier: RiverpodClass(notifier), lib: lib).process();
   }
 
-  void handleExecutable(ExecutableElement function, LibraryBuilder lib) {
-    ExecutableHandler.fromLib(function, lib).process();
+  void handleStaticMethod(MethodElement function, LibraryBuilder lib) {
+    StaticMethodHandler(function, lib).process();
+  }
+
+  void handleFunction(FunctionElement function, LibraryBuilder lib) {
+    FunctionHandler(function, lib).process();
   }
 }
 
@@ -93,7 +97,7 @@ class NotifierHandler {
         .where(mutationTypeChecker.hasAnnotationOf);
 
     for (final MethodElement mutation in mutations) {
-      ExecutableHandler.fromNotifierHandler(this, mutation).process();
+      MethodHandler.fromNotifierHandler(this, mutation).process();
     }
     lib.body.add(extension.build());
   }
@@ -137,31 +141,111 @@ extension type ParameterElements(Iterable<ParameterElement> elements)
   Iterable<Parameter> get toParameters => map((e) => e.toParameter);
 }
 
-class ExecutableHandler {
-  ExecutableHandler({
-    required this.mutationElement,
-    required this.add,
-  });
-  ExecutableHandler.fromLib(
-    this.mutationElement,
-    LibraryBuilder lib,
-  ) : add = lib.body.add;
+extension on String {
+  String get public {
+    if (startsWith('_')) return substring(1);
+    return this;
+  }
+}
 
-  ExecutableHandler.fromExtension(
+class MethodHandler extends ExecutableHandler<Method> {
+  MethodHandler(
     this.mutationElement,
     ExtensionBuilder extension,
-  ) : add = extension.methods.add;
+  ) : super(add: extension.methods.add);
 
-  ExecutableHandler.fromNotifierHandler(
+  MethodHandler.fromNotifierHandler(
     NotifierHandler notifierMaker,
-    ExecutableElement mutationElement,
-  ) : this.fromExtension(mutationElement, notifierMaker.extension);
+    MethodElement mutationElement,
+  ) : this(mutationElement, notifierMaker.extension);
 
-  final ExecutableElement mutationElement;
+  final MethodElement mutationElement;
 
-  final void Function(Method) add;
+  @override
+  Method buildMutation() {
+    return Method((m) {
+      m.name = methodName.public;
 
-  void process() => add(buildMutationMethod());
+      m.returns = returnedProviderType;
+
+      m.lambda = true;
+
+      if (keyedParameters.isEmpty) m.type = MethodType.getter;
+      m.requiredParameters
+          .addAll(keyedParameters.requiredPositional.toParameters);
+      m.optionalParameters
+          .addAll(keyedParameters.optionalPositional.toParameters);
+      m.optionalParameters.addAll(keyedParameters.named.toParameters);
+
+      m.body = buildInstantiation().code;
+    });
+  }
+
+  @override
+  Expression providerSourceReference() => refer('this');
+
+  @override
+  Expression methodKeyReference() => literalString(methodName);
+}
+
+class FunctionHandler extends ExecutableHandler<Field> {
+  FunctionHandler(
+    this.mutationElement,
+    LibraryBuilder lib,
+  ) : super(add: lib.body.add);
+
+  final FunctionElement mutationElement;
+
+  @override
+  Field buildMutation() {
+    return Field((f) {
+      f.name = methodName.public + 'Mut';
+
+      // f.type = returnedProviderType;
+      f.modifier = FieldModifier.final$;
+      f.assignment = buildInstantiation().code;
+    });
+  }
+
+  @override
+  Expression methodKeyReference() => refer(methodName);
+}
+
+class StaticMethodHandler extends ExecutableHandler<Field> {
+  StaticMethodHandler(
+    this.mutationElement,
+    LibraryBuilder lib,
+  ) : super(add: lib.body.add);
+
+  final MethodElement mutationElement;
+  String get className => mutationElement.enclosingElement3.name!;
+
+  @override
+  Field buildMutation() {
+    return Field((f) {
+      f.name = '${className}_${methodName.public}Mut';
+
+      // f.type = returnedProviderType;
+      f.modifier = FieldModifier.final$;
+      f.assignment = buildInstantiation().code;
+    });
+  }
+
+  @override
+  Expression methodKeyReference() => refer(className).property(methodName);
+}
+
+sealed class ExecutableHandler<S extends Spec> {
+  ExecutableHandler({required this.add});
+  final void Function(S) add;
+
+  static const method = MethodHandler.new;
+  static const function = FunctionHandler.new;
+  static const staticMethod = StaticMethodHandler.new;
+
+  ExecutableElement get mutationElement;
+
+  void process() => add(buildMutation());
 
   ParameterElements get nonKeyedParameters =>
       ParameterElements(mutationElement.parameters
@@ -171,7 +255,8 @@ class ExecutableHandler {
   ParameterElements get keyedParameters => ParameterElements(
       mutationElement.parameters.where(mutationKeyTypeChecker.hasAnnotationOf));
 
-  String get name => mutationElement.name;
+  String get methodName => mutationElement.name;
+
   TypeReference get providerType => TypeReference((b) {
         b.url =
             'package:riverpod_mutations_annotation/riverpod_mutations_annotation.dart';
@@ -183,65 +268,12 @@ class ExecutableHandler {
             .toRef);
       });
 
-  Method buildMutationMethod() {
-    return Method((m) {
-      m.name = switch (mutationElement) {
-        MethodElement(
-          isStatic: true,
-          name: final methodName,
-          enclosingElement3: Element(name: final className?)
-        ) =>
-          '${className}_${methodName.public}Mut',
-        FunctionElement(name: final name) when !name.startsWith('_') =>
-          name + 'Mut',
-        _ => name.public,
-      };
+  TypeReference get returnedProviderType => providerType;
 
-      m.returns = providerType;
+  S buildMutation();
 
-      m.lambda = true;
-
-      if (keyedParameters.isEmpty) m.type = MethodType.getter;
-      m.requiredParameters
-          .addAll(keyedParameters.requiredPositional.toParameters);
-      m.optionalParameters
-          .addAll(keyedParameters.optionalPositional.toParameters);
-      m.optionalParameters.addAll(keyedParameters.named.toParameters);
-
-      m.body = providerType.call([
-        buildCreateClosure(),
-      ], {
-        'keys': literalRecord([], {
-          for (final param in keyedParameters) param.name: refer(param.name),
-        }),
-        'source': switch (mutationElement) {
-          MethodElement(isStatic: false) => refer('this'),
-          _ => literalNull,
-        },
-        'method': switch (mutationElement) {
-          // use the name of the method for ==
-          MethodElement(
-            isStatic: false,
-            name: final methodName,
-          ) =>
-            literalString(methodName),
-          MethodElement(
-            isStatic: true,
-            name: final methodName,
-            enclosingElement3: ClassElement(name: final className)
-          ) =>
-            refer(className).property(methodName),
-          // use the static function itself for ==
-          FunctionElement() => refer(mutationElement.name),
-          _ => throw StateError(
-              'Unknown mutation element type for $mutationElement'),
-        },
-      }).code;
-    });
-  }
-
-  static const refName = '_ref';
-  static final ref = refer(refName);
+  String get refName => '_ref';
+  Reference get ref => refer(refName);
 
   Expression buildCreateClosure() {
     return Method((b) {
@@ -275,7 +307,7 @@ class ExecutableHandler {
             final method = switch (mutationElement) {
               MethodElement(isStatic: false) => ref
                   .property('read')
-                  .call([refer('this.notifier')]).property(name),
+                  .call([refer('this.notifier')]).property(methodName),
               MethodElement(
                 isStatic: true,
                 :final name,
@@ -308,11 +340,22 @@ class ExecutableHandler {
       }).closure.code;
     }).closure;
   }
-}
 
-extension on String {
-  String get public {
-    if (startsWith('_')) return substring(1);
-    return this;
+  Expression buildInstantiation() {
+    return providerType.call([
+      buildCreateClosure(),
+    ], {
+      'keys': keysReference(),
+      'source': providerSourceReference(),
+      'method': methodKeyReference(),
+    });
   }
+
+  Expression keysReference() => literalRecord([], {
+        for (final param in keyedParameters) param.name: refer(param.name),
+      });
+
+  Expression providerSourceReference() => literalNull;
+
+  Expression methodKeyReference();
 }
