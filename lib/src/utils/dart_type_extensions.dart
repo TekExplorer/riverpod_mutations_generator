@@ -47,7 +47,7 @@ extension DartTypeHelpers on DartType {
 //     visitInvalidType: (type) => InvalidTypeToRef(type).toRef,
 //     visitNeverType: (type) => NeverTypeToRef(type).toRef,
 //     visitRecordType: (type) => RecordTypeToRef(type).toRef,
-//     visitTypeParameterType: (type) => c.refer(type.element3.name3!),
+//     visitTypeParameterType: (type) => c.refer(type.element3.displayName),
 //     visitVoidType: (type) => VoidTypeToRef(type).toRef,
 //   );
 
@@ -59,7 +59,7 @@ extension DartTypeHelpers on DartType {
 //     if (aliasElement != null) {
 //       return c.TypeReference((t) {
 //         t.isNullable = type.isNullable;
-//         t.symbol = aliasElement.name3;
+//         t.symbol = aliasElement.displayName;
 //       });
 //     }
 //     return null;
@@ -136,7 +136,7 @@ extension DartTypeHelpers on DartType {
 // extension InterfaceTypeToRef on InterfaceType {
 //   c.TypeReference get toRef => c.TypeReference((t) {
 //     t.isNullable = isNullable;
-//     t.symbol = element3.name3!;
+//     t.symbol = element3.displayName;
 //     t.types.addAll([for (final arg in typeArguments) arg.toRef]);
 //   });
 // }
@@ -161,9 +161,9 @@ extension DartTypeHelpers on DartType {
 //       else if (param.isOptionalPositional)
 //         f.optionalParameters.add(param.type.toRef);
 //       else if (param.isRequiredNamed)
-//         f.namedRequiredParameters[param.name3!] = param.type.toRef;
+//         f.namedRequiredParameters[param.displayName] = param.type.toRef;
 //       else if (param.isOptionalNamed)
-//         f.namedParameters[param.name3!] = param.type.toRef;
+//         f.namedParameters[param.displayName] = param.type.toRef;
 //     }
 //   });
 // }
@@ -204,7 +204,7 @@ extension FunctionTypeX on FunctionType {
   // );
   // FunctionType get withoutMutationRef => copyWith(
   //   formalParameters: formalParameters.whereNot((param) {
-  //     return param.name3 == 'ref' && param.isRequiredPositional;
+  //     return param.displayName == 'ref' && param.isRequiredPositional;
   //   }),
   // );
 }

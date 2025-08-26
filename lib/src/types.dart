@@ -1,11 +1,17 @@
 import 'package:analyzer/dart/element/element2.dart'
-    show ClassElement2, FormalParameterElement, MethodElement2;
+    show
+        ClassElement2,
+        FormalParameterElement,
+        MethodElement2,
+        TypeParameterElement2;
 import 'package:analyzer/dart/element/type.dart' show FunctionType, DartType;
 import 'package:riverpod_mutations_generator/src/type_checkers.dart';
 import 'package:riverpod_mutations_generator/src/utils/dart_type_extensions.dart';
 
 extension type NotifierClass(ClassElement2 element) {
-  String get name => element.name3!;
+  String get name => element.displayName;
+
+  List<TypeParameterElement2> get typeParameters => element.typeParameters2;
 
   MethodElement2 get buildMethod => element.getMethod2('build')!;
   bool get isAsync => buildMethod.returnType.isAsync;
@@ -17,7 +23,7 @@ extension type NotifierClass(ClassElement2 element) {
 }
 
 extension type MutationMethod(MethodElement2 element) {
-  String get name => element.name3!;
+  String get name => element.displayName;
 
   FunctionType get type => element.type;
   DartType get returnType => type.returnType;

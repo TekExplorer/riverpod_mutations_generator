@@ -9,36 +9,61 @@ class Demo extends _$Demo {
   @override
   FutureOr<int> build() => 0;
 
+  DemoProvider get provider => demoProvider;
+
   @mutation
   Future<void> change(int i) async {
-    state = AsyncData(i);
+    ref.read<Future<void> Function(int i)>(provider.change.run);
   }
 
   @mutation
   Future<String?> nullable() async {
-    return null;
+    ref.read<Future<String?> Function()>(provider.nullable.run);
+    throw UnimplementedError();
   }
 
-  // @mutation
-  // FutureOr<String> futureOr() => '';
+  @mutation
+  Future<void> normal() async {
+    ref.read<Future<void> Function()>(provider.normal.run);
+  }
 
   @mutation
-  Future<void> normal() async {}
+  Future<void> withRef(MutationRef ref) async {
+    ref.get<Future<void> Function()>(provider.withRef.run);
+  }
 
   @mutation
-  Future<void> withRef(MutationRef ref) async {}
+  Future<T> generic<T>() {
+    ref.read<Future<T> Function()>(provider.generic<T>().run);
+    throw UnimplementedError();
+  }
 
   @mutation
-  Future<T> generic<T>() => throw UnimplementedError();
+  Future<void> nameCollision(Object ref, Object mutation) async {
+    this.ref.read<Future<void> Function(Object ref, Object mutation)>(
+      provider.nameCollision.run,
+    );
+  }
 
   @mutation
-  Future<void> nameCollision(Object ref, Object mutation) async {}
+  Future<void> keyed(
+    @mutationKey String key,
+    int param, {
+    @mutationKey String? namedKey,
+    int? optionalParam,
+  }) async {
+    ref.read<Future<void> Function(int param, {int? optionalParam})>(
+      provider.keyed(key, namedKey: namedKey).run,
+    );
+  }
 }
 
 @riverpod
 class DemoFamily extends _$DemoFamily {
   @override
   FutureOr<int> build(bool key) => 0;
+
+  DemoFamilyProvider get provider => demoFamilyProvider(key);
 
   @mutation
   Future<void> changeFamily(
@@ -47,14 +72,40 @@ class DemoFamily extends _$DemoFamily {
     required bool b,
     num n = 1,
   }) async {
-    state = AsyncData(i);
+    ref.read<Future<void> Function(int i, String? e, {required bool b, num n})>(
+      provider.changeFamily.run,
+    );
+  }
+}
+
+@riverpod
+class DemoGeneric<T> extends _$DemoGeneric<T> {
+  @override
+  T build() {
+    throw UnimplementedError();
+  }
+
+  DemoGenericProvider<T> get provider => demoGenericProvider<T>();
+
+  @mutation
+  Future<void> changeGeneric(T value) async {
+    ref.read<Future<void> Function(T value)>(provider.changeGeneric.run);
+  }
+
+  @mutation
+  Future<(T, R)> generic<R>() {
+    ref.read<Future<(T, R)> Function()>(provider.generic<R>().run);
+    throw UnimplementedError();
+  }
+
+  @mutation
+  Future<T> genericShadowed<T>() {
+    ref.read<Future<T> Function()>(provider.genericShadowed<T>().run);
+    throw UnimplementedError();
   }
 }
 
 void main() {
-  test('check', () {
-    print(demoFamilyProvider(true).changeFamily);
-  });
   test('test', () async {
     final container = ProviderContainer.test();
     final demoProviderSub = container.listen(demoProvider, (previous, next) {});

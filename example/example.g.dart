@@ -101,19 +101,18 @@ String _$exampleHash() => r'd7387c366d4b862b8004d28c0cef5f53de53e5f7';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 extension TodoListNotifierMutations on TodoListNotifierProvider {
   MutationListenable<void, Future<void> Function(Todo newTodo)> get addTodo =>
-      MutationListenable(
+      MutationListenable.create(
         (ref, mutation) => (
           ref.watch(mutation),
           (Todo newTodo) => mutation.run(ref, (ref) {
             return ref.get(this.notifier).addTodo(newTodo);
           }),
         ),
-        (this, 'addTodo'),
-        label: '${this.name}.addTodo',
+        (this, 'addTodo', ()),
       );
   MutationListenable<void, Future<void> Function()> removeTodo({
     required int id,
-  }) => MutationListenable(
+  }) => MutationListenable.create(
     (ref, mutation) => (
       ref.watch(mutation),
       () => mutation.run(ref, (ref) {
@@ -121,6 +120,5 @@ extension TodoListNotifierMutations on TodoListNotifierProvider {
       }),
     ),
     (this, 'removeTodo', (id: id)),
-    label: '${this.name}.removeTodo',
   );
 }
