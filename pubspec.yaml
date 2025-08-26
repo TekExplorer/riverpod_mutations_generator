@@ -1,7 +1,9 @@
 name: riverpod_mutations_annotation
 description: The annotation for riverpod_mutations_generator
-version: 2.0.0-dev.0
+version: 2.0.0-dev.2
 repository: https://github.com/TekExplorer/riverpod_mutations_annotation
+
+# resolution: workspace
 
 environment:
   sdk: ^3.6.0-0
@@ -9,7 +11,6 @@ environment:
 dependencies:
   meta: ^1.0.0
   riverpod: ^3.0.0-dev.17
-  collection: ^1.19.0
   riverpod_annotation: ^3.0.0-dev.17
 
 dev_dependencies:

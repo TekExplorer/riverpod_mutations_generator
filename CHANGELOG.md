@@ -1,5 +1,21 @@
 # Riverpod Mutations Annotation
 
+## 2.0.0-dev.2
+
+Revamped to use riverpod's included mutations as of `v3.0.0-dev.17`
+
+The type is now `(MutationState<ResultT>, Future<ResultT> Function(...))`
+
+You can also reset the mutation by doing `provider.doSomething.reset(ref)`
+
+You can also access the original mutation with `..doSomething.mutation`
+
+- The above reset method just forwards to the mutation object.
+
+Much simpler, now that its just a wrapper of sorts.
+
+### Notice: Invalidation does nothing
+
 ## 2.0.0-dev.0
 
 Replaced the 4 mutation types with Mut with MutIdle, MutError, and MutSuccess.
