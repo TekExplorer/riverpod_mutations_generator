@@ -1,6 +1,5 @@
 // ignore_for_file: unused_local_variable
 
-import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_mutations_annotation/riverpod_mutations_annotation.dart';
 
@@ -13,7 +12,7 @@ class Todo {
 }
 
 @riverpod
-class TodoList extends _$TodoList {
+class TodoListNotifier extends _$TodoListNotifier {
   @override
   FutureOr<List<Todo>> build() => [];
 
@@ -51,20 +50,23 @@ void example(Ref ref) {
   final (addedTodo, addTodo) = ref.watch(todoListProvider.addTodo);
 
   switch (addedTodo) {
-    case Mut(isLoading: true):
+    case MutationPending():
       print('Loading...');
-    case MutIdle():
+    case MutationIdle():
       print('Idle/Initial');
-    case MutError(:final error):
+    case MutationError(:final error):
       print(error.toString());
-    case MutSuccess<void>():
+    case MutationSuccess<void>():
       print('Success!');
   }
 
   addTodo(Todo(1, 'newTodo'));
 
-  final removeTodo = ref.watch(todoListProvider.removeTodo(id: 1));
+  final (state, removeTodo) = ref.watch(todoListProvider.removeTodo(id: 1));
 
   // the parameter marked by @mutationKey was removed, as it's stored
-  removeTodo.action();
+  removeTodo();
 }
+
+@mutation
+Future<String> exampleFunction(int id) => throw UnimplementedError();

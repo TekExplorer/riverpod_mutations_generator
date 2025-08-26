@@ -1,5 +1,9 @@
 # Riverpod Mutations Generator
 
+## 2.0.0-dev.1
+
+Bump source_gen to v2.0.0 and analyzer to v7
+
 ## 2.0.0-dev.0
 
 Replaced the 4 mutation types with `Mut` with `MutIdle`, `MutError`, and `MutSuccess`.

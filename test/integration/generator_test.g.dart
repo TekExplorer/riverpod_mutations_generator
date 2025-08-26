@@ -6,184 +6,139 @@ part of 'generator_test.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$demoHash() => r'd73b926efe1b906f92bc67a2bb0361b389dd082a';
-
-/// See also [Demo].
 @ProviderFor(Demo)
-final demoProvider = AutoDisposeAsyncNotifierProvider<Demo, int>.internal(
-  Demo.new,
-  name: r'demoProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$demoHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const demoProvider = DemoProvider._();
 
-typedef _$Demo = AutoDisposeAsyncNotifier<int>;
-String _$demoFamilyHash() => r'e479991a6aab77284092ad566ca45c3a530b7890';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$DemoFamily extends BuildlessAutoDisposeAsyncNotifier<int> {
-  late final bool key;
-
-  FutureOr<int> build(
-    bool key,
-  );
-}
-
-/// See also [DemoFamily].
-@ProviderFor(DemoFamily)
-const demoFamilyProvider = DemoFamilyFamily();
-
-/// See also [DemoFamily].
-class DemoFamilyFamily extends Family<AsyncValue<int>> {
-  /// See also [DemoFamily].
-  const DemoFamilyFamily();
-
-  /// See also [DemoFamily].
-  DemoFamilyProvider call(
-    bool key,
-  ) {
-    return DemoFamilyProvider(
-      key,
-    );
-  }
-
-  @override
-  DemoFamilyProvider getProviderOverride(
-    covariant DemoFamilyProvider provider,
-  ) {
-    return call(
-      provider.key,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'demoFamilyProvider';
-}
-
-/// See also [DemoFamily].
-class DemoFamilyProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<DemoFamily, int> {
-  /// See also [DemoFamily].
-  DemoFamilyProvider(
-    bool key,
-  ) : this._internal(
-          () => DemoFamily()..key = key,
-          from: demoFamilyProvider,
-          name: r'demoFamilyProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$demoFamilyHash,
-          dependencies: DemoFamilyFamily._dependencies,
-          allTransitiveDependencies:
-              DemoFamilyFamily._allTransitiveDependencies,
-          key: key,
-        );
-
-  DemoFamilyProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.key,
-  }) : super.internal();
-
-  final bool key;
-
-  @override
-  FutureOr<int> runNotifierBuild(
-    covariant DemoFamily notifier,
-  ) {
-    return notifier.build(
-      key,
-    );
-  }
-
-  @override
-  Override overrideWith(DemoFamily Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: DemoFamilyProvider._internal(
-        () => create()..key = key,
-        from: from,
-        name: null,
+final class DemoProvider extends $AsyncNotifierProvider<Demo, int> {
+  const DemoProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'demoProvider',
+        isAutoDispose: true,
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        key: key,
-      ),
-    );
-  }
+        $allTransitiveDependencies: null,
+      );
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<DemoFamily, int> createElement() {
-    return _DemoFamilyProviderElement(this);
+  String debugGetCreateSourceHash() => _$demoHash();
+
+  @$internal
+  @override
+  Demo create() => Demo();
+}
+
+String _$demoHash() => r'9c49b71c3b7076bfb689cd1030394b5d07529d4a';
+
+abstract class _$Demo extends $AsyncNotifier<int> {
+  FutureOr<int> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AsyncValue<int>, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<int>, int>,
+              AsyncValue<int>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
   }
+}
+
+@ProviderFor(DemoFamily)
+const demoFamilyProvider = DemoFamilyFamily._();
+
+final class DemoFamilyProvider extends $AsyncNotifierProvider<DemoFamily, int> {
+  const DemoFamilyProvider._({
+    required DemoFamilyFamily super.from,
+    required bool super.argument,
+  }) : super(
+         retry: null,
+         name: r'demoFamilyProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$demoFamilyHash();
+
+  @override
+  String toString() {
+    return r'demoFamilyProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  DemoFamily create() => DemoFamily();
 
   @override
   bool operator ==(Object other) {
-    return other is DemoFamilyProvider && other.key == key;
+    return other is DemoFamilyProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, key.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin DemoFamilyRef on AutoDisposeAsyncNotifierProviderRef<int> {
-  /// The parameter `key` of this provider.
-  bool get key;
-}
+String _$demoFamilyHash() => r'e479991a6aab77284092ad566ca45c3a530b7890';
 
-class _DemoFamilyProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<DemoFamily, int>
-    with DemoFamilyRef {
-  _DemoFamilyProviderElement(super.provider);
+final class DemoFamilyFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          DemoFamily,
+          AsyncValue<int>,
+          int,
+          FutureOr<int>,
+          bool
+        > {
+  const DemoFamilyFamily._()
+    : super(
+        retry: null,
+        name: r'demoFamilyProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  DemoFamilyProvider call(bool key) =>
+      DemoFamilyProvider._(argument: key, from: this);
 
   @override
-  bool get key => (origin as DemoFamilyProvider).key;
+  String toString() => r'demoFamilyProvider';
 }
+
+abstract class _$DemoFamily extends $AsyncNotifier<int> {
+  late final _$args = ref.$arg as bool;
+  bool get key => _$args;
+
+  FutureOr<int> build(bool key);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref = this.ref as $Ref<AsyncValue<int>, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<int>, int>,
+              AsyncValue<int>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
 
@@ -191,95 +146,76 @@ class _DemoFamilyProviderElement
 // RiverpodMutationsGenerator
 // **************************************************************************
 
-extension DemoMutations on AsyncNotifierProviderBase<Demo, dynamic> {
-  MutProvider<void, void Function(int)> get change =>
-      MutProvider<void, void Function(int)>(
-        (_ref) =>
-            (int i) => _ref.mutate(() => _ref.read(this.notifier).change(i)),
-        keys: (),
-        source: this,
-        method: 'change',
-      );
-  MutProvider<String?, void Function()> get nullable =>
-      MutProvider<String?, void Function()>(
-        (_ref) => () => _ref.mutate(() => _ref.read(this.notifier).nullable()),
-        keys: (),
-        source: this,
-        method: 'nullable',
-      );
-  MutProvider<String, void Function()> get futureOr =>
-      MutProvider<String, void Function()>(
-        (_ref) => () => _ref.mutate(() => _ref.read(this.notifier).futureOr()),
-        keys: (),
-        source: this,
-        method: 'futureOr',
-      );
-  MutProvider<void, void Function()> get normal =>
-      MutProvider<void, void Function()>(
-        (_ref) => () => _ref.mutate(() => _ref.read(this.notifier).normal()),
-        keys: (),
-        source: this,
-        method: 'normal',
-      );
-  MutProvider<void, void Function()> get withRef =>
-      MutProvider<void, void Function()>(
-        (_ref) =>
-            () => _ref.mutate(() => _ref.read(this.notifier).withRef(_ref)),
-        keys: (),
-        source: this,
-        method: 'withRef',
-      );
+extension DemoMutations on DemoProvider {
+  Provider<(MutationState<void>, Future<void> Function(int))> get change =>
+      Provider<(MutationState<void>, Future<void> Function(int))>((ref) {
+        final mutation = Mutation<void>()((this, 'change'));
+        return (
+          ref.watch(mutation),
+          (int i) =>
+              mutation.run(ref, (ref) => ref.get(this.notifier).change(i)),
+        );
+      });
+  Provider<(MutationState<String?>, Future<String?> Function())> get nullable =>
+      Provider<(MutationState<String?>, Future<String?> Function())>((ref) {
+        final mutation = Mutation<String?>()((this, 'nullable'));
+        return (
+          ref.watch(mutation),
+          () => mutation.run(ref, (ref) => ref.get(this.notifier).nullable()),
+        );
+      });
+  Provider<(MutationState<void>, Future<void> Function())> get normal =>
+      Provider<(MutationState<void>, Future<void> Function())>((ref) {
+        final mutation = Mutation<void>()((this, 'normal'));
+        return (
+          ref.watch(mutation),
+          () => mutation.run(ref, (ref) => ref.get(this.notifier).normal()),
+        );
+      });
+  Provider<(MutationState<void>, Future<void> Function())> get withRef =>
+      Provider<(MutationState<void>, Future<void> Function())>((ref) {
+        final mutation = Mutation<void>()((this, 'withRef'));
+        return (
+          ref.watch(mutation),
+          () => mutation.run(ref, (ref) => ref.get(this.notifier).withRef(ref)),
+        );
+      });
 }
 
 extension DemoFamilyMutations on DemoFamilyProvider {
-  MutProvider<
-      void,
-      void Function(
-        int,
-        String?, {
-        required bool b,
-        num n,
-      })> get changeFamily => MutProvider<
-          void,
-          void Function(
-            int,
-            String?, {
-            required bool b,
-            num n,
-          })>(
-        (_ref) => (
-          int i,
-          String? e, {
-          required bool b,
-          num n = 1,
-        }) =>
-            _ref.mutate(() => _ref.read(this.notifier).changeFamily(
-                  i,
-                  e,
-                  b: b,
-                  n: n,
-                )),
-        keys: (),
-        source: this,
-        method: 'changeFamily',
-      );
+  Provider<
+    (
+      MutationState<void>,
+      Future<void> Function(int, String?, {required bool b, num n}),
+    )
+  >
+  get changeFamily =>
+      Provider<
+        (
+          MutationState<void>,
+          Future<void> Function(int, String?, {required bool b, num n}),
+        )
+      >((ref) {
+        final mutation = Mutation<void>()((this, 'changeFamily'));
+        return (
+          ref.watch(mutation),
+          (int i, String? e, {required bool b, num n = 1}) => mutation.run(
+            ref,
+            (ref) => ref.get(this.notifier).changeFamily(i, e, b: b, n: n),
+          ),
+        );
+      });
 }
 
-final loginMut = MutProvider<
-    String,
-    void Function(
-      String,
-      String,
-    )>(
-  (_ref) => (
-    String username,
-    String password,
-  ) =>
-      _ref.mutate(() => login(
-            username,
-            password,
-          )),
-  keys: (),
-  source: null,
-  method: login,
-);
+Provider<(MutationState<String>, Future<String> Function(String, String))>
+get loginMut =>
+    Provider<(MutationState<String>, Future<String> Function(String, String))>((
+      ref,
+    ) {
+      final mutation = Mutation<String>()(login);
+      return (
+        ref.watch(mutation),
+        (String username, String password) =>
+            mutation.run(ref, (ref) => login(username, password)),
+      );
+    });

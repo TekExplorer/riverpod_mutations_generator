@@ -5,8 +5,7 @@ import 'src/riverpod_mutations_generator.dart';
 
 /// Builds generators for `build_runner` to run
 Builder riverpodMutationsBuilder(BuilderOptions options) {
-  return SharedPartBuilder(
-    [RiverpodMutationsGenerator()],
-    'riverpod_mutations',
-  );
+  return SharedPartBuilder([
+    RiverpodMutationsGenerator(),
+  ], 'riverpod_mutations');
 }
