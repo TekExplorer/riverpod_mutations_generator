@@ -3,6 +3,8 @@ import 'package:riverpod/misc.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../riverpod_mutations_annotation.dart' show $Mutations;
+
 typedef MutationWrapper<R, F extends Function> = (
   MutationState<R> state,
   F run
@@ -25,9 +27,19 @@ abstract final class MutationListenable<R, F extends Function>
     implements ProviderListenable<MutationWrapper<R, F>> {
   factory MutationListenable(
     MutationWrapper<R, F> Function(Ref, Mutation<R>) create,
-    Record keys, {
-    Object? label,
-  }) = _MutationListenable;
+    Mutation<R> mutation,
+  ) = _MutationListenable;
+
+  factory MutationListenable.create(
+    MutationWrapper<R, F> Function(Ref, Mutation<R>) create,
+    // ignore: invalid_use_of_internal_member
+    ($ClassProvider provider, String mutationName, Record parameters) keys,
+  ) {
+    final (provider, mutationName, parameters) = keys;
+    var mutation = $Mutations.getForProvider<R>(provider, mutationName);
+    if (parameters != ()) mutation = mutation(parameters);
+    return MutationListenable(create, mutation);
+  }
 
   Mutation<R> get mutation;
 }
@@ -38,12 +50,10 @@ final class _MutationListenable<R, F extends Function>
             MutationWrapper<R, F>>
     implements
         MutationListenable<R, F> {
-  _MutationListenable(this.create, this.keys, {this.label});
+  _MutationListenable(this.create, this.mutation);
 
   @override
-  late final mutation = Mutation<R>(label: label)(keys);
-  final Object keys;
-  final Object? label;
+  final Mutation<R> mutation;
   final MutationWrapper<R, F> Function(Ref, Mutation<R>) create;
 
   // TODO: If we can get access to a reader in [transform]

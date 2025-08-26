@@ -9,4 +9,5 @@ export 'package:riverpod/riverpod.dart' show Provider;
 // export 'package:riverpod_annotation/riverpod_annotation.dart';
 
 export 'src/annotations.dart';
+export 'src/mutations_store.dart';
 export 'src/wrapper.dart';
