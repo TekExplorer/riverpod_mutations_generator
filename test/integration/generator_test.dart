@@ -1,14 +1,8 @@
-import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_mutations_annotation/riverpod_mutations_annotation.dart';
 import 'package:test/test.dart';
 
 part 'generator_test.g.dart';
-
-@mutation
-Future<String> login(String username, String password) async {
-  return '';
-}
 
 @riverpod
 class Demo extends _$Demo {
@@ -33,6 +27,12 @@ class Demo extends _$Demo {
 
   @mutation
   Future<void> withRef(MutationRef ref) async {}
+
+  @mutation
+  Future<T> generic<T>() => throw UnimplementedError();
+
+  @mutation
+  Future<void> nameCollision(Object ref, Object mutation) async {}
 }
 
 @riverpod
@@ -52,6 +52,9 @@ class DemoFamily extends _$DemoFamily {
 }
 
 void main() {
+  test('check', () {
+    print(demoFamilyProvider(true).changeFamily);
+  });
   test('test', () async {
     final container = ProviderContainer.test();
     final demoProviderSub = container.listen(demoProvider, (previous, next) {});

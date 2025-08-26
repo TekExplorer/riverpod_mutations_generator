@@ -1,5 +1,22 @@
 # Riverpod Mutations Generator
 
+## 2.0.0-dev.2
+
+Forget all of that and wrap riverpod 3.0.0-dev.17's mutations for a state of `(MutationState<ResultT>, F extends Function)`
+
+- Access the original mutation by doing `yourProvider.yourMutation.mutation`
+- Reset the mutation by doing `yourProvider.yourMutation.reset(ref)`
+  - At least until invalidation forwarding comes around
+
+Dependencies have been updated
+
+- `3.0.0-dev.17` on all riverpod dependencies
+- `source_gen` bumped to v3
+  - many associated dependencies are bumped too
+
+- No longer depending on `code_builder`
+  - Switched to using `analyzer_buffer` by @rrousselGit
+
 ## 2.0.0-dev.1
 
 Bump source_gen to v2.0.0 and analyzer to v7

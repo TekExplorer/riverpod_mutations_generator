@@ -29,7 +29,7 @@ final class DemoProvider extends $AsyncNotifierProvider<Demo, int> {
   Demo create() => Demo();
 }
 
-String _$demoHash() => r'9c49b71c3b7076bfb689cd1030394b5d07529d4a';
+String _$demoHash() => r'bd3ee7affcd5e1cfcacc8697dce59cbc74887c60';
 
 abstract class _$Demo extends $AsyncNotifier<int> {
   FutureOr<int> build();
@@ -146,76 +146,90 @@ abstract class _$DemoFamily extends $AsyncNotifier<int> {
 // RiverpodMutationsGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 extension DemoMutations on DemoProvider {
-  Provider<(MutationState<void>, Future<void> Function(int))> get change =>
-      Provider<(MutationState<void>, Future<void> Function(int))>((ref) {
-        final mutation = Mutation<void>()((this, 'change'));
-        return (
+  MutationListenable<void, Future<void> Function(int i)> get change =>
+      MutationListenable(
+        (ref, mutation) => (
           ref.watch(mutation),
-          (int i) =>
-              mutation.run(ref, (ref) => ref.get(this.notifier).change(i)),
-        );
-      });
-  Provider<(MutationState<String?>, Future<String?> Function())> get nullable =>
-      Provider<(MutationState<String?>, Future<String?> Function())>((ref) {
-        final mutation = Mutation<String?>()((this, 'nullable'));
-        return (
+          (int i) => mutation.run(ref, (ref) {
+            return ref.get(this.notifier).change(i);
+          }),
+        ),
+        (this, 'change'),
+        label: '${this.name}.change',
+      );
+  MutationListenable<String?, Future<String?> Function()> get nullable =>
+      MutationListenable(
+        (ref, mutation) => (
           ref.watch(mutation),
-          () => mutation.run(ref, (ref) => ref.get(this.notifier).nullable()),
-        );
-      });
-  Provider<(MutationState<void>, Future<void> Function())> get normal =>
-      Provider<(MutationState<void>, Future<void> Function())>((ref) {
-        final mutation = Mutation<void>()((this, 'normal'));
-        return (
+          () => mutation.run(ref, (ref) {
+            return ref.get(this.notifier).nullable();
+          }),
+        ),
+        (this, 'nullable'),
+        label: '${this.name}.nullable',
+      );
+  MutationListenable<void, Future<void> Function()> get normal =>
+      MutationListenable(
+        (ref, mutation) => (
           ref.watch(mutation),
-          () => mutation.run(ref, (ref) => ref.get(this.notifier).normal()),
-        );
-      });
-  Provider<(MutationState<void>, Future<void> Function())> get withRef =>
-      Provider<(MutationState<void>, Future<void> Function())>((ref) {
-        final mutation = Mutation<void>()((this, 'withRef'));
-        return (
+          () => mutation.run(ref, (ref) {
+            return ref.get(this.notifier).normal();
+          }),
+        ),
+        (this, 'normal'),
+        label: '${this.name}.normal',
+      );
+  MutationListenable<void, Future<void> Function()> get withRef =>
+      MutationListenable(
+        (ref, mutation) => (
           ref.watch(mutation),
-          () => mutation.run(ref, (ref) => ref.get(this.notifier).withRef(ref)),
-        );
-      });
+          () => mutation.run(ref, (ref) {
+            return ref.get(this.notifier).withRef(ref);
+          }),
+        ),
+        (this, 'withRef'),
+        label: '${this.name}.withRef',
+      );
+  MutationListenable<T, Future<T> Function()> generic<T>() =>
+      MutationListenable(
+        (ref, mutation) => (
+          ref.watch(mutation),
+          () => mutation.run(ref, (ref) {
+            return ref.get(this.notifier).generic();
+          }),
+        ),
+        (this, 'generic'),
+        label: '${this.name}.generic',
+      );
+  MutationListenable<void, Future<void> Function(Object ref, Object mutation)>
+  get nameCollision => MutationListenable(
+    (ref_0, mutation_0) => (
+      ref_0.watch(mutation_0),
+      (Object ref, Object mutation) => mutation_0.run(ref_0, (ref_0) {
+        return ref_0.get(this.notifier).nameCollision(ref, mutation);
+      }),
+    ),
+    (this, 'nameCollision'),
+    label: '${this.name}.nameCollision',
+  );
 }
 
 extension DemoFamilyMutations on DemoFamilyProvider {
-  Provider<
-    (
-      MutationState<void>,
-      Future<void> Function(int, String?, {required bool b, num n}),
-    )
+  MutationListenable<
+    void,
+    Future<void> Function(int i, String? e, {required bool b, num n})
   >
-  get changeFamily =>
-      Provider<
-        (
-          MutationState<void>,
-          Future<void> Function(int, String?, {required bool b, num n}),
-        )
-      >((ref) {
-        final mutation = Mutation<void>()((this, 'changeFamily'));
-        return (
-          ref.watch(mutation),
-          (int i, String? e, {required bool b, num n = 1}) => mutation.run(
-            ref,
-            (ref) => ref.get(this.notifier).changeFamily(i, e, b: b, n: n),
-          ),
-        );
-      });
+  get changeFamily => MutationListenable(
+    (ref, mutation) => (
+      ref.watch(mutation),
+      (int i, String? e, {required bool b, num n = 1}) =>
+          mutation.run(ref, (ref) {
+            return ref.get(this.notifier).changeFamily(i, e, b: b, n: n);
+          }),
+    ),
+    (this, 'changeFamily'),
+    label: '${this.name}.changeFamily',
+  );
 }
-
-Provider<(MutationState<String>, Future<String> Function(String, String))>
-get loginMut =>
-    Provider<(MutationState<String>, Future<String> Function(String, String))>((
-      ref,
-    ) {
-      final mutation = Mutation<String>()(login);
-      return (
-        ref.watch(mutation),
-        (String username, String password) =>
-            mutation.run(ref, (ref) => login(username, password)),
-      );
-    });

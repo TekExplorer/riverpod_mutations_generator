@@ -49,16 +49,12 @@ void example(Ref ref) {
 
   final (addedTodo, addTodo) = ref.watch(todoListProvider.addTodo);
 
-  switch (addedTodo) {
-    case MutationPending():
-      print('Loading...');
-    case MutationIdle():
-      print('Idle/Initial');
-    case MutationError(:final error):
-      print(error.toString());
-    case MutationSuccess<void>():
-      print('Success!');
-  }
+  print(switch (addedTodo) {
+    MutationIdle() => 'Idle/Initial',
+    MutationPending() => 'Loading...',
+    MutationError(:final error) => error.toString(),
+    MutationSuccess() => 'Success!',
+  });
 
   addTodo(Todo(1, 'newTodo'));
 
@@ -67,6 +63,3 @@ void example(Ref ref) {
   // the parameter marked by @mutationKey was removed, as it's stored
   removeTodo();
 }
-
-@mutation
-Future<String> exampleFunction(int id) => throw UnimplementedError();

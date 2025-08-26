@@ -89,7 +89,7 @@ final class ExampleProvider extends $FunctionalProvider<void, void, void>
   }
 }
 
-String _$exampleHash() => r'e75f372c53ca876f1847faf2b447a4841426d004';
+String _$exampleHash() => r'd7387c366d4b862b8004d28c0cef5f53de53e5f7';
 
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
@@ -98,36 +98,29 @@ String _$exampleHash() => r'e75f372c53ca876f1847faf2b447a4841426d004';
 // RiverpodMutationsGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 extension TodoListNotifierMutations on TodoListNotifierProvider {
-  Provider<(MutationState<void>, Future<void> Function(Todo))> get addTodo =>
-      Provider<(MutationState<void>, Future<void> Function(Todo))>((ref) {
-        final mutation = Mutation<void>()((this, 'addTodo'));
-        return (
+  MutationListenable<void, Future<void> Function(Todo newTodo)> get addTodo =>
+      MutationListenable(
+        (ref, mutation) => (
           ref.watch(mutation),
-          (Todo newTodo) => mutation.run(
-            ref,
-            (ref) => ref.get(this.notifier).addTodo(newTodo),
-          ),
-        );
-      });
-  Provider<(MutationState<void>, Future<void> Function())> removeTodo({
-    required int id,
-  }) => Provider<(MutationState<void>, Future<void> Function())>((ref) {
-    final mutation = Mutation<void>()((this, 'removeTodo'))((id: id));
-    return (
-      ref.watch(mutation),
-      () =>
-          mutation.run(ref, (ref) => ref.get(this.notifier).removeTodo(id: id)),
-    );
-  });
-}
-
-Provider<(MutationState<String>, Future<String> Function(int))>
-get exampleFunctionMut =>
-    Provider<(MutationState<String>, Future<String> Function(int))>((ref) {
-      final mutation = Mutation<String>()(exampleFunction);
-      return (
-        ref.watch(mutation),
-        (int id) => mutation.run(ref, (ref) => exampleFunction(id)),
+          (Todo newTodo) => mutation.run(ref, (ref) {
+            return ref.get(this.notifier).addTodo(newTodo);
+          }),
+        ),
+        (this, 'addTodo'),
+        label: '${this.name}.addTodo',
       );
-    });
+  MutationListenable<void, Future<void> Function()> removeTodo({
+    required int id,
+  }) => MutationListenable(
+    (ref, mutation) => (
+      ref.watch(mutation),
+      () => mutation.run(ref, (ref) {
+        return ref.get(this.notifier).removeTodo(id: id);
+      }),
+    ),
+    (this, 'removeTodo', (id: id)),
+    label: '${this.name}.removeTodo',
+  );
+}
