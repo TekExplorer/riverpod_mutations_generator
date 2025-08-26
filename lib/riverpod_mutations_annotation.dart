@@ -3,12 +3,25 @@
 
 library;
 
-export 'package:riverpod/riverpod.dart'
-    show ProviderListenable, Refreshable, Provider;
-export 'package:riverpod/src/internals.dart'
-    show AsyncNotifierProviderBase, NotifierProviderBase;
+import 'package:riverpod/riverpod.dart';
+
+import '' show MutationState, ProviderListenable;
+
+export 'package:riverpod/experimental/mutation.dart';
+export 'package:riverpod/riverpod.dart' show Provider;
+export 'package:riverpod_annotation/riverpod_annotation.dart'
+    show ProviderListenable;
 
 export 'src/annotations.dart';
-export 'src/mut.dart';
 
-// export 'package:riverpod_annotation/riverpod_annotation.dart';
+extension MutationPairX<R, F extends Function> on (MutationState<R>, F) {
+  MutationState<R> get state => $1;
+  F get run => $2;
+}
+
+extension MutationProviderX<R, F extends Function>
+    on ProviderListenable<(MutationState<R>, F)> {
+  ProviderListenable<MutationState<R>> get state =>
+      select((value) => value.state);
+  ProviderListenable<F> get run => select((value) => value.run);
+}
