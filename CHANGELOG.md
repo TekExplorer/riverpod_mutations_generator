@@ -1,5 +1,13 @@
 # Riverpod Mutations Annotation
 
+## 2.0.0-dev.3
+
+Fix an issue where a single key results in a single value, and not a record.
+
+It now accepts any Object
+
+(probably shouldn't have skipped dev.1)
+
 ## 2.0.0-dev.2
 
 Revamped to use riverpod's included mutations as of `v3.0.0-dev.17`

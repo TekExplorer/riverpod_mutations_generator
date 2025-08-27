@@ -33,7 +33,7 @@ abstract final class MutationListenable<R, F extends Function>
   factory MutationListenable.create(
     MutationWrapper<R, F> Function(Ref, Mutation<R>) create,
     // ignore: invalid_use_of_internal_member
-    ($ClassProvider provider, String mutationName, Record parameters) keys,
+    ($ClassProvider provider, String mutationName, Object parameters) keys,
   ) {
     final (provider, mutationName, parameters) = keys;
     var mutation = $Mutations.getForProvider<R>(provider, mutationName);
