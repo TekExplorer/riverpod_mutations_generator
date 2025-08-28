@@ -5,13 +5,15 @@ repository: https://github.com/TekExplorer/riverpod_mutations_annotation
 
 # resolution: workspace
 
+define: &riverpod_version ^3.0.0-dev.17
+
 environment:
   sdk: ^3.6.0-0
 
 dependencies:
   meta: ^1.0.0
-  riverpod: ^3.0.0-dev.17
-  riverpod_annotation: ^3.0.0-dev.17
+  riverpod: *riverpod_version
+  riverpod_annotation: *riverpod_version
 
 dev_dependencies:
   lints: ^6.0.0
