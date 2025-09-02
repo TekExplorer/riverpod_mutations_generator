@@ -11,6 +11,8 @@ import 'package:riverpod_mutations_generator/src/utils/dart_type_extensions.dart
 extension type NotifierClass(ClassElement2 element) {
   String get name => element.displayName;
 
+  DartType get valueType => buildMethod.returnType.innerFutureType;
+
   List<TypeParameterElement2> get typeParameters => element.typeParameters2;
 
   MethodElement2 get buildMethod => element.getMethod2('build')!;
