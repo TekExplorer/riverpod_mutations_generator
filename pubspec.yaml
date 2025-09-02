@@ -5,14 +5,12 @@ repository: https://github.com/TekExplorer/riverpod_mutations_generator
 
 # resolution: workspace
 
+workspace:
+  - packages/riverpod_mutations_annotation
+
 environment:
   # sdk: ">=3.0.0 <4.0.0"
   sdk: ^3.8.0
-
-dependency_overrides:
-  riverpod_mutations_annotation:
-    path: ../riverpod_mutations_annotation
-  # custom_lint_core: 0.6.10
 
 define: &riverpod_version ^3.0.0-dev.17
 
