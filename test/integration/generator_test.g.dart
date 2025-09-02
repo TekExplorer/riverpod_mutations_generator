@@ -272,7 +272,6 @@ extension DemoMutations on DemoProvider {
         ),
         (this, 'change', ()),
       );
-
   MutationListenable<String?, Future<String?> Function()> get nullable =>
       MutationListenable.create(
         (ref, mutation) => (
