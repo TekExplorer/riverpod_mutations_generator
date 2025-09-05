@@ -41,9 +41,9 @@ class NotifierTemplate {
           }
         },
         'mutation_classes': () {
-          for (final template in templates) {
-            template.defineInLibrary(buffer);
-          }
+          // for (final template in templates) {
+          //   template.defineInLibrary(buffer);
+          // }
         },
       },
       '''
@@ -85,23 +85,20 @@ class MutationTemplate {
     return 'tsx'.makeUnique(method.formalParameters.map((e) => e.displayName));
   }
 
-  late final target = 'target'.makeUnique(
+  late final String target = 'target'.makeUnique(
+    method.formalParameters.map((e) => e.displayName),
+  );
+
+  late final String mutation = 'mutation'.makeUnique(
+    method.formalParameters.map((e) => e.displayName),
+  );
+
+  late final String run = 'run'.makeUnique(
     method.formalParameters.map((e) => e.displayName),
   );
 
   Map<String, void Function()> sharedArgs(AnalyzerBuffer buffer) =>
       <String, void Function()>{
-        'define_class_generics': () {
-          final generics = [...nonConflictingGenerics, ...methodGenerics];
-          if (generics.isEmpty) return;
-
-          buffer.write('<${generics.toCodes().join(', ')}>');
-        },
-        'use_class_generics': () {
-          final generics = [...nonConflictingGenerics, ...methodGenerics];
-          if (generics.isEmpty) return;
-          buffer.write('<${generics.toNames().join(', ')}>');
-        },
         'define_method_generics': () {
           if (methodGenerics.isEmpty) return;
           buffer.write('<${methodGenerics.toCodes().join(', ')}>');
@@ -140,24 +137,18 @@ class MutationTemplate {
         'ResultT': () {
           buffer.write(method.resultT.toCode());
         },
+        'MutationTarget': () {
+          buffer.write('#{{riverpod|$MutationTarget}}');
+        },
+        // 'MutationTransaction': () {
+        //   buffer.write('#{{riverpod|$MutationRef}}');
+        //   // in a newer version
+        //   // buffer.write('#{{riverpod|MutationTransaction}}');
+        // },
       };
 
   void invokeInExtension(AnalyzerBuffer buffer) {
-    buffer.write(
-      args: {
-        'keyed_args': () {
-          buffer.write(method.keyedParameters.toCode());
-        },
-        ...sharedArgs(buffer),
-      },
-      [
-        '$mutationClassName#{{use_class_generics}}',
-        if (isGetter) 'get',
-        method.name,
-        '#{{define_method_generics}}',
-        if (!isGetter) '#{{keyed_args}}',
-      ].join((' ')),
-    );
+    final String get = isGetter ? 'get ' : '';
     buffer.write(
       args: {
         'keys_list': () {
@@ -165,59 +156,41 @@ class MutationTemplate {
             method.keyedParameters.toInvocationCode(omitIfEmpty: true),
           );
         },
-
-        ...sharedArgs(buffer),
-      },
-      ''' => ${mutationClassName}._(
-      _\$mutation<#{{ResultT}}>(
-        '${method.name}',
-        #{{keys_list}}
-      ),
-      ($tsx, #{{end_user_params}}) => $tsx.get(this.notifier).${method.name}#{{all_params}}
-    );
-''',
-    );
-  }
-
-  void defineInLibrary(AnalyzerBuffer buffer) {
-    buffer.write(
-      args: {
         'keyed_args': () {
-          for (final parameter in method.keyedParameters) {
-            buffer.write('this.${parameter.displayName}, ');
-          }
-        },
-        'MutationTarget': () {
-          buffer.write('#{{riverpod|$MutationTarget}}');
-        },
-        'MutationTransaction': () {
-          buffer.write('#{{riverpod|$MutationRef}}');
-          // in a newer version
-          // buffer.write('#{{riverpod|MutationTransaction}}');
+          if (isGetter) return;
+          buffer.write(method.keyedParameters.toCode());
         },
         ...sharedArgs(buffer),
-        'proxyMutationPair': () {
-          buffer.write(
-            r'#{{riverpod_mutations_annotation|$proxyMutationPair}}',
-          );
+        'MutationListenable': () {
+          buffer.write('#{{riverpod_mutations_annotation|MutationListenable}}');
+        },
+        'TypedMutationListenable': () {
+          buffer.write('''
+  #{{MutationListenable}}<
+    #{{ResultT}},
+    Future<#{{ResultT}}> Function(#{{MutationTarget}} $target, #{{end_user_params_in_type}}),
+    Future<#{{ResultT}}> Function(#{{end_user_params_in_type}})
+  >
+''');
         },
       },
       '''
-final class $mutationClassName#{{define_class_generics}} extends MutationListenable<#{{ResultT}}> {
-  $mutationClassName._(super.mutation, this._run);
-  final Future<#{{ResultT}}> Function(#{{MutationTransaction}}, #{{end_user_params_in_type}}) _run;
-
-  ProviderListenable<(
-    #{{riverpod|MutationState}}<#{{ResultT}}>,
-    Future<#{{ResultT}}> Function(#{{end_user_params_in_type}})
-  )> get pair => #{{proxyMutationPair}}(this.mutation, (target) {
-    return (#{{end_user_params}}) => run(target, #{{invoke_end_user_params}});
-  });
-
-  Future<#{{ResultT}}> run(#{{MutationTarget}} $target, #{{end_user_params}}) => this.mutation.run($target, ($tsx) {
-    return _run($tsx, #{{invoke_end_user_params}});
-  });
-}
+  #{{TypedMutationListenable}} $get${method.name}#{{define_method_generics}}#{{keyed_args}} {
+    final $mutation = _\$mutation<#{{ResultT}}>(
+        '${method.name}',
+        #{{keys_list}}
+      );
+    Future<#{{ResultT}}> $run(#{{MutationTarget}} $target, #{{end_user_params}}) {
+      return $mutation.run($target, ($tsx) {
+        return $tsx.get(this.notifier).${method.name}#{{all_params}};
+      });
+    }
+    return #{{MutationListenable}}(
+      $mutation,
+      (#{{MutationTarget}} $target, #{{end_user_params}}) => $run($target, #{{invoke_end_user_params}}),
+      (#{{MutationTarget}} $target) => (#{{end_user_params}}) => $run($target, #{{invoke_end_user_params}}),
+    );
+  }
 ''',
     );
   }

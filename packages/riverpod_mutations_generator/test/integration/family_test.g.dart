@@ -46,7 +46,7 @@ final class DemoFamilyProvider extends $AsyncNotifierProvider<DemoFamily, int> {
   }
 }
 
-String _$demoFamilyHash() => r'4e5a1331c9d350780515c337af595f4292c1f925';
+String _$demoFamilyHash() => r'4cfb9f420c94938f936ee9f09d56018585d06dd4';
 
 final class DemoFamilyFamily extends $Family
     with
@@ -106,42 +106,38 @@ abstract class _$DemoFamily extends $AsyncNotifier<int> {
 extension DemoFamilyMutations on DemoFamilyProvider {
   Mutation<T> _$mutation<T>(String mutationName, [Object? key]) =>
       $Mutations.getForProvider<T>(this, mutationName, key);
-  DemoFamily_ChangeFamily get changeFamily => DemoFamily_ChangeFamily._(
-    _$mutation<void>('changeFamily'),
-    (tsx, int i, String? e, {required bool b, num n = 1}) =>
-        tsx.get(this.notifier).changeFamily(i, e, b: b, n: n),
-  );
-}
-
-final class DemoFamily_ChangeFamily extends MutationListenable<void> {
-  DemoFamily_ChangeFamily._(super.mutation, this._run);
-  final Future<void> Function(
-    MutationRef,
-    int i,
-    String? e, {
-    required bool b,
-    num n,
-  })
-  _run;
-
-  ProviderListenable<
-    (
-      MutationState<void>,
-      Future<void> Function(int i, String? e, {required bool b, num n}),
-    )
+  MutationListenable<
+    void,
+    Future<void> Function(
+      MutationTarget target,
+      int i,
+      String? e, {
+      required bool b,
+      num n,
+    }),
+    Future<void> Function(int i, String? e, {required bool b, num n})
   >
-  get pair => $proxyMutationPair(this.mutation, (target) {
-    return (int i, String? e, {required bool b, num n = 1}) =>
-        run(target, i, e, b: b, n: n);
-  });
+  get changeFamily {
+    final mutation = _$mutation<void>('changeFamily');
+    Future<void> run(
+      MutationTarget target,
+      int i,
+      String? e, {
+      required bool b,
+      num n = 1,
+    }) {
+      return mutation.run(target, (tsx) {
+        return tsx.get(this.notifier).changeFamily(i, e, b: b, n: n);
+      });
+    }
 
-  Future<void> run(
-    MutationTarget target,
-    int i,
-    String? e, {
-    required bool b,
-    num n = 1,
-  }) => this.mutation.run(target, (tsx) {
-    return _run(tsx, i, e, b: b, n: n);
-  });
+    return MutationListenable(
+      mutation,
+      (MutationTarget target, int i, String? e, {required bool b, num n = 1}) =>
+          run(target, i, e, b: b, n: n),
+      (MutationTarget target) =>
+          (int i, String? e, {required bool b, num n = 1}) =>
+              run(target, i, e, b: b, n: n),
+    );
+  }
 }

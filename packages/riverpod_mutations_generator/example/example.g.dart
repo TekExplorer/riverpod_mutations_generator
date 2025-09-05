@@ -102,42 +102,45 @@ String _$exampleHash() => r'8e94925464b940f3e410c2c2054797d4910f3652';
 extension TodoListNotifierMutations on TodoListNotifierProvider {
   Mutation<T> _$mutation<T>(String mutationName, [Object? key]) =>
       $Mutations.getForProvider<T>(this, mutationName, key);
-  TodoListNotifier_AddTodo get addTodo => TodoListNotifier_AddTodo._(
-    _$mutation<void>('addTodo'),
-    (tsx, Todo newTodo) => tsx.get(this.notifier).addTodo(newTodo),
-  );
-  TodoListNotifier_RemoveTodo removeTodo({required int id}) =>
-      TodoListNotifier_RemoveTodo._(
-        _$mutation<void>('removeTodo', (id: id)),
-        (tsx) => tsx.get(this.notifier).removeTodo(id: id),
-      );
-}
-
-final class TodoListNotifier_AddTodo extends MutationListenable<void> {
-  TodoListNotifier_AddTodo._(super.mutation, this._run);
-  final Future<void> Function(MutationRef, Todo newTodo) _run;
-
-  ProviderListenable<(MutationState<void>, Future<void> Function(Todo newTodo))>
-  get pair => $proxyMutationPair(this.mutation, (target) {
-    return (Todo newTodo) => run(target, newTodo);
-  });
-
-  Future<void> run(MutationTarget target, Todo newTodo) =>
-      this.mutation.run(target, (tsx) {
-        return _run(tsx, newTodo);
+  MutationListenable<
+    void,
+    Future<void> Function(MutationTarget target, Todo newTodo),
+    Future<void> Function(Todo newTodo)
+  >
+  get addTodo {
+    final mutation = _$mutation<void>('addTodo');
+    Future<void> run(MutationTarget target, Todo newTodo) {
+      return mutation.run(target, (tsx) {
+        return tsx.get(this.notifier).addTodo(newTodo);
       });
-}
+    }
 
-final class TodoListNotifier_RemoveTodo extends MutationListenable<void> {
-  TodoListNotifier_RemoveTodo._(super.mutation, this._run);
-  final Future<void> Function(MutationRef) _run;
+    return MutationListenable(
+      mutation,
+      (MutationTarget target, Todo newTodo) => run(target, newTodo),
+      (MutationTarget target) =>
+          (Todo newTodo) => run(target, newTodo),
+    );
+  }
 
-  ProviderListenable<(MutationState<void>, Future<void> Function())> get pair =>
-      $proxyMutationPair(this.mutation, (target) {
-        return () => run(target);
+  MutationListenable<
+    void,
+    Future<void> Function(MutationTarget target),
+    Future<void> Function()
+  >
+  removeTodo({required int id}) {
+    final mutation = _$mutation<void>('removeTodo', (id: id));
+    Future<void> run(MutationTarget target) {
+      return mutation.run(target, (tsx) {
+        return tsx.get(this.notifier).removeTodo(id: id);
       });
+    }
 
-  Future<void> run(MutationTarget target) => this.mutation.run(target, (tsx) {
-    return _run(tsx);
-  });
+    return MutationListenable(
+      mutation,
+      (MutationTarget target) => run(target),
+      (MutationTarget target) =>
+          () => run(target),
+    );
+  }
 }

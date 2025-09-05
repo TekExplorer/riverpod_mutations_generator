@@ -5,15 +5,14 @@ import 'package:riverpod_mutations_annotation/riverpod_mutations_annotation.dart
 part 'internal_provider.g.dart';
 
 @internal
-ProviderListenable<(MutationState<R>, F)>
-    $proxyMutationPair<R, F extends Function>(
+ProviderListenable<(MutationState<R>, F)> $proxyMutationPair<R, F>(
   Mutation<R> mutation,
   F Function(MutationTarget target) fn,
 ) =>
-        _mutationsProvider<R, F>(mutation, Ignore(fn));
+    _mutationsProvider<R, F>(mutation, Ignore(fn));
 
 @riverpod
-class _Mutations<R, F extends Function> extends _$Mutations<R, F> {
+class _Mutations<R, F> extends _$Mutations<R, F> {
   @override
   (MutationState<R>, F) build(
     Mutation<R> mutation,

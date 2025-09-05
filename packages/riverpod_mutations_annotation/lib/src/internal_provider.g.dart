@@ -9,7 +9,7 @@ part of 'internal_provider.dart';
 @ProviderFor(_Mutations)
 const _mutationsProvider = _MutationsFamily._();
 
-final class _MutationsProvider<R, F extends Function>
+final class _MutationsProvider<R, F>
     extends $NotifierProvider<_Mutations<R, F>, (MutationState<R>, F)> {
   const _MutationsProvider._(
       {required _MutationsFamily super.from,
@@ -40,7 +40,7 @@ final class _MutationsProvider<R, F extends Function>
   @override
   _Mutations<R, F> create() => _Mutations<R, F>();
 
-  $R _captureGenerics<$R>($R Function<R, F extends Function>() cb) {
+  $R _captureGenerics<$R>($R Function<R, F>() cb) {
     return cb<R, F>();
   }
 
@@ -65,7 +65,7 @@ final class _MutationsProvider<R, F extends Function>
   }
 }
 
-String _$_mutationsHash() => r'1117c6f3d1d5086e27255256963f13813a23c230';
+String _$_mutationsHash() => r'519e47d01b508b4e37d6ba8db50ef2a5ddbb4900';
 
 final class _MutationsFamily extends $Family {
   const _MutationsFamily._()
@@ -77,7 +77,7 @@ final class _MutationsFamily extends $Family {
           isAutoDispose: true,
         );
 
-  _MutationsProvider<R, F> call<R, F extends Function>(
+  _MutationsProvider<R, F> call<R, F>(
     Mutation<R> mutation,
     Ignore<F Function(MutationTarget target)> fn,
   ) =>
@@ -90,13 +90,12 @@ final class _MutationsFamily extends $Family {
   String toString() => r'_mutationsProvider';
 
   /// {@macro riverpod.override_with}
-  Override overrideWith(
-          _Mutations<R, F> Function<R, F extends Function>() create) =>
+  Override overrideWith(_Mutations<R, F> Function<R, F>() create) =>
       $FamilyOverride(
           from: this,
           createElement: (pointer) {
             final provider = pointer.origin as _MutationsProvider;
-            return provider._captureGenerics(<R, F extends Function>() {
+            return provider._captureGenerics(<R, F>() {
               provider as _MutationsProvider<R, F>;
               return provider
                   .$view(create: create<R, F>)
@@ -106,14 +105,14 @@ final class _MutationsFamily extends $Family {
 
   /// {@macro riverpod.override_with_build}
   Override overrideWithBuild(
-          (MutationState<R>, F) Function<R, F extends Function>(
+          (MutationState<R>, F) Function<R, F>(
                   Ref ref, _Mutations<R, F> notifier)
               build) =>
       $FamilyOverride(
           from: this,
           createElement: (pointer) {
             final provider = pointer.origin as _MutationsProvider;
-            return provider._captureGenerics(<R, F extends Function>() {
+            return provider._captureGenerics(<R, F>() {
               provider as _MutationsProvider<R, F>;
               return provider
                   .$view(runNotifierBuildOverride: build<R, F>)
@@ -122,8 +121,7 @@ final class _MutationsFamily extends $Family {
           });
 }
 
-abstract class _$Mutations<R, F extends Function>
-    extends $Notifier<(MutationState<R>, F)> {
+abstract class _$Mutations<R, F> extends $Notifier<(MutationState<R>, F)> {
   late final _$args = ref.$arg as (
     Mutation<R>,
     Ignore<F Function(MutationTarget target)>,

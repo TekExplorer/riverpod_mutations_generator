@@ -60,7 +60,7 @@ final class DemoGenericProvider<T>
   }
 }
 
-String _$demoGenericHash() => r'7d2478f377ca5bbdd089e45218aeef44e1e2a6ac';
+String _$demoGenericHash() => r'e4ca89947ee9d283766a012725511d27893b2f0c';
 
 final class DemoGenericFamily extends $Family {
   const DemoGenericFamily._()
@@ -131,60 +131,66 @@ abstract class _$DemoGeneric<T> extends $Notifier<T> {
 extension DemoGenericMutations<T> on DemoGenericProvider<T> {
   Mutation<T> _$mutation<T>(String mutationName, [Object? key]) =>
       $Mutations.getForProvider<T>(this, mutationName, key);
-  DemoGeneric_ChangeGeneric<T> get changeGeneric => DemoGeneric_ChangeGeneric._(
-    _$mutation<void>('changeGeneric'),
-    (tsx, T value) => tsx.get(this.notifier).changeGeneric(value),
-  );
-  DemoGeneric_Generic<T, R> generic<R>() => DemoGeneric_Generic._(
-    _$mutation<(T, R)>('generic'),
-    (tsx) => tsx.get(this.notifier).generic<R>(),
-  );
-  DemoGeneric_GenericShadowed<T> genericShadowed<T>() =>
-      DemoGeneric_GenericShadowed._(
-        _$mutation<T>('genericShadowed'),
-        (tsx) => tsx.get(this.notifier).genericShadowed<T>(),
-      );
-}
-
-final class DemoGeneric_ChangeGeneric<T> extends MutationListenable<void> {
-  DemoGeneric_ChangeGeneric._(super.mutation, this._run);
-  final Future<void> Function(MutationRef, T value) _run;
-
-  ProviderListenable<(MutationState<void>, Future<void> Function(T value))>
-  get pair => $proxyMutationPair(this.mutation, (target) {
-    return (T value) => run(target, value);
-  });
-
-  Future<void> run(MutationTarget target, T value) =>
-      this.mutation.run(target, (tsx) {
-        return _run(tsx, value);
+  MutationListenable<
+    void,
+    Future<void> Function(MutationTarget target, T value),
+    Future<void> Function(T value)
+  >
+  get changeGeneric {
+    final mutation = _$mutation<void>('changeGeneric');
+    Future<void> run(MutationTarget target, T value) {
+      return mutation.run(target, (tsx) {
+        return tsx.get(this.notifier).changeGeneric(value);
       });
-}
+    }
 
-final class DemoGeneric_Generic<T, R> extends MutationListenable<(T, R)> {
-  DemoGeneric_Generic._(super.mutation, this._run);
-  final Future<(T, R)> Function(MutationRef) _run;
+    return MutationListenable(
+      mutation,
+      (MutationTarget target, T value) => run(target, value),
+      (MutationTarget target) =>
+          (T value) => run(target, value),
+    );
+  }
 
-  ProviderListenable<(MutationState<(T, R)>, Future<(T, R)> Function())>
-  get pair => $proxyMutationPair(this.mutation, (target) {
-    return () => run(target);
-  });
-
-  Future<(T, R)> run(MutationTarget target) => this.mutation.run(target, (tsx) {
-    return _run(tsx);
-  });
-}
-
-final class DemoGeneric_GenericShadowed<T> extends MutationListenable<T> {
-  DemoGeneric_GenericShadowed._(super.mutation, this._run);
-  final Future<T> Function(MutationRef) _run;
-
-  ProviderListenable<(MutationState<T>, Future<T> Function())> get pair =>
-      $proxyMutationPair(this.mutation, (target) {
-        return () => run(target);
+  MutationListenable<
+    (T, R),
+    Future<(T, R)> Function(MutationTarget target),
+    Future<(T, R)> Function()
+  >
+  generic<R>() {
+    final mutation = _$mutation<(T, R)>('generic');
+    Future<(T, R)> run(MutationTarget target) {
+      return mutation.run(target, (tsx) {
+        return tsx.get(this.notifier).generic<R>();
       });
+    }
 
-  Future<T> run(MutationTarget target) => this.mutation.run(target, (tsx) {
-    return _run(tsx);
-  });
+    return MutationListenable(
+      mutation,
+      (MutationTarget target) => run(target),
+      (MutationTarget target) =>
+          () => run(target),
+    );
+  }
+
+  MutationListenable<
+    T,
+    Future<T> Function(MutationTarget target),
+    Future<T> Function()
+  >
+  genericShadowed<T>() {
+    final mutation = _$mutation<T>('genericShadowed');
+    Future<T> run(MutationTarget target) {
+      return mutation.run(target, (tsx) {
+        return tsx.get(this.notifier).genericShadowed<T>();
+      });
+    }
+
+    return MutationListenable(
+      mutation,
+      (MutationTarget target) => run(target),
+      (MutationTarget target) =>
+          () => run(target),
+    );
+  }
 }

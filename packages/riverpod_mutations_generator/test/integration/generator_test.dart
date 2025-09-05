@@ -46,11 +46,16 @@ class Demo extends _$Demo {
   }
 
   @mutation
-  Future<void> nameCollision(Object ref, Object mutation) async {
-    c<Future<void> Function(MutationTarget, Object ref, Object mutation)>(
-      provider.nameCollision.run,
-    );
-    c2<Future<void> Function(Object ref, Object mutation)>(
+  Future<void> nameCollision(Object ref, Object mutation, Object run) async {
+    c<
+      Future<void> Function(
+        MutationTarget,
+        Object ref,
+        Object mutation,
+        Object run,
+      )
+    >(provider.nameCollision.run);
+    c2<Future<void> Function(Object ref, Object mutation, Object run)>(
       provider.nameCollision.pair,
     );
   }
