@@ -20,23 +20,27 @@ import 'package:riverpod_annotation/riverpod_annotation.dart'
 abstract class $Mutations {
   static final _mutations = <Object, Mutation>{};
 
+  @internal
   @useResult
   static Mutation<T> getForProvider<T>(
-    $ClassProvider provider,
-    String mutationName,
-  ) {
-    // the provider and mutation name to specify a method
-    final key = (provider, mutationName);
-    return upsert(key, () {
-      return Mutation<T>(label: '$provider.$mutationName');
-    });
+      $ClassProvider provider, String mutationName,
+      [Object? key]) {
+    if (key != null) {
+      return _upsert((provider, mutationName, key), () {
+        return Mutation<T>(label: '$provider.$mutationName')(key);
+      });
+    } else {
+      return _upsert((provider, mutationName), () {
+        return Mutation<T>(label: '$provider.$mutationName');
+      });
+    }
   }
 
   /// No need to provide [key] to the mutation, as this function does it for you
   @useResult
-  static Mutation<T> upsert<T>(Object key, Mutation<T> Function() ifEmpty) {
-    _mutations.putIfAbsent((T, key), () => ifEmpty()(key));
-    return _mutations[(T, key)] as Mutation<T>;
+  static Mutation<T> _upsert<T>(Object key, Mutation<T> Function() ifEmpty) {
+    return _mutations.putIfAbsent((T, key), () => ifEmpty()(key))
+        as Mutation<T>;
   }
 
   // static Iterable<Mutation> getAll() => _mutations.values;

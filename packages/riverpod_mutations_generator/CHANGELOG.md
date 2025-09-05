@@ -1,5 +1,25 @@
 # Riverpod Mutations Generator
 
+## 2.0.0.dev.3
+
+Changed tracks again to make the api like _this_ in order to match traditional usage of the `Mutation` object
+
+```dart
+final MutationState<T> state = ref.watch(todosProvider.addTodo);
+await todosProvider.addTodo.run(ref, Todo(...));
+// traditionally
+final addTodoMutation = Mutation<void>();
+await addTodoMutation.run(ref, (ref) {...});
+```
+
+Of course, the `(state, action)` syntax may still be valuable, so its available as an extension as so:
+
+```dart
+
+final (state, addTodo) = ref.watch(todosProvider.addTodo.pair);
+await addTodo(Todo(...));
+```
+
 ## 2.0.0-dev.2
 
 Forget all of that and wrap riverpod 3.0.0-dev.17's mutations for a state of `(MutationState<ResultT>, F extends Function)`

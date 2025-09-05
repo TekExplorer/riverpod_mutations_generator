@@ -16,5 +16,7 @@ dependencies:
   riverpod_annotation: *riverpod_version
 
 dev_dependencies:
+  riverpod_generator: *riverpod_version
+  build_runner: any
   lints: ^6.0.0
   test: ^1.21.0

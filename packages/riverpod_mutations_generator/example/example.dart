@@ -47,7 +47,7 @@ void example(Ref ref) {
   // normal usage
   final todoList = ref.watch(todoListProvider);
 
-  final (addedTodo, addTodo) = ref.watch(todoListProvider.addTodo);
+  final addedTodo = ref.watch(todoListProvider.addTodo);
 
   print(switch (addedTodo) {
     MutationIdle() => 'Idle/Initial',
@@ -55,11 +55,10 @@ void example(Ref ref) {
     MutationError(:final error) => error.toString(),
     MutationSuccess() => 'Success!',
   });
+  todoListProvider.addTodo.run(ref, Todo(1, 'newTodo'));
 
-  addTodo(Todo(1, 'newTodo'));
-
-  final (state, removeTodo) = ref.watch(todoListProvider.removeTodo(id: 1));
+  final state = ref.watch(todoListProvider.removeTodo(id: 1));
 
   // the parameter marked by @mutationKey was removed, as it's stored
-  removeTodo();
+  todoListProvider.removeTodo(id: 1).run(ref);
 }

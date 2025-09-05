@@ -2,6 +2,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_mutations_annotation/riverpod_mutations_annotation.dart';
 import 'package:test/test.dart';
 
+import 'shared.dart';
+
 part 'generator_test.g.dart';
 
 @riverpod
@@ -13,35 +15,43 @@ class Demo extends _$Demo {
 
   @mutation
   Future<void> change(int i) async {
-    ref.read<Future<void> Function(int i)>(provider.change.run);
+    c<Future<void> Function(MutationTarget, int i)>(provider.change.run);
+    c2<Future<void> Function(int i)>(provider.change.pair);
   }
 
   @mutation
   Future<String?> nullable() async {
-    ref.read<Future<String?> Function()>(provider.nullable.run);
+    c<Future<String?> Function(MutationTarget)>(provider.nullable.run);
+    c2<Future<String?> Function()>(provider.nullable.pair);
     throw UnimplementedError();
   }
 
   @mutation
   Future<void> normal() async {
-    ref.read<Future<void> Function()>(provider.normal.run);
+    c<Future<void> Function(MutationTarget)>(provider.normal.run);
+    c2<Future<void> Function()>(provider.normal.pair);
   }
 
   @mutation
   Future<void> withRef(MutationRef ref) async {
-    ref.get<Future<void> Function()>(provider.withRef.run);
+    c<Future<void> Function(MutationTarget)>(provider.withRef.run);
+    c2<Future<void> Function()>(provider.withRef.pair);
   }
 
   @mutation
   Future<T> generic<T>() {
-    ref.read<Future<T> Function()>(provider.generic<T>().run);
+    c<Future<T> Function(MutationTarget)>(provider.generic<T>().run);
+    c2<Future<T> Function()>(provider.generic<T>().pair);
     throw UnimplementedError();
   }
 
   @mutation
   Future<void> nameCollision(Object ref, Object mutation) async {
-    this.ref.read<Future<void> Function(Object ref, Object mutation)>(
+    c<Future<void> Function(MutationTarget, Object ref, Object mutation)>(
       provider.nameCollision.run,
+    );
+    c2<Future<void> Function(Object ref, Object mutation)>(
+      provider.nameCollision.pair,
     );
   }
 
@@ -52,56 +62,12 @@ class Demo extends _$Demo {
     @mutationKey String? namedKey,
     int? optionalParam,
   }) async {
-    ref.read<Future<void> Function(int param, {int? optionalParam})>(
+    c<Future<void> Function(MutationTarget, int param, {int? optionalParam})>(
       provider.keyed(key, namedKey: namedKey).run,
     );
-  }
-}
-
-@riverpod
-class DemoFamily extends _$DemoFamily {
-  @override
-  FutureOr<int> build(bool key) => 0;
-
-  DemoFamilyProvider get provider => demoFamilyProvider(key);
-
-  @mutation
-  Future<void> changeFamily(
-    int i,
-    String? e, {
-    required bool b,
-    num n = 1,
-  }) async {
-    ref.read<Future<void> Function(int i, String? e, {required bool b, num n})>(
-      provider.changeFamily.run,
+    c2<Future<void> Function(int param, {int? optionalParam})>(
+      provider.keyed(key, namedKey: namedKey).pair,
     );
-  }
-}
-
-@riverpod
-class DemoGeneric<T> extends _$DemoGeneric<T> {
-  @override
-  T build() {
-    throw UnimplementedError();
-  }
-
-  DemoGenericProvider<T> get provider => demoGenericProvider<T>();
-
-  @mutation
-  Future<void> changeGeneric(T value) async {
-    ref.read<Future<void> Function(T value)>(provider.changeGeneric.run);
-  }
-
-  @mutation
-  Future<(T, R)> generic<R>() {
-    ref.read<Future<(T, R)> Function()>(provider.generic<R>().run);
-    throw UnimplementedError();
-  }
-
-  @mutation
-  Future<T> genericShadowed<T>() {
-    ref.read<Future<T> Function()>(provider.genericShadowed<T>().run);
-    throw UnimplementedError();
   }
 }
 
@@ -117,15 +83,15 @@ void main() {
     expect(demoProviderSub.read(), isA<AsyncData<int>>());
     expect(demoProviderSub.read(), AsyncData<int>(0));
 
-    expect(demoProviderChangeSub.read().state, isA<MutationIdle<void>>());
+    expect(demoProviderChangeSub.read(), isA<MutationIdle<void>>());
 
-    demoProviderChangeSub.read().run(3);
-    expect(demoProviderChangeSub.read().state, isA<MutationPending<void>>());
+    demoProvider.change.run(container, 3);
+    expect(demoProviderChangeSub.read(), isA<MutationPending<void>>());
     // await container.pump();
 
     await container.pump();
 
-    expect(demoProviderChangeSub.read().state, isA<MutationSuccess<void>>());
+    expect(demoProviderChangeSub.read(), isA<MutationSuccess<void>>());
     expect(demoProviderSub.read(), isA<AsyncData<int>>());
     expect(demoProviderSub.read(), AsyncData<int>(3));
 
@@ -137,7 +103,7 @@ void main() {
       (previous, next) {},
     );
 
-    expect(demoProviderChangeSub2.read().state, isA<MutationIdle<void>>());
+    expect(demoProviderChangeSub2.read(), isA<MutationIdle<void>>());
     expect(demoProviderSub.read(), isA<AsyncData<int>>(), reason: 'unchanged');
     expect(demoProviderSub.read(), AsyncData<int>(3), reason: 'unchanged');
   });

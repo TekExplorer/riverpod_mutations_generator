@@ -18,13 +18,13 @@ define: &riverpod_version ^3.0.0-dev.17
 dependencies:
   riverpod_mutations_annotation: ^2.0.0-dev.2
   riverpod_annotation: *riverpod_version
-  analyzer: ">=7.3.0 <9.0.0"
+  analyzer: ">=7.4.0 <8.0.0"
   build: ^3.0.0
   build_config: ^1.2.0
   collection: ^1.19.0
   # crypto: ^3.0.2
   meta: ^1.17.0
-  source_gen: ^3.0.0 
+  source_gen: ^3.1.0 
   recase: ^4.1.0
   source_helper: ^1.3.5
   analyzer_buffer: ^0.1.9

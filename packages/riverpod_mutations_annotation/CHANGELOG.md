@@ -1,5 +1,11 @@
 # Riverpod Mutations Annotation
 
+## 2.0.0-dev.4
+
+For `2.0.0-dev.3` of the generator
+
+Changes the wrapper to instead be a forwarder to `Mutation` itself
+
 ## 2.0.0-dev.3
 
 Fix an issue where a single key results in a single value, and not a record.

@@ -4,7 +4,8 @@ import 'package:analyzer/dart/element/element2.dart'
         FormalParameterElement,
         MethodElement2,
         TypeParameterElement2;
-import 'package:analyzer/dart/element/type.dart' show FunctionType, DartType;
+import 'package:analyzer/dart/element/type.dart'
+    show FunctionType, DartType, InterfaceType;
 import 'package:riverpod_mutations_generator/src/type_checkers.dart';
 import 'package:riverpod_mutations_generator/src/utils/dart_type_extensions.dart';
 
@@ -12,6 +13,8 @@ extension type NotifierClass(ClassElement2 element) {
   String get name => element.displayName;
 
   DartType get valueType => buildMethod.returnType.innerFutureType;
+
+  InterfaceType get thisType => element.thisType;
 
   List<TypeParameterElement2> get typeParameters => element.typeParameters2;
 

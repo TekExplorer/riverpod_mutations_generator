@@ -89,7 +89,7 @@ final class ExampleProvider extends $FunctionalProvider<void, void, void>
   }
 }
 
-String _$exampleHash() => r'd7387c366d4b862b8004d28c0cef5f53de53e5f7';
+String _$exampleHash() => r'8e94925464b940f3e410c2c2054797d4910f3652';
 
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
@@ -100,25 +100,44 @@ String _$exampleHash() => r'd7387c366d4b862b8004d28c0cef5f53de53e5f7';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 extension TodoListNotifierMutations on TodoListNotifierProvider {
-  MutationListenable<void, Future<void> Function(Todo newTodo)> get addTodo =>
-      MutationListenable.create(
-        (ref, mutation) => (
-          ref.watch(mutation),
-          (Todo newTodo) => mutation.run(ref, (ref) {
-            return ref.get(this.notifier).addTodo(newTodo);
-          }),
-        ),
-        (this, 'addTodo', ()),
-      );
-  MutationListenable<void, Future<void> Function()> removeTodo({
-    required int id,
-  }) => MutationListenable.create(
-    (ref, mutation) => (
-      ref.watch(mutation),
-      () => mutation.run(ref, (ref) {
-        return ref.get(this.notifier).removeTodo(id: id);
-      }),
-    ),
-    (this, 'removeTodo', (id: id)),
+  Mutation<T> _$mutation<T>(String mutationName, [Object? key]) =>
+      $Mutations.getForProvider<T>(this, mutationName, key);
+  TodoListNotifier_AddTodo get addTodo => TodoListNotifier_AddTodo._(
+    _$mutation<void>('addTodo'),
+    (tsx, Todo newTodo) => tsx.get(this.notifier).addTodo(newTodo),
   );
+  TodoListNotifier_RemoveTodo removeTodo({required int id}) =>
+      TodoListNotifier_RemoveTodo._(
+        _$mutation<void>('removeTodo', (id: id)),
+        (tsx) => tsx.get(this.notifier).removeTodo(id: id),
+      );
+}
+
+final class TodoListNotifier_AddTodo extends MutationListenable<void> {
+  TodoListNotifier_AddTodo._(super.mutation, this._run);
+  final Future<void> Function(MutationRef, Todo newTodo) _run;
+
+  ProviderListenable<(MutationState<void>, Future<void> Function(Todo newTodo))>
+  get pair => $proxyMutationPair(this.mutation, (target) {
+    return (Todo newTodo) => run(target, newTodo);
+  });
+
+  Future<void> run(MutationTarget target, Todo newTodo) =>
+      this.mutation.run(target, (tsx) {
+        return _run(tsx, newTodo);
+      });
+}
+
+final class TodoListNotifier_RemoveTodo extends MutationListenable<void> {
+  TodoListNotifier_RemoveTodo._(super.mutation, this._run);
+  final Future<void> Function(MutationRef) _run;
+
+  ProviderListenable<(MutationState<void>, Future<void> Function())> get pair =>
+      $proxyMutationPair(this.mutation, (target) {
+        return () => run(target);
+      });
+
+  Future<void> run(MutationTarget target) => this.mutation.run(target, (tsx) {
+    return _run(tsx);
+  });
 }
