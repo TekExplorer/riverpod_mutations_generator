@@ -1,8 +1,8 @@
 import 'package:meta/meta.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod/misc.dart';
-import 'package:riverpod_mutations_annotation/riverpod_mutations_annotation.dart'
-    show $proxyMutationPair;
+
+import 'internal_provider.dart';
 
 sealed class MutationListenable<ResultT, RunT, PairRunT>
     implements ProviderListenable<MutationState<ResultT>> {
