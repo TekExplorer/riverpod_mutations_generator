@@ -11,12 +11,12 @@ First, import both this and `riverpod_mutations_annotation`
 dependencies:
   riverpod: ^3.0.0-dev.17 # Your preferred riverpod package
   riverpod_annotation: ^3.0.0-dev.17
-  riverpod_mutations_annotation: ^2.0.0-dev.2
+  riverpod_mutations_annotation: ^2.0.0-dev.4
 
 dev_dependencies:
   build_runner: ^2.3.3
   riverpod_generator: ^3.0.0-dev.17
-  riverpod_mutations_generator: ^2.0.0-dev.2
+  riverpod_mutations_generator: ^2.0.0-dev.3
 ```
 
 ```dart
@@ -49,14 +49,24 @@ return Consumer(
     final (
       MutationState<void> addTodoState,
       Future<void> Function(Todo) addTodo,
-    ) = ref.watch(exampleProvider.addTodo);
+    ) = ref.watch(exampleProvider.addTodo.pair);
+
 
     // this will allow you to track the same method multiple times, exactly like a family.
     // note: the parameter was removed from `removeTodo()` as shown.
     // This particular value is now stored in the object in `removeTodo.params.id`
 
     // this example also shows using the state and action without unpacking it
-    final removeTodo = ref.watch(exampleProvider.removeTodo(id: 4));
+    final removeTodo = ref.watch(exampleProvider.removeTodo(id: 4).pair);
+
+    // you can also do it separately (the normal usage)
+    final removeTodoMutation = exampleProvider.removeTodo(id: 4);
+    final MutationState<void> removeTodoState = ref.watch(removeTodoMutation);
+    // and call it with
+    onPressed() {
+      await removeTodoMutation.run(ref);
+    }
+
 
     return Row(
       children: [

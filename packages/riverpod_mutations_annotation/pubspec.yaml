@@ -1,6 +1,6 @@
 name: riverpod_mutations_annotation
 description: The annotations for riverpod_mutations_generator
-version: 2.0.0-dev.3
+version: 2.0.0-dev.4
 repository: https://github.com/TekExplorer/riverpod_mutations_generator
 
 resolution: workspace
