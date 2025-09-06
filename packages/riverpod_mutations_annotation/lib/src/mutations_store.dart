@@ -23,17 +23,14 @@ abstract class $Mutations {
   @internal
   @useResult
   static Mutation<T> getForProvider<T>(
-      $ClassProvider provider, String mutationName,
-      [Object? key]) {
-    if (key != null) {
-      return _upsert((provider, mutationName, key), () {
-        return Mutation<T>(label: '$provider.$mutationName')(key);
-      });
-    } else {
-      return _upsert((provider, mutationName), () {
-        return Mutation<T>(label: '$provider.$mutationName');
-      });
-    }
+    $ClassProvider provider,
+    String mutationName, [
+    Object? key,
+  ]) {
+    return _upsert(
+      key != null ? (provider, mutationName, key) : (provider, mutationName),
+      () => Mutation<T>(label: '$provider.$mutationName'),
+    );
   }
 
   /// No need to provide [key] to the mutation, as this function does it for you
