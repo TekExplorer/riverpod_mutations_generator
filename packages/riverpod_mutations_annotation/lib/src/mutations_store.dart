@@ -29,6 +29,7 @@ abstract class $Mutations {
   ]) {
     return _upsert(
       key != null ? (provider, mutationName, key) : (provider, mutationName),
+      // Do not call with a key. That happens in the _upsert function with the above
       () => Mutation<T>(label: '$provider.$mutationName'),
     );
   }
