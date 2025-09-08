@@ -27,18 +27,14 @@ abstract final class $Mutations {
     String mutationName, [
     Object? key,
   ]) {
-    return _upsert(
-      key != null ? (provider, mutationName, key) : (provider, mutationName),
-      // Do not call with a key. That happens in the _upsert function with the above
-      () => Mutation<T>(label: '$provider.$mutationName'),
-    );
-  }
+    key = key != null
+        ? (T, provider, mutationName, key)
+        : (T, provider, mutationName);
 
-  /// No need to provide [key] to the mutation, as this function does it for you
-  @useResult
-  static Mutation<T> _upsert<T>(Object key, Mutation<T> Function() ifEmpty) {
-    return _mutations.putIfAbsent((T, key), () => ifEmpty()(key))
-        as Mutation<T>;
+    return _mutations.putIfAbsent(
+      key,
+      () => Mutation<T>(label: '$provider.$mutationName')(key),
+    ) as Mutation<T>;
   }
 
   // static Iterable<Mutation> getAll() => _mutations.values;

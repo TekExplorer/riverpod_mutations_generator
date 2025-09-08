@@ -36,8 +36,10 @@ final class Ignore<T> {
   final T value;
 
   @override
-  operator ==(Object other) => other is Ignore<T>;
+  int get hashCode => T.hashCode;
 
   @override
-  int get hashCode => T.hashCode;
+  operator ==(covariant Ignore other) => _eqT(other) && other._eqT(this);
+
+  bool _eqT(Object other) => other is Ignore<T>;
 }

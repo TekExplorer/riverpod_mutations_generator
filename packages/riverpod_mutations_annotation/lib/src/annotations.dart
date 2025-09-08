@@ -7,7 +7,6 @@ final class _Mutation {
 }
 
 const mutation = _Mutation();
-// const mut = mutation;
 
 @experimental
 @Target({TargetKind.parameter})
@@ -17,5 +16,3 @@ final class _MutationKey {
 
 @experimental
 const mutationKey = _MutationKey();
-// @experimental
-// const mutKey = mutationKey;
