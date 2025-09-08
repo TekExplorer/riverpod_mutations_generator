@@ -17,7 +17,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart'
 ///
 /// If not for that, each mutation would have an accompanying family provider
 @internal
-abstract class $Mutations {
+abstract final class $Mutations {
   static final _mutations = <Object, Mutation>{};
 
   @internal
