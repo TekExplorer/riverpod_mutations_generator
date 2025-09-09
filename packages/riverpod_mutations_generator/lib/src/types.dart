@@ -72,5 +72,5 @@ sealed class MutationExecutable {
 }
 
 extension on FormalParameterElement {
-  bool get isMutationRef => mutationRefTypeChecker.isExactlyType(type);
+  bool get isMutationRef => mutationTransactionTypeChecker.isExactlyType(type);
 }

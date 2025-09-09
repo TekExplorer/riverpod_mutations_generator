@@ -1,5 +1,9 @@
 # Riverpod Mutations Annotation
 
+## 2.0.0-dev.5
+
+Bump to riverpod 3.0.0-dev.18
+
 ## 2.0.0-dev.4
 
 For `2.0.0-dev.3` of the generator

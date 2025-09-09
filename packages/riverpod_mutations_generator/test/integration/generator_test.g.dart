@@ -6,6 +6,9 @@ part of 'generator_test.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(Demo)
 const demoProvider = DemoProvider._();
 
@@ -29,7 +32,7 @@ final class DemoProvider extends $AsyncNotifierProvider<Demo, int> {
   Demo create() => Demo();
 }
 
-String _$demoHash() => r'779327e2e3b649d075a5f7d6593bcc1a9ee929ce';
+String _$demoHash() => r'054c810b62d4438d54be9aae601264b37f726725';
 
 abstract class _$Demo extends $AsyncNotifier<int> {
   FutureOr<int> build();
@@ -49,9 +52,6 @@ abstract class _$Demo extends $AsyncNotifier<int> {
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
 
 // **************************************************************************
 // RiverpodMutationsGenerator

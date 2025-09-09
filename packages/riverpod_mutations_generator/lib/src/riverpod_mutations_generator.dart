@@ -19,17 +19,24 @@ class RiverpodMutationsGenerator extends sourceGen.Generator {
         .map(TopLevelFunctionMutation.new);
 
     final classes = library.classes
-        .where(riverpodTypeChecker.hasAnnotationOf)
+        .where(
+          (e) =>
+              riverpodTypeChecker.hasAnnotationOf(e) ||
+              e.allSupertypes.any(anyNotifierTypeChecker.isExactlyType),
+        )
         .where(classHasMutation)
         .map(NotifierClass.new);
     //
     // TODO: consider allowing extensions
     if (classes.isEmpty && functions.isEmpty) return null;
-    final buffer = AnalyzerBuffer.part2(library.element);
-    buffer.write('''
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
-''');
+    final buffer = AnalyzerBuffer.part2(
+      library.element,
+      header: '''
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+''',
+    );
+
     //
     for (final notifier in classes) {
       final template = NotifierTemplate(notifier);

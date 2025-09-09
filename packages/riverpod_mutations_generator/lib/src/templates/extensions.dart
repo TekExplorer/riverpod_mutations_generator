@@ -132,7 +132,7 @@ extension on FormalParameterElement {
   }
 
   @useResult
-  bool get isMutationRef => mutationRefTypeChecker.isExactlyType(type);
+  bool get isMutationTsx => mutationTransactionTypeChecker.isExactlyType(type);
 }
 
 extension on String {

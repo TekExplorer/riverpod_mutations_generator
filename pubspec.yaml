@@ -12,31 +12,3 @@ workspace:
 environment:
   # sdk: ">=3.0.0 <4.0.0"
   sdk: ^3.8.0
-
-define: &riverpod_version ^3.0.0-dev.17
-
-dependencies:
-  riverpod_mutations_annotation: ^2.0.0-dev.2
-  riverpod_annotation: *riverpod_version
-  analyzer: ">=7.4.0 <8.0.0"
-  build: ^3.0.0
-  build_config: ^1.2.0
-  collection: ^1.19.0
-  # crypto: ^3.0.2
-  meta: ^1.17.0
-  source_gen: ^3.1.0 
-  recase: ^4.1.0
-  source_helper: ^1.3.5
-  analyzer_buffer: ^0.1.9
-  # riverpod_analyzer_utils: ^0.4.1
-
-dev_dependencies:
-  lints: ^6.0.0
-  build_runner: ^2.7.0
-  build_test: ^3.3.2
-  build_verify: ^3.1.0
-  freezed: ^3.2.0
-  freezed_annotation: ^3.1.0
-  riverpod: *riverpod_version
-  riverpod_generator: *riverpod_version
-  test: ^1.21.0

@@ -1,7 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod/misc.dart';
-import 'package:riverpod_mutations_annotation/src/mutations_store.dart';
 
 import 'internal_provider.dart';
 
@@ -71,27 +70,4 @@ final class _MutationListenable<ResultT, RunT, PairRunT>
 
   @override
   int get hashCode => mutation.hashCode;
-}
-
-Future<String> doSomething(MutationRef ref, String input) async {
-  await Future.delayed(const Duration(seconds: 1));
-  return 'Result: $input';
-}
-
-MutationListenable<String, Future<void> Function(MutationTarget target),
-    Future<void> Function()> doSomethingMutation(String input) {
-  final mutation =
-      $Mutations.getForFunction<String>(doSomething, 'doSomething');
-
-  Future<void> run(MutationTarget target) {
-    return mutation.run(target, (tsx) {
-      return doSomething(tsx, input);
-    });
-  }
-
-  return MutationListenable(
-    mutation,
-    (MutationTarget target) => run(target),
-    (MutationTarget target) => () => run(target),
-  );
 }

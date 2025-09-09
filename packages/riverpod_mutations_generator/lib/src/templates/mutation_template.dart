@@ -62,7 +62,7 @@ class MutationTemplate {
 
   String get tsx {
     final refInArguments = executable.formalParameters
-        .where((p) => p.isMutationRef)
+        .where((p) => p.isMutationTsx)
         .firstOrNull;
     if (refInArguments != null) return refInArguments.displayName;
 

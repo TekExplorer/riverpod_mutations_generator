@@ -1,5 +1,9 @@
 # Riverpod Mutations Generator
 
+## 2.0.0-dev.4
+
+Bump to riverpod 3.0.0-dev.18
+
 ## 2.0.0.dev.3
 
 Changed tracks again to make the api like _this_ in order to match traditional usage of the `Mutation` object

@@ -6,6 +6,9 @@ part of 'generic_test.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(DemoGeneric)
 const demoGenericProvider = DemoGenericFamily._();
 
@@ -60,7 +63,7 @@ final class DemoGenericProvider<T>
   }
 }
 
-String _$demoGenericHash() => r'e4ca89947ee9d283766a012725511d27893b2f0c';
+String _$demoGenericHash() => r'40ab8c9552aa139fd1068ca92cd595fbeb6517ca';
 
 final class DemoGenericFamily extends $Family {
   const DemoGenericFamily._()
@@ -119,9 +122,6 @@ abstract class _$DemoGeneric<T> extends $Notifier<T> {
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
 
 // **************************************************************************
 // RiverpodMutationsGenerator

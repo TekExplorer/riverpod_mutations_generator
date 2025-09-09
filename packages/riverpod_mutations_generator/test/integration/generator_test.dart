@@ -33,7 +33,7 @@ class Demo extends _$Demo {
   }
 
   @mutation
-  Future<void> withRef(MutationRef ref) async {
+  Future<void> withRef(MutationTransaction ref) async {
     runCheck<Future<void> Function(MutationTarget)>(provider.withRef.run);
     pairCheck<Future<void> Function()>(provider.withRef.pair);
   }

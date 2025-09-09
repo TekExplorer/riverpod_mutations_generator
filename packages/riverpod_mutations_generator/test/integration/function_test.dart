@@ -13,7 +13,7 @@ Future<String> _getSomething(String id, @mutationKey String key) async {
 }
 
 @mutation
-Future<bool> _usesRef(MutationRef ref) async {
+Future<bool> _usesRef(MutationTransaction ref) async {
   final provider = usesRef;
   runCheck<Future<bool> Function(MutationTarget)>(provider.run);
   pairCheck<Future<bool> Function()>(provider.pair);
