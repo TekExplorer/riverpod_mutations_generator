@@ -58,15 +58,15 @@ the provider is also much simpler now, no need to know about mut keys or notifie
 
 ## 1.0.9
 
-Go back to a previous method with the hope it breaks less (as keeps happening *immediately* after publishing - of course - not before)
+Go back to a previous method with the hope it breaks less (as keeps happening _immediately_ after publishing - of course - not before)
 
 ## 1.0.8
 
-*Don't* break nullable parameters
+_Don't_ break nullable parameters
 
 ## 1.0.7
 
-Once more, let's not forget the *other* spot that needed the fix.
+Once more, let's not forget the _other_ spot that needed the fix.
 
 ## 1.0.6
 
