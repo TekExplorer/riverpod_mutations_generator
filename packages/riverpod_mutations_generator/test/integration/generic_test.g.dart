@@ -128,16 +128,16 @@ abstract class _$DemoGeneric<T> extends $Notifier<T> {
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
 extension DemoGenericMutations<T> on DemoGenericProvider<T> {
-  Mutation<T> _$mutation<T>(String mutationName, [Object? key]) =>
-      $Mutations.getForProvider<T>(this, mutationName, key);
   MutationListenable<
     void,
     Future<void> Function(MutationTarget target, T value),
     Future<void> Function(T value)
   >
   get changeGeneric {
-    final mutation = _$mutation<void>('changeGeneric');
+    final mutation = $Mutations.getForProvider<void>(this, 'changeGeneric');
     Future<void> run(MutationTarget target, T value) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).changeGeneric(value);
@@ -158,7 +158,7 @@ extension DemoGenericMutations<T> on DemoGenericProvider<T> {
     Future<(T, R)> Function()
   >
   generic<R>() {
-    final mutation = _$mutation<(T, R)>('generic');
+    final mutation = $Mutations.getForProvider<(T, R)>(this, 'generic');
     Future<(T, R)> run(MutationTarget target) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).generic<R>();
@@ -179,7 +179,7 @@ extension DemoGenericMutations<T> on DemoGenericProvider<T> {
     Future<T> Function()
   >
   genericShadowed<T>() {
-    final mutation = _$mutation<T>('genericShadowed');
+    final mutation = $Mutations.getForProvider<T>(this, 'genericShadowed');
     Future<T> run(MutationTarget target) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).genericShadowed<T>();

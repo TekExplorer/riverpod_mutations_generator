@@ -19,7 +19,7 @@ class DemoFamily extends _$DemoFamily {
     required bool b,
     num n = 1,
   }) async {
-    c<
+    runCheck<
       Future<void> Function(
         MutationTarget,
         int i,
@@ -28,8 +28,8 @@ class DemoFamily extends _$DemoFamily {
         num n,
       })
     >(provider.changeFamily.run);
-    c2<Future<void> Function(int i, String? e, {required bool b, num n})>(
-      provider.changeFamily.pair,
-    );
+    pairCheck<
+      Future<void> Function(int i, String? e, {required bool b, num n})
+    >(provider.changeFamily.pair);
   }
 }

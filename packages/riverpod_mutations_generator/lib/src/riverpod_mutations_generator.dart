@@ -1,30 +1,10 @@
 import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer_buffer/analyzer_buffer.dart';
-import 'package:build/src/builder/build_step.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:source_gen/source_gen.dart' as sourceGen;
 
 import 'templates/templates.dart';
 import 'type_checkers.dart';
 import 'types.dart';
-
-class X extends sourceGen.GeneratorForAnnotation<Riverpod> {
-  @override
-  generateForAnnotatedElement(
-    Element2 element,
-    sourceGen.ConstantReader annotation,
-    BuildStep buildStep,
-  ) {
-    if (element is! ClassElement2) return;
-    if (!classHasMutation(element)) return;
-
-    final buffer = AnalyzerBuffer.part2(element.library2);
-
-    NotifierTemplate(NotifierClass(element)).defineInLibrary(buffer);
-
-    return buffer.toString();
-  }
-}
 
 bool classHasMutation(ClassElement2 notifier) =>
     notifier.methods2.any(mutationTypeChecker.hasAnnotationOf);
@@ -34,18 +14,31 @@ class RiverpodMutationsGenerator extends sourceGen.Generator {
 
   @override
   Future<String?> generate(library, buildStep) async {
+    final functions = library.element.topLevelFunctions
+        .where(mutationTypeChecker.hasAnnotationOf)
+        .map(TopLevelFunctionMutation.new);
+
     final classes = library.classes
         .where(riverpodTypeChecker.hasAnnotationOf)
         .where(classHasMutation)
         .map(NotifierClass.new);
     //
     // TODO: consider allowing extensions
-    if (classes.isEmpty) return null;
+    if (classes.isEmpty && functions.isEmpty) return null;
     final buffer = AnalyzerBuffer.part2(library.element);
-
+    buffer.write('''
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+''');
+    //
     for (final notifier in classes) {
       final template = NotifierTemplate(notifier);
-      template.defineInLibrary(buffer);
+      template.writeExtension(buffer);
+    }
+
+    for (final function in functions) {
+      final template = MutationTemplate(function);
+      template.writeGetter(buffer);
     }
 
     return buffer.toString();

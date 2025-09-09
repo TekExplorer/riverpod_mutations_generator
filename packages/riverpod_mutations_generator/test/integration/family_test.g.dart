@@ -103,9 +103,9 @@ abstract class _$DemoFamily extends $AsyncNotifier<int> {
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
 extension DemoFamilyMutations on DemoFamilyProvider {
-  Mutation<T> _$mutation<T>(String mutationName, [Object? key]) =>
-      $Mutations.getForProvider<T>(this, mutationName, key);
   MutationListenable<
     void,
     Future<void> Function(
@@ -118,7 +118,7 @@ extension DemoFamilyMutations on DemoFamilyProvider {
     Future<void> Function(int i, String? e, {required bool b, num n})
   >
   get changeFamily {
-    final mutation = _$mutation<void>('changeFamily');
+    final mutation = $Mutations.getForProvider<void>(this, 'changeFamily');
     Future<void> run(
       MutationTarget target,
       int i,

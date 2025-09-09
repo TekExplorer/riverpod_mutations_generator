@@ -150,8 +150,6 @@ extension on String {
     }
     return newName;
   }
-
-  String get properNoun => this[0].toUpperCase() + this.substring(1);
 }
 
 extension on TypeParameterElement2 {

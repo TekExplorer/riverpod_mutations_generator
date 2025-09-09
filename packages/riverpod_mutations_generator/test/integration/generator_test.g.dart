@@ -58,16 +58,16 @@ abstract class _$Demo extends $AsyncNotifier<int> {
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
 extension DemoMutations on DemoProvider {
-  Mutation<T> _$mutation<T>(String mutationName, [Object? key]) =>
-      $Mutations.getForProvider<T>(this, mutationName, key);
   MutationListenable<
     void,
     Future<void> Function(MutationTarget target, int i),
     Future<void> Function(int i)
   >
   get change {
-    final mutation = _$mutation<void>('change');
+    final mutation = $Mutations.getForProvider<void>(this, 'change');
     Future<void> run(MutationTarget target, int i) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).change(i);
@@ -88,7 +88,7 @@ extension DemoMutations on DemoProvider {
     Future<String?> Function()
   >
   get nullable {
-    final mutation = _$mutation<String?>('nullable');
+    final mutation = $Mutations.getForProvider<String?>(this, 'nullable');
     Future<String?> run(MutationTarget target) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).nullable();
@@ -109,7 +109,7 @@ extension DemoMutations on DemoProvider {
     Future<void> Function()
   >
   get normal {
-    final mutation = _$mutation<void>('normal');
+    final mutation = $Mutations.getForProvider<void>(this, 'normal');
     Future<void> run(MutationTarget target) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).normal();
@@ -130,7 +130,7 @@ extension DemoMutations on DemoProvider {
     Future<void> Function()
   >
   get withRef {
-    final mutation = _$mutation<void>('withRef');
+    final mutation = $Mutations.getForProvider<void>(this, 'withRef');
     Future<void> run(MutationTarget target) {
       return mutation.run(target, (ref) {
         return ref.get(this.notifier).withRef(ref);
@@ -151,7 +151,7 @@ extension DemoMutations on DemoProvider {
     Future<T> Function()
   >
   generic<T>() {
-    final mutation = _$mutation<T>('generic');
+    final mutation = $Mutations.getForProvider<T>(this, 'generic');
     Future<T> run(MutationTarget target) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).generic<T>();
@@ -177,7 +177,7 @@ extension DemoMutations on DemoProvider {
     Future<void> Function(Object ref, Object mutation, Object run)
   >
   get nameCollision {
-    final mutation_0 = _$mutation<void>('nameCollision');
+    final mutation_0 = $Mutations.getForProvider<void>(this, 'nameCollision');
     Future<void> run_0(
       MutationTarget target,
       Object ref,
@@ -209,7 +209,10 @@ extension DemoMutations on DemoProvider {
     Future<void> Function(int param, {int? optionalParam})
   >
   keyed(String key, {String? namedKey}) {
-    final mutation = _$mutation<void>('keyed', (key, namedKey: namedKey));
+    final mutation = $Mutations.getForProvider<void>(this, 'keyed', (
+      key,
+      namedKey: namedKey,
+    ));
     Future<void> run(MutationTarget target, int param, {int? optionalParam}) {
       return mutation.run(target, (tsx) {
         return tsx

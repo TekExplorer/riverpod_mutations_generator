@@ -15,39 +15,39 @@ class Demo extends _$Demo {
 
   @mutation
   Future<void> change(int i) async {
-    c<Future<void> Function(MutationTarget, int i)>(provider.change.run);
-    c2<Future<void> Function(int i)>(provider.change.pair);
+    runCheck<Future<void> Function(MutationTarget, int i)>(provider.change.run);
+    pairCheck<Future<void> Function(int i)>(provider.change.pair);
   }
 
   @mutation
   Future<String?> nullable() async {
-    c<Future<String?> Function(MutationTarget)>(provider.nullable.run);
-    c2<Future<String?> Function()>(provider.nullable.pair);
+    runCheck<Future<String?> Function(MutationTarget)>(provider.nullable.run);
+    pairCheck<Future<String?> Function()>(provider.nullable.pair);
     throw UnimplementedError();
   }
 
   @mutation
   Future<void> normal() async {
-    c<Future<void> Function(MutationTarget)>(provider.normal.run);
-    c2<Future<void> Function()>(provider.normal.pair);
+    runCheck<Future<void> Function(MutationTarget)>(provider.normal.run);
+    pairCheck<Future<void> Function()>(provider.normal.pair);
   }
 
   @mutation
   Future<void> withRef(MutationRef ref) async {
-    c<Future<void> Function(MutationTarget)>(provider.withRef.run);
-    c2<Future<void> Function()>(provider.withRef.pair);
+    runCheck<Future<void> Function(MutationTarget)>(provider.withRef.run);
+    pairCheck<Future<void> Function()>(provider.withRef.pair);
   }
 
   @mutation
   Future<T> generic<T>() {
-    c<Future<T> Function(MutationTarget)>(provider.generic<T>().run);
-    c2<Future<T> Function()>(provider.generic<T>().pair);
+    runCheck<Future<T> Function(MutationTarget)>(provider.generic<T>().run);
+    pairCheck<Future<T> Function()>(provider.generic<T>().pair);
     throw UnimplementedError();
   }
 
   @mutation
   Future<void> nameCollision(Object ref, Object mutation, Object run) async {
-    c<
+    runCheck<
       Future<void> Function(
         MutationTarget,
         Object ref,
@@ -55,7 +55,7 @@ class Demo extends _$Demo {
         Object run,
       )
     >(provider.nameCollision.run);
-    c2<Future<void> Function(Object ref, Object mutation, Object run)>(
+    pairCheck<Future<void> Function(Object ref, Object mutation, Object run)>(
       provider.nameCollision.pair,
     );
   }
@@ -67,10 +67,10 @@ class Demo extends _$Demo {
     @mutationKey String? namedKey,
     int? optionalParam,
   }) async {
-    c<Future<void> Function(MutationTarget, int param, {int? optionalParam})>(
-      provider.keyed(key, namedKey: namedKey).run,
-    );
-    c2<Future<void> Function(int param, {int? optionalParam})>(
+    runCheck<
+      Future<void> Function(MutationTarget, int param, {int? optionalParam})
+    >(provider.keyed(key, namedKey: namedKey).run);
+    pairCheck<Future<void> Function(int param, {int? optionalParam})>(
       provider.keyed(key, namedKey: namedKey).pair,
     );
   }

@@ -1,15 +1,13 @@
-import 'package:analyzer/dart/element/element2.dart'
-    show
-        ClassElement2,
-        FormalParameterElement,
-        MethodElement2,
-        TypeParameterElement2;
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart'
     show FunctionType, DartType, InterfaceType;
 import 'package:riverpod_mutations_generator/src/type_checkers.dart';
 import 'package:riverpod_mutations_generator/src/utils/dart_type_extensions.dart';
 
-extension type NotifierClass(ClassElement2 element) {
+final class NotifierClass {
+  NotifierClass(this.element);
+  final ClassElement2 element;
+
   String get name => element.displayName;
 
   DartType get valueType => buildMethod.returnType.innerFutureType;
@@ -27,7 +25,26 @@ extension type NotifierClass(ClassElement2 element) {
       .map(MutationMethod.new);
 }
 
-extension type MutationMethod(MethodElement2 element) {
+final class MutationMethod extends MutationExecutable {
+  MutationMethod(this.element);
+  final MethodElement2 element;
+
+  NotifierClass get notifier =>
+      NotifierClass(element.enclosingElement2 as ClassElement2);
+}
+
+final class MutationFunction extends MutationExecutable {
+  MutationFunction(this.element);
+  final TopLevelFunctionElement element;
+}
+
+final class TopLevelFunctionMutation extends MutationFunction {
+  TopLevelFunctionMutation(TopLevelFunctionElement element) : super(element);
+}
+
+sealed class MutationExecutable {
+  ExecutableElement2 get element;
+
   String get name => element.displayName;
 
   FunctionType get type => element.type;
@@ -35,9 +52,6 @@ extension type MutationMethod(MethodElement2 element) {
 
   /// The T of a FutureOr<T>
   DartType get resultT => returnType.innerFutureType;
-
-  NotifierClass get notifier =>
-      NotifierClass(element.enclosingElement2 as ClassElement2);
 
   bool get isPublic => element.isPublic;
   bool get isPrivate => element.isPrivate;

@@ -18,7 +18,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart'
 /// If not for that, each mutation would have an accompanying family provider
 @internal
 abstract final class $Mutations {
-  static final _mutations = <Object, Mutation>{};
+  static final _mutations = <(Type, Object), Mutation>{};
+  static Mutation<T> _putIfAbsent<T>({
+    required Object key,
+    required Mutation<T> Function() ifAbsent,
+  }) =>
+      _mutations.putIfAbsent((T, key), ifAbsent) as Mutation<T>;
+
+  static Mutation<T> get<T>(String label, Object key) => _putIfAbsent<T>(
+        key: key,
+        ifAbsent: () => Mutation<T>(label: label)(key),
+      );
 
   @internal
   @useResult
@@ -26,17 +36,27 @@ abstract final class $Mutations {
     $ClassProvider provider,
     String mutationName, [
     Object? key,
-  ]) {
-    key = key != null
-        ? (T, provider, mutationName, key)
-        : (T, provider, mutationName);
+  ]) =>
+      get<T>(
+        '$provider.$mutationName',
+        _key(provider, mutationName, key),
+      );
 
-    return _mutations.putIfAbsent(
-      key,
-      () => Mutation<T>(label: '$provider.$mutationName')(key),
-    ) as Mutation<T>;
-  }
+  @internal
+  @useResult
+  static Mutation<T> getForFunction<T>(
+    Object function,
+    String functionName, [
+    Object? key,
+  ]) =>
+      get<T>(
+        functionName,
+        _key(function, functionName, key),
+      );
 
   // static Iterable<Mutation> getAll() => _mutations.values;
   // static void clear() => _mutations.clear();
 }
+
+Record _key(Object first, Object second, Object? third) =>
+    third == null ? (first, second) : (first, second, third);

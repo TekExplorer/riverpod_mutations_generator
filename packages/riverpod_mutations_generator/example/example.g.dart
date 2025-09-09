@@ -99,16 +99,16 @@ String _$exampleHash() => r'8e94925464b940f3e410c2c2054797d4910f3652';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
 extension TodoListNotifierMutations on TodoListNotifierProvider {
-  Mutation<T> _$mutation<T>(String mutationName, [Object? key]) =>
-      $Mutations.getForProvider<T>(this, mutationName, key);
   MutationListenable<
     void,
     Future<void> Function(MutationTarget target, Todo newTodo),
     Future<void> Function(Todo newTodo)
   >
   get addTodo {
-    final mutation = _$mutation<void>('addTodo');
+    final mutation = $Mutations.getForProvider<void>(this, 'addTodo');
     Future<void> run(MutationTarget target, Todo newTodo) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).addTodo(newTodo);
@@ -129,7 +129,9 @@ extension TodoListNotifierMutations on TodoListNotifierProvider {
     Future<void> Function()
   >
   removeTodo({required int id}) {
-    final mutation = _$mutation<void>('removeTodo', (id: id));
+    final mutation = $Mutations.getForProvider<void>(this, 'removeTodo', (
+      id: id,
+    ));
     Future<void> run(MutationTarget target) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).removeTodo(id: id);
