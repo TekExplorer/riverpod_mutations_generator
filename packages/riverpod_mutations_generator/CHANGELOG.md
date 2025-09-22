@@ -1,5 +1,10 @@
 # Riverpod Mutations Generator
 
+## Unreleased Version
+
+Bump to riverpod 3.0.0 proper
+Support non-generated providers
+
 ## 2.0.0-dev.4
 
 Bump to riverpod 3.0.0-dev.18
@@ -19,7 +24,6 @@ await addTodoMutation.run(ref, (ref) {...});
 Of course, the `(state, action)` syntax may still be valuable, so its available as an extension as so:
 
 ```dart
-
 final (state, addTodo) = ref.watch(todosProvider.addTodo.pair);
 await addTodo(Todo(...));
 ```

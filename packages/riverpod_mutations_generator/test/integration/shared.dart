@@ -1,5 +1,13 @@
-import 'package:riverpod/experimental/mutation.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:riverpod_mutations_annotation/riverpod_mutations_annotation.dart';
 
-void runCheck<F>(F fn) {}
-void pairCheck<F>(ProviderListenable<(MutationState, F)> listenable) {}
+extension MutationListenableCheck<ResultT, RunT, PairRunT>
+    on MutationListenable<ResultT, RunT, PairRunT> {
+  // void checkResult<T extends ResultT>() {}
+  // void checkRun<T extends RunT>() {}
+  // void checkPair<T extends PairRunT>() {}
+  void check<
+    ResultC extends ResultT,
+    RunC extends RunT,
+    PairRunC extends PairRunT
+  >() {}
+}

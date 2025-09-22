@@ -5,6 +5,8 @@ library;
 
 export 'package:riverpod/experimental/mutation.dart';
 export 'package:riverpod/riverpod.dart' show Provider;
+export 'package:riverpod_annotation/riverpod_annotation.dart'
+    show $ClassProvider;
 
 // export 'package:riverpod_annotation/riverpod_annotation.dart';
 

@@ -1,16 +1,24 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+// non generated test
+import 'dart:async';
+
+import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_mutations_annotation/riverpod_mutations_annotation.dart';
 
 import 'shared.dart';
 
-part 'family_test.g.dart';
+part 'non_generated.g.dart';
 
-@riverpod
-class DemoFamily extends _$DemoFamily {
+final demoFamily2Provider = AsyncNotifierProvider.family(DemoFamily2.new);
+
+class DemoFamily2 extends AsyncNotifier<int> {
+  DemoFamily2(this.key);
+  final bool key;
+
   @override
-  FutureOr<int> build(bool key) => 0;
+  FutureOr<int> build() => 0;
 
-  DemoFamilyProvider get provider => demoFamilyProvider(key);
+  AsyncNotifierProvider<DemoFamily2, int> get provider =>
+      demoFamily2Provider(key);
 
   @mutation
   Future<void> changeFamily(

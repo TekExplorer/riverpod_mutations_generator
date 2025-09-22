@@ -40,9 +40,20 @@ class NotifierTemplate {
             template.writeGetter(buffer);
           }
         },
+        'on_type': () {
+          if (riverpodTypeChecker.hasAnnotationOf(notifier.element)) {
+            buffer.write(
+              '${notifierName}Provider#{{NotifierGenericsApplication}}',
+            );
+          } else {
+            buffer.write(
+              '\$ClassProvider<${notifierName}#{{NotifierGenericsApplication}}, dynamic, dynamic, dynamic>',
+            );
+          }
+        },
       },
       '''
-extension ${notifierName}Mutations#{{NotifierGenerics}} on ${notifierName}Provider#{{NotifierGenericsApplication}} {
+extension ${notifierName}Mutations#{{NotifierGenerics}} on #{{on_type}} {
   #{{mutation_getters}}
 }
 ''',

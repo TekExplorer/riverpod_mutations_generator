@@ -6,16 +6,22 @@ part 'function_test.g.dart';
 
 @mutation
 Future<String> _getSomething(String id, @mutationKey String key) async {
-  final provider = getSomething(key);
-  runCheck<Future<String> Function(MutationTarget, String)>(provider.run);
-  pairCheck<Future<String> Function(String)>(provider.pair);
+  getSomething(key)
+      .check<
+        String,
+        Future<String> Function(MutationTarget target, String id),
+        Future<String> Function(String id)
+      >();
   return 'result';
 }
 
 @mutation
 Future<bool> _usesRef(MutationTransaction ref) async {
-  final provider = usesRef;
-  runCheck<Future<bool> Function(MutationTarget)>(provider.run);
-  pairCheck<Future<bool> Function()>(provider.pair);
+  usesRef
+      .check<
+        bool,
+        Future<bool> Function(MutationTarget target),
+        Future<bool> Function()
+      >();
   return true;
 }

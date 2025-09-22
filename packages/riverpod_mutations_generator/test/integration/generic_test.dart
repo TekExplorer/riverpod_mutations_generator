@@ -16,27 +16,35 @@ class DemoGeneric<T> extends _$DemoGeneric<T> {
 
   @mutation
   Future<void> changeGeneric(T value) async {
-    runCheck<Future<void> Function(MutationTarget, T value)>(
-      provider.changeGeneric.run,
-    );
-    pairCheck<Future<void> Function(T value)>(provider.changeGeneric.pair);
+    provider.changeGeneric
+        .check<
+          void,
+          Future<void> Function(MutationTarget target, T value),
+          Future<void> Function(T value)
+        >();
   }
 
   @mutation
   Future<(T, R)> generic<R>() {
-    runCheck<Future<(T, R)> Function(MutationTarget)>(
-      provider.generic<R>().run,
-    );
-    pairCheck<Future<(T, R)> Function()>(provider.generic<R>().pair);
+    provider
+        .generic<R>()
+        .check<
+          (T, R),
+          Future<(T, R)> Function(MutationTarget target),
+          Future<(T, R)> Function()
+        >();
     throw UnimplementedError();
   }
 
   @mutation
   Future<T> genericShadowed<T>() {
-    runCheck<Future<T> Function(MutationTarget)>(
-      provider.genericShadowed<T>().run,
-    );
-    pairCheck<Future<T> Function()>(provider.genericShadowed<T>().pair);
+    provider
+        .genericShadowed<T>()
+        .check<
+          T,
+          Future<T> Function(MutationTarget target),
+          Future<T> Function()
+        >();
     throw UnimplementedError();
   }
 }

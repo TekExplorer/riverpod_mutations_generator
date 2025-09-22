@@ -10,7 +10,7 @@ environment:
   # sdk: ">=3.0.0 <4.0.0"
   sdk: ^3.8.0
 
-define: &riverpod_version ^3.0.0-dev.18
+define: &riverpod_version ^3.0.0
 
 dependencies:
   riverpod_mutations_annotation: ^2.0.0-dev.4

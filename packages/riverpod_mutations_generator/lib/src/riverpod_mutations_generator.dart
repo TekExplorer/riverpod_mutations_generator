@@ -32,7 +32,6 @@ class RiverpodMutationsGenerator extends sourceGen.Generator {
     final buffer = AnalyzerBuffer.part2(
       library.element,
       header: '''
-// GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 ''',
     );

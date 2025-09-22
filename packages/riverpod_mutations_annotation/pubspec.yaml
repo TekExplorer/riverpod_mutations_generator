@@ -5,7 +5,7 @@ repository: https://github.com/TekExplorer/riverpod_mutations_generator
 
 resolution: workspace
 
-define: &riverpod_version ^3.0.0-dev.17
+define: &riverpod_version ^3.0.0
 
 environment:
   sdk: ^3.6.0-0
