@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer_buffer/analyzer_buffer.dart';
 import 'package:source_gen/source_gen.dart' as sourceGen;
 
@@ -6,8 +6,8 @@ import 'templates/templates.dart';
 import 'type_checkers.dart';
 import 'types.dart';
 
-bool classHasMutation(ClassElement2 notifier) =>
-    notifier.methods2.any(mutationTypeChecker.hasAnnotationOf);
+bool classHasMutation(ClassElement notifier) =>
+    notifier.methods.any(mutationTypeChecker.hasAnnotationOf);
 
 class RiverpodMutationsGenerator extends sourceGen.Generator {
   const RiverpodMutationsGenerator();

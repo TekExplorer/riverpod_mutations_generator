@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_system.dart';
@@ -7,8 +7,8 @@ import 'package:collection/collection.dart';
 import 'package:source_helper/source_helper.dart';
 
 extension DartTypeX on DartType {
-  static TypeSystem typeSystemOf(Element2 element) =>
-      element.library2!.typeSystem;
+  static TypeSystem typeSystemOf(Element element) =>
+      element.library!.typeSystem;
 
   bool get hasQuestionMark => nullabilitySuffix == NullabilitySuffix.question;
 
@@ -173,12 +173,12 @@ extension FunctionTypeX on FunctionType {
     NullabilitySuffix? nullabilitySuffix,
     Iterable<FormalParameterElement>? formalParameters,
     DartType? returnType,
-    Iterable<TypeParameterElement2>? typeParameters,
+    Iterable<TypeParameterElement>? typeParameters,
     InstantiatedTypeAliasElement? alias,
   })
   get copyWith =>
       ({
-        Iterable<TypeParameterElement2>? typeParameters,
+        Iterable<TypeParameterElement>? typeParameters,
         Iterable<FormalParameterElement>? formalParameters,
         DartType? returnType,
         NullabilitySuffix? nullabilitySuffix,

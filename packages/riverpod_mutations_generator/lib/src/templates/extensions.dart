@@ -152,7 +152,7 @@ extension on String {
   }
 }
 
-extension on TypeParameterElement2 {
+extension on TypeParameterElement {
   String toCode([String? nameOverride]) {
     final buffer = StringBuffer();
     buffer.write(nameOverride ?? displayName);
@@ -163,11 +163,11 @@ extension on TypeParameterElement2 {
   }
 }
 
-extension on Iterable<TypeParameterElement2> {
-  List<String> toNames([String? nameOverride(TypeParameterElement2 type)?]) =>
+extension on Iterable<TypeParameterElement> {
+  List<String> toNames([String? nameOverride(TypeParameterElement type)?]) =>
       map(
         (e) => nameOverride?.call(e) ?? e.displayName,
       ).toList(growable: false);
-  List<String> toCodes([String? nameOverride(TypeParameterElement2 type)?]) =>
+  List<String> toCodes([String? nameOverride(TypeParameterElement type)?]) =>
       map((e) => e.toCode(nameOverride?.call(e))).toList(growable: false);
 }

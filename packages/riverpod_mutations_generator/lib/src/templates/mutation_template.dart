@@ -68,7 +68,7 @@ class MutationTemplate {
   bool get isGetter =>
       executable.keyedParameters.isEmpty && methodGenerics.isEmpty;
 
-  List<TypeParameterElement2> get methodGenerics =>
+  List<TypeParameterElement> get methodGenerics =>
       executable.type.typeParameters;
 
   String get tsx {

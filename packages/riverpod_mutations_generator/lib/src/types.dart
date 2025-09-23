@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart'
     show FunctionType, DartType, InterfaceType;
 import 'package:riverpod_mutations_generator/src/type_checkers.dart';
@@ -6,7 +6,7 @@ import 'package:riverpod_mutations_generator/src/utils/dart_type_extensions.dart
 
 final class NotifierClass {
   NotifierClass(this.element);
-  final ClassElement2 element;
+  final ClassElement element;
 
   String get name => element.displayName;
 
@@ -14,12 +14,12 @@ final class NotifierClass {
 
   InterfaceType get thisType => element.thisType;
 
-  List<TypeParameterElement2> get typeParameters => element.typeParameters2;
+  List<TypeParameterElement> get typeParameters => element.typeParameters;
 
-  MethodElement2 get buildMethod => element.getMethod2('build')!;
+  MethodElement get buildMethod => element.getMethod('build')!;
   bool get isAsync => buildMethod.returnType.isAsync;
 
-  Iterable<MutationMethod> get mutations => element.methods2
+  Iterable<MutationMethod> get mutations => element.methods
       .where((m) => m.isStatic == false)
       .where(mutationTypeChecker.hasAnnotationOf)
       .map(MutationMethod.new);
@@ -27,10 +27,10 @@ final class NotifierClass {
 
 final class MutationMethod extends MutationExecutable {
   MutationMethod(this.element);
-  final MethodElement2 element;
+  final MethodElement element;
 
   NotifierClass get notifier =>
-      NotifierClass(element.enclosingElement2 as ClassElement2);
+      NotifierClass(element.enclosingElement as ClassElement);
 }
 
 final class MutationFunction extends MutationExecutable {
@@ -43,7 +43,7 @@ final class TopLevelFunctionMutation extends MutationFunction {
 }
 
 sealed class MutationExecutable {
-  ExecutableElement2 get element;
+  ExecutableElement get element;
 
   String get name => element.displayName;
 
