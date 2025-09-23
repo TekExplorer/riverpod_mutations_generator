@@ -158,6 +158,7 @@ class MutationTemplate {
   };
 
   void writeGetter(AnalyzerBuffer buffer) {
+    final executable = this.executable;
     final String get = isGetter ? 'get ' : '';
     buffer.write(
       args: {
@@ -166,7 +167,9 @@ class MutationTemplate {
           buffer.write(switch (executable) {
             MutationMethod() =>
               '$tsx.get(this.notifier).${executable.name}#{{all_params}}',
-            MutationFunction() => '${executable.name}#{{all_params}}',
+            TopLevelFunctionMutation() => '${executable.name}#{{all_params}}',
+            StaticMutationMethod() =>
+              '${executable.interface.name}.${executable.name}#{{all_params}}',
           });
         },
         'Mutations': () {
@@ -182,20 +185,25 @@ class MutationTemplate {
           buffer.write(switch (executable) {
             MutationMethod() =>
               "#{{Mutations}}.getForProvider<#{{ResultT}}>(this, '${executable.name}', #{{keys_list}})",
-            MutationFunction() =>
+            TopLevelFunctionMutation() =>
               "#{{Mutations}}.getForFunction<#{{ResultT}}>(${executable.name}, '${executable.name}', #{{keys_list}})",
+            StaticMutationMethod() =>
+              "#{{Mutations}}.getForFunction<#{{ResultT}}>(${executable.interface.name}.${executable.name}, '${executable.interface.name}.${executable.name}', #{{keys_list}})",
           });
         },
         'getter_name': () {
           buffer.write(switch (executable) {
             MutationMethod() => executable.name.public,
-            MutationFunction(isPublic: false) => executable.name.public,
-            MutationFunction(isPublic: true) => throw InvalidGenerationSource(
-              'Public functions cannot be used as mutations.',
-              todo:
-                  'Make the function private by prefixing its name with an underscore (_).',
-              element: executable.element,
-            ),
+            TopLevelFunctionMutation(isPublic: false) => executable.name.public,
+            TopLevelFunctionMutation(isPublic: true) =>
+              throw InvalidGenerationSource(
+                'Public functions cannot be used as mutations.',
+                todo:
+                    'Make the function private by prefixing its name with an underscore (_).',
+                element: executable.element,
+              ),
+            StaticMutationMethod() =>
+              '_\$${executable.interface.name}_${executable.name.public}',
           });
         },
       },

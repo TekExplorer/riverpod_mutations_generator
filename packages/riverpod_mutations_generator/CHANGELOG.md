@@ -4,6 +4,7 @@
 
 Bump to riverpod 3.0.0 proper
 Support non-generated providers
+Support static methods
 
 ## 2.0.0-dev.4
 

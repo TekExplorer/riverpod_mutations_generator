@@ -4,6 +4,8 @@ import 'package:analyzer/dart/element/type.dart'
 import 'package:riverpod_mutations_generator/src/type_checkers.dart';
 import 'package:riverpod_mutations_generator/src/utils/dart_type_extensions.dart';
 
+import 'riverpod_mutations_generator.dart';
+
 final class NotifierClass {
   NotifierClass(this.element);
   final ClassElement element;
@@ -26,20 +28,31 @@ final class NotifierClass {
 }
 
 final class MutationMethod extends MutationExecutable {
-  MutationMethod(this.element);
+  MutationMethod(this.element)
+    : assert(element.isStatic == false),
+      assert(mutationTypeChecker.hasAnnotationOf(element));
+
   final MethodElement element;
 
-  NotifierClass get notifier =>
-      NotifierClass(element.enclosingElement as ClassElement);
+  NotifierClass get notifier {
+    final $notifier = element.enclosingElement as ClassElement;
+    assert(classIsNotifier($notifier));
+    return NotifierClass($notifier);
+  }
 }
 
-final class MutationFunction extends MutationExecutable {
-  MutationFunction(this.element);
+final class StaticMutationMethod extends MutationExecutable {
+  StaticMutationMethod(this.element)
+    : assert(element.isStatic),
+      assert(mutationTypeChecker.hasAnnotationOf(element));
+
+  final MethodElement element;
+  InstanceElement get interface => element.enclosingElement as InstanceElement;
+}
+
+final class TopLevelFunctionMutation extends MutationExecutable {
+  TopLevelFunctionMutation(this.element);
   final TopLevelFunctionElement element;
-}
-
-final class TopLevelFunctionMutation extends MutationFunction {
-  TopLevelFunctionMutation(TopLevelFunctionElement element) : super(element);
 }
 
 sealed class MutationExecutable {

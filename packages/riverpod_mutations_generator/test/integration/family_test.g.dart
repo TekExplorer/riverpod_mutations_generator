@@ -49,7 +49,7 @@ final class DemoFamilyProvider extends $AsyncNotifierProvider<DemoFamily, int> {
   }
 }
 
-String _$demoFamilyHash() => r'c9230ab97f66972474f023287fcc49661f77ada2';
+String _$demoFamilyHash() => r'c6dd19d746bf9ec20bce3df1c2e6cb8cf5ff2633';
 
 final class DemoFamilyFamily extends $Family
     with

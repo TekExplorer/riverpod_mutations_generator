@@ -63,7 +63,7 @@ final class DemoGenericProvider<T>
   }
 }
 
-String _$demoGenericHash() => r'40ab8c9552aa139fd1068ca92cd595fbeb6517ca';
+String _$demoGenericHash() => r'8bd68b55cf7cf2c59dbc6f3e22379b52d0346324';
 
 final class DemoGenericFamily extends $Family {
   const DemoGenericFamily._()

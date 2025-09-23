@@ -32,7 +32,7 @@ final class DemoProvider extends $AsyncNotifierProvider<Demo, int> {
   Demo create() => Demo();
 }
 
-String _$demoHash() => r'054c810b62d4438d54be9aae601264b37f726725';
+String _$demoHash() => r'3b56e9bfa022cb257297751a48f32a061dd6cb9e';
 
 abstract class _$Demo extends $AsyncNotifier<int> {
   FutureOr<int> build();

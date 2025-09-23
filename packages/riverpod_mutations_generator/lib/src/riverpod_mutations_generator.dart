@@ -9,26 +9,37 @@ import 'types.dart';
 bool classHasMutation(ClassElement notifier) =>
     notifier.methods.any(mutationTypeChecker.hasAnnotationOf);
 
+bool classIsNotifier(ClassElement cls) =>
+    riverpodTypeChecker.hasAnnotationOf(cls) ||
+    cls.allSupertypes.any(anyNotifierTypeChecker.isExactlyType);
+
 class RiverpodMutationsGenerator extends sourceGen.Generator {
   const RiverpodMutationsGenerator();
 
   @override
   Future<String?> generate(library, buildStep) async {
+    final notifiers = library.classes
+        .where(classIsNotifier)
+        .where(classHasMutation)
+        .map(NotifierClass.new);
+
+    final staticMutations = library.allElements
+        .whereType<InstanceElement>()
+        .expand(
+          (interface) => interface.methods
+              .where((m) => m.isStatic)
+              .where(mutationTypeChecker.hasAnnotationOf)
+              .map(StaticMutationMethod.new),
+        );
+
     final functions = library.element.topLevelFunctions
         .where(mutationTypeChecker.hasAnnotationOf)
         .map(TopLevelFunctionMutation.new);
 
-    final classes = library.classes
-        .where(
-          (e) =>
-              riverpodTypeChecker.hasAnnotationOf(e) ||
-              e.allSupertypes.any(anyNotifierTypeChecker.isExactlyType),
-        )
-        .where(classHasMutation)
-        .map(NotifierClass.new);
-    //
-    // TODO: consider allowing extensions
-    if (classes.isEmpty && functions.isEmpty) return null;
+    if (notifiers.isEmpty && functions.isEmpty && staticMutations.isEmpty) {
+      return null;
+    }
+
     final buffer = AnalyzerBuffer.part2(
       library.element,
       header: '''
@@ -37,9 +48,14 @@ class RiverpodMutationsGenerator extends sourceGen.Generator {
     );
 
     //
-    for (final notifier in classes) {
+    for (final notifier in notifiers) {
       final template = NotifierTemplate(notifier);
       template.writeExtension(buffer);
+    }
+
+    for (final staticMutation in staticMutations) {
+      final template = MutationTemplate(staticMutation);
+      template.writeGetter(buffer);
     }
 
     for (final function in functions) {
