@@ -2,6 +2,9 @@ part of 'templates.dart';
 
 extension ParameterList on Iterable<FormalParameterElement> {
   @useResult
+  Iterable<String> get names => map((p) => p.displayName);
+
+  @useResult
   Iterable<FormalParameterElement> get named {
     return where((p) => p.isNamed);
   }
@@ -153,9 +156,9 @@ extension on String {
 }
 
 extension on TypeParameterElement {
-  String toCode([String? nameOverride]) {
+  String toCode() {
     final buffer = StringBuffer();
-    buffer.write(nameOverride ?? displayName);
+    buffer.write(displayName);
     if (bound case final bound?) {
       buffer.write(' extends ${bound.toCode()}');
     }
@@ -164,10 +167,11 @@ extension on TypeParameterElement {
 }
 
 extension on Iterable<TypeParameterElement> {
-  List<String> toNames([String? nameOverride(TypeParameterElement type)?]) =>
-      map(
-        (e) => nameOverride?.call(e) ?? e.displayName,
-      ).toList(growable: false);
-  List<String> toCodes([String? nameOverride(TypeParameterElement type)?]) =>
-      map((e) => e.toCode(nameOverride?.call(e))).toList(growable: false);
+  Iterable<String> toNames() => map((e) => e.displayName);
+  Iterable<String> toCodes() => map((e) => e.toCode());
+
+  String toGenericsCode() {
+    if (isEmpty) return '';
+    return '<${toCodes().join(', ')}>';
+  }
 }

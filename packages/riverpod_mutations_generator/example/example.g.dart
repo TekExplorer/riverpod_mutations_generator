@@ -108,7 +108,7 @@ extension TodoListNotifierMutations on TodoListNotifierProvider {
     Future<void> Function(Todo newTodo)
   >
   get addTodo {
-    final mutation = $Mutations.getForProvider<void>(this, 'addTodo');
+    final mutation = $Mutations.ofProvider<void>(this, 'addTodo');
     Future<void> run(MutationTarget target, Todo newTodo) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).addTodo(newTodo);
@@ -117,7 +117,7 @@ extension TodoListNotifierMutations on TodoListNotifierProvider {
 
     return MutationListenable(
       mutation,
-      (MutationTarget target, Todo newTodo) => run(target, newTodo),
+      run,
       (MutationTarget target) =>
           (Todo newTodo) => run(target, newTodo),
     );
@@ -129,9 +129,7 @@ extension TodoListNotifierMutations on TodoListNotifierProvider {
     Future<void> Function()
   >
   removeTodo({required int id}) {
-    final mutation = $Mutations.getForProvider<void>(this, 'removeTodo', (
-      id: id,
-    ));
+    final mutation = $Mutations.ofProvider<void>(this, 'removeTodo', (id: id));
     Future<void> run(MutationTarget target) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).removeTodo(id: id);
@@ -140,7 +138,7 @@ extension TodoListNotifierMutations on TodoListNotifierProvider {
 
     return MutationListenable(
       mutation,
-      (MutationTarget target) => run(target),
+      run,
       (MutationTarget target) =>
           () => run(target),
     );

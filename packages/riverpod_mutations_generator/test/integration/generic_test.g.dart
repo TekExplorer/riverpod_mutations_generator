@@ -137,7 +137,7 @@ extension DemoGenericMutations<T> on DemoGenericProvider<T> {
     Future<void> Function(T value)
   >
   get changeGeneric {
-    final mutation = $Mutations.getForProvider<void>(this, 'changeGeneric');
+    final mutation = $Mutations.ofProvider<void>(this, 'changeGeneric');
     Future<void> run(MutationTarget target, T value) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).changeGeneric(value);
@@ -146,7 +146,7 @@ extension DemoGenericMutations<T> on DemoGenericProvider<T> {
 
     return MutationListenable(
       mutation,
-      (MutationTarget target, T value) => run(target, value),
+      run,
       (MutationTarget target) =>
           (T value) => run(target, value),
     );
@@ -158,7 +158,7 @@ extension DemoGenericMutations<T> on DemoGenericProvider<T> {
     Future<(T, R)> Function()
   >
   generic<R>() {
-    final mutation = $Mutations.getForProvider<(T, R)>(this, 'generic');
+    final mutation = $Mutations.ofProvider<(T, R)>(this, 'generic');
     Future<(T, R)> run(MutationTarget target) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).generic<R>();
@@ -167,7 +167,7 @@ extension DemoGenericMutations<T> on DemoGenericProvider<T> {
 
     return MutationListenable(
       mutation,
-      (MutationTarget target) => run(target),
+      run,
       (MutationTarget target) =>
           () => run(target),
     );
@@ -179,7 +179,7 @@ extension DemoGenericMutations<T> on DemoGenericProvider<T> {
     Future<T> Function()
   >
   genericShadowed<T>() {
-    final mutation = $Mutations.getForProvider<T>(this, 'genericShadowed');
+    final mutation = $Mutations.ofProvider<T>(this, 'genericShadowed');
     Future<T> run(MutationTarget target) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).genericShadowed<T>();
@@ -188,7 +188,7 @@ extension DemoGenericMutations<T> on DemoGenericProvider<T> {
 
     return MutationListenable(
       mutation,
-      (MutationTarget target) => run(target),
+      run,
       (MutationTarget target) =>
           () => run(target),
     );

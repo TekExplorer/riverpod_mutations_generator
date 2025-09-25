@@ -67,7 +67,7 @@ extension DemoMutations on DemoProvider {
     Future<void> Function(int i)
   >
   get change {
-    final mutation = $Mutations.getForProvider<void>(this, 'change');
+    final mutation = $Mutations.ofProvider<void>(this, 'change');
     Future<void> run(MutationTarget target, int i) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).change(i);
@@ -76,7 +76,7 @@ extension DemoMutations on DemoProvider {
 
     return MutationListenable(
       mutation,
-      (MutationTarget target, int i) => run(target, i),
+      run,
       (MutationTarget target) =>
           (int i) => run(target, i),
     );
@@ -88,7 +88,7 @@ extension DemoMutations on DemoProvider {
     Future<String?> Function()
   >
   get nullable {
-    final mutation = $Mutations.getForProvider<String?>(this, 'nullable');
+    final mutation = $Mutations.ofProvider<String?>(this, 'nullable');
     Future<String?> run(MutationTarget target) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).nullable();
@@ -97,7 +97,7 @@ extension DemoMutations on DemoProvider {
 
     return MutationListenable(
       mutation,
-      (MutationTarget target) => run(target),
+      run,
       (MutationTarget target) =>
           () => run(target),
     );
@@ -109,7 +109,7 @@ extension DemoMutations on DemoProvider {
     Future<void> Function()
   >
   get normal {
-    final mutation = $Mutations.getForProvider<void>(this, 'normal');
+    final mutation = $Mutations.ofProvider<void>(this, 'normal');
     Future<void> run(MutationTarget target) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).normal();
@@ -118,7 +118,7 @@ extension DemoMutations on DemoProvider {
 
     return MutationListenable(
       mutation,
-      (MutationTarget target) => run(target),
+      run,
       (MutationTarget target) =>
           () => run(target),
     );
@@ -130,7 +130,7 @@ extension DemoMutations on DemoProvider {
     Future<void> Function()
   >
   get withRef {
-    final mutation = $Mutations.getForProvider<void>(this, 'withRef');
+    final mutation = $Mutations.ofProvider<void>(this, 'withRef');
     Future<void> run(MutationTarget target) {
       return mutation.run(target, (ref) {
         return ref.get(this.notifier).withRef(ref);
@@ -139,7 +139,7 @@ extension DemoMutations on DemoProvider {
 
     return MutationListenable(
       mutation,
-      (MutationTarget target) => run(target),
+      run,
       (MutationTarget target) =>
           () => run(target),
     );
@@ -151,7 +151,7 @@ extension DemoMutations on DemoProvider {
     Future<T> Function()
   >
   generic<T>() {
-    final mutation = $Mutations.getForProvider<T>(this, 'generic');
+    final mutation = $Mutations.ofProvider<T>(this, 'generic');
     Future<T> run(MutationTarget target) {
       return mutation.run(target, (tsx) {
         return tsx.get(this.notifier).generic<T>();
@@ -160,7 +160,7 @@ extension DemoMutations on DemoProvider {
 
     return MutationListenable(
       mutation,
-      (MutationTarget target) => run(target),
+      run,
       (MutationTarget target) =>
           () => run(target),
     );
@@ -177,7 +177,7 @@ extension DemoMutations on DemoProvider {
     Future<void> Function(Object ref, Object mutation, Object run)
   >
   get nameCollision {
-    final mutation_0 = $Mutations.getForProvider<void>(this, 'nameCollision');
+    final mutation_0 = $Mutations.ofProvider<void>(this, 'nameCollision');
     Future<void> run_0(
       MutationTarget target,
       Object ref,
@@ -191,8 +191,7 @@ extension DemoMutations on DemoProvider {
 
     return MutationListenable(
       mutation_0,
-      (MutationTarget target, Object ref, Object mutation, Object run) =>
-          run_0(target, ref, mutation, run),
+      run_0,
       (MutationTarget target) =>
           (Object ref, Object mutation, Object run) =>
               run_0(target, ref, mutation, run),
@@ -209,7 +208,7 @@ extension DemoMutations on DemoProvider {
     Future<void> Function(int param, {int? optionalParam})
   >
   keyed(String key, {String? namedKey}) {
-    final mutation = $Mutations.getForProvider<void>(this, 'keyed', (
+    final mutation = $Mutations.ofProvider<void>(this, 'keyed', (
       key,
       namedKey: namedKey,
     ));
@@ -228,8 +227,7 @@ extension DemoMutations on DemoProvider {
 
     return MutationListenable(
       mutation,
-      (MutationTarget target, int param, {int? optionalParam}) =>
-          run(target, param, optionalParam: optionalParam),
+      run,
       (MutationTarget target) =>
           (int param, {int? optionalParam}) =>
               run(target, param, optionalParam: optionalParam),

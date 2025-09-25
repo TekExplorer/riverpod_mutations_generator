@@ -15,10 +15,7 @@ MutationListenable<
   Future<void> Function()
 >
 get _$Static_test {
-  final mutation = $Mutations.getForFunction<void>(
-    Static._test,
-    'Static._test',
-  );
+  final mutation = $Mutations.ofFunction<void>(Static._test, 'Static._test');
   Future<void> run(MutationTarget target) {
     return mutation.run(target, (tsx) {
       return Static._test();
@@ -27,7 +24,7 @@ get _$Static_test {
 
   return MutationListenable(
     mutation,
-    (MutationTarget target) => run(target),
+    run,
     (MutationTarget target) =>
         () => run(target),
   );
@@ -39,7 +36,7 @@ MutationListenable<
   Future<String> Function(String id)
 >
 _$Static_test2(String key) {
-  final mutation = $Mutations.getForFunction<String>(
+  final mutation = $Mutations.ofFunction<String>(
     Static._test2,
     'Static._test2',
     (key),
@@ -52,7 +49,7 @@ _$Static_test2(String key) {
 
   return MutationListenable(
     mutation,
-    (MutationTarget target, String id) => run(target, id),
+    run,
     (MutationTarget target) =>
         (String id) => run(target, id),
   );
@@ -64,7 +61,7 @@ MutationListenable<
   Future<void> Function()
 >
 get _$Extension_test {
-  final mutation = $Mutations.getForFunction<void>(
+  final mutation = $Mutations.ofFunction<void>(
     Extension._test,
     'Extension._test',
   );
@@ -76,7 +73,7 @@ get _$Extension_test {
 
   return MutationListenable(
     mutation,
-    (MutationTarget target) => run(target),
+    run,
     (MutationTarget target) =>
         () => run(target),
   );
@@ -88,7 +85,7 @@ MutationListenable<
   Future<String> Function(String id)
 >
 _$Extension_test2(String key) {
-  final mutation = $Mutations.getForFunction<String>(
+  final mutation = $Mutations.ofFunction<String>(
     Extension._test2,
     'Extension._test2',
     (key),
@@ -101,7 +98,7 @@ _$Extension_test2(String key) {
 
   return MutationListenable(
     mutation,
-    (MutationTarget target, String id) => run(target, id),
+    run,
     (MutationTarget target) =>
         (String id) => run(target, id),
   );
@@ -113,7 +110,7 @@ MutationListenable<
   Future<void> Function()
 >
 get _$ExtensionType_test {
-  final mutation = $Mutations.getForFunction<void>(
+  final mutation = $Mutations.ofFunction<void>(
     ExtensionType._test,
     'ExtensionType._test',
   );
@@ -125,7 +122,7 @@ get _$ExtensionType_test {
 
   return MutationListenable(
     mutation,
-    (MutationTarget target) => run(target),
+    run,
     (MutationTarget target) =>
         () => run(target),
   );
@@ -137,7 +134,7 @@ MutationListenable<
   Future<String> Function(String id)
 >
 _$ExtensionType_test2(String key) {
-  final mutation = $Mutations.getForFunction<String>(
+  final mutation = $Mutations.ofFunction<String>(
     ExtensionType._test2,
     'ExtensionType._test2',
     (key),
@@ -150,7 +147,7 @@ _$ExtensionType_test2(String key) {
 
   return MutationListenable(
     mutation,
-    (MutationTarget target, String id) => run(target, id),
+    run,
     (MutationTarget target) =>
         (String id) => run(target, id),
   );

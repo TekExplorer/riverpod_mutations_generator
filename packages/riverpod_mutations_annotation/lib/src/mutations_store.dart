@@ -26,7 +26,7 @@ abstract final class $Mutations {
         () => Mutation<Object?>(label: label),
       );
 
-  static Mutation<T> get<T>(
+  static Mutation<T> of<T>(
     Object key,
     String? label,
   ) =>
@@ -34,24 +34,24 @@ abstract final class $Mutations {
 
   @internal
   @useResult
-  static Mutation<T> getForProvider<T>(
+  static Mutation<T> ofProvider<T>(
     $ClassProvider provider,
     String mutationName, [
     Object? key,
   ]) =>
-      get<T>(
+      of<T>(
         _key(provider, mutationName, key),
         '$provider.$mutationName',
       );
 
   @internal
   @useResult
-  static Mutation<T> getForFunction<T>(
+  static Mutation<T> ofFunction<T>(
     Object function,
     String functionName, [
     Object? key,
   ]) =>
-      get<T>(
+      of<T>(
         _key(function, functionName, key),
         functionName,
       );

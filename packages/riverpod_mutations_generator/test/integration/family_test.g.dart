@@ -118,7 +118,7 @@ extension DemoFamilyMutations on DemoFamilyProvider {
     Future<void> Function(int i, String? e, {required bool b, num n})
   >
   get changeFamily {
-    final mutation = $Mutations.getForProvider<void>(this, 'changeFamily');
+    final mutation = $Mutations.ofProvider<void>(this, 'changeFamily');
     Future<void> run(
       MutationTarget target,
       int i,
@@ -133,8 +133,7 @@ extension DemoFamilyMutations on DemoFamilyProvider {
 
     return MutationListenable(
       mutation,
-      (MutationTarget target, int i, String? e, {required bool b, num n = 1}) =>
-          run(target, i, e, b: b, n: n),
+      run,
       (MutationTarget target) =>
           (int i, String? e, {required bool b, num n = 1}) =>
               run(target, i, e, b: b, n: n),

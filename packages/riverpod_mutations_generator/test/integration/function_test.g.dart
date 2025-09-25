@@ -15,7 +15,7 @@ MutationListenable<
   Future<String> Function(String id)
 >
 getSomething(String key) {
-  final mutation = $Mutations.getForFunction<String>(
+  final mutation = $Mutations.ofFunction<String>(
     _getSomething,
     '_getSomething',
     (key),
@@ -28,7 +28,7 @@ getSomething(String key) {
 
   return MutationListenable(
     mutation,
-    (MutationTarget target, String id) => run(target, id),
+    run,
     (MutationTarget target) =>
         (String id) => run(target, id),
   );
@@ -40,7 +40,7 @@ MutationListenable<
   Future<bool> Function()
 >
 get usesRef {
-  final mutation = $Mutations.getForFunction<bool>(_usesRef, '_usesRef');
+  final mutation = $Mutations.ofFunction<bool>(_usesRef, '_usesRef');
   Future<bool> run(MutationTarget target) {
     return mutation.run(target, (ref) {
       return _usesRef(ref);
@@ -49,7 +49,7 @@ get usesRef {
 
   return MutationListenable(
     mutation,
-    (MutationTarget target) => run(target),
+    run,
     (MutationTarget target) =>
         () => run(target),
   );
