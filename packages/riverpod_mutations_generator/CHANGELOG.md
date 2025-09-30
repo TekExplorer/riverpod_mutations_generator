@@ -1,6 +1,6 @@
 # Riverpod Mutations Generator
 
-## Unreleased Version
+## 2.0.0-dev.5
 
 Bump to riverpod 3.0.0 proper
 Support non-generated providers
