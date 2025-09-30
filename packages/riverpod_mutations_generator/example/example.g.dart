@@ -104,43 +104,45 @@ String _$exampleHash() => r'8e94925464b940f3e410c2c2054797d4910f3652';
 extension TodoListNotifierMutations on TodoListNotifierProvider {
   MutationListenable<
     void,
-    Future<void> Function(MutationTarget target, Todo newTodo),
+    Future<void> Function(MutationTarget _$target, Todo newTodo),
     Future<void> Function(Todo newTodo)
   >
   get addTodo {
-    final mutation = $Mutations.ofProvider<void>(this, 'addTodo');
-    Future<void> run(MutationTarget target, Todo newTodo) {
-      return mutation.run(target, (tsx) {
-        return tsx.get(this.notifier).addTodo(newTodo);
+    final _$mutation = $Mutations.ofProvider<void>(this, 'addTodo');
+    Future<void> _$run(MutationTarget _$target, Todo newTodo) {
+      return _$mutation.run(_$target, (_$tsx) {
+        return _$tsx.get(this.notifier).addTodo(newTodo);
       });
     }
 
     return MutationListenable(
-      mutation,
-      run,
-      (MutationTarget target) =>
-          (Todo newTodo) => run(target, newTodo),
+      _$mutation,
+      _$run,
+      (MutationTarget _$target) =>
+          (Todo newTodo) => _$run(_$target, newTodo),
     );
   }
 
   MutationListenable<
     void,
-    Future<void> Function(MutationTarget target),
+    Future<void> Function(MutationTarget _$target),
     Future<void> Function()
   >
   removeTodo({required int id}) {
-    final mutation = $Mutations.ofProvider<void>(this, 'removeTodo', (id: id));
-    Future<void> run(MutationTarget target) {
-      return mutation.run(target, (tsx) {
-        return tsx.get(this.notifier).removeTodo(id: id);
+    final _$mutation = $Mutations.ofProvider<void>(this, 'removeTodo', (
+      id: id,
+    ));
+    Future<void> _$run(MutationTarget _$target) {
+      return _$mutation.run(_$target, (_$tsx) {
+        return _$tsx.get(this.notifier).removeTodo(id: id);
       });
     }
 
     return MutationListenable(
-      mutation,
-      run,
-      (MutationTarget target) =>
-          () => run(target),
+      _$mutation,
+      _$run,
+      (MutationTarget _$target) =>
+          () => _$run(_$target),
     );
   }
 }

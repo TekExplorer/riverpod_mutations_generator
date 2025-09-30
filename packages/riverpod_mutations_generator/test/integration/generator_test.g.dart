@@ -63,113 +63,113 @@ abstract class _$Demo extends $AsyncNotifier<int> {
 extension DemoMutations on DemoProvider {
   MutationListenable<
     void,
-    Future<void> Function(MutationTarget target, int i),
+    Future<void> Function(MutationTarget _$target, int i),
     Future<void> Function(int i)
   >
   get change {
-    final mutation = $Mutations.ofProvider<void>(this, 'change');
-    Future<void> run(MutationTarget target, int i) {
-      return mutation.run(target, (tsx) {
-        return tsx.get(this.notifier).change(i);
+    final _$mutation = $Mutations.ofProvider<void>(this, 'change');
+    Future<void> _$run(MutationTarget _$target, int i) {
+      return _$mutation.run(_$target, (_$tsx) {
+        return _$tsx.get(this.notifier).change(i);
       });
     }
 
     return MutationListenable(
-      mutation,
-      run,
-      (MutationTarget target) =>
-          (int i) => run(target, i),
+      _$mutation,
+      _$run,
+      (MutationTarget _$target) =>
+          (int i) => _$run(_$target, i),
     );
   }
 
   MutationListenable<
     String?,
-    Future<String?> Function(MutationTarget target),
+    Future<String?> Function(MutationTarget _$target),
     Future<String?> Function()
   >
   get nullable {
-    final mutation = $Mutations.ofProvider<String?>(this, 'nullable');
-    Future<String?> run(MutationTarget target) {
-      return mutation.run(target, (tsx) {
-        return tsx.get(this.notifier).nullable();
+    final _$mutation = $Mutations.ofProvider<String?>(this, 'nullable');
+    Future<String?> _$run(MutationTarget _$target) {
+      return _$mutation.run(_$target, (_$tsx) {
+        return _$tsx.get(this.notifier).nullable();
       });
     }
 
     return MutationListenable(
-      mutation,
-      run,
-      (MutationTarget target) =>
-          () => run(target),
+      _$mutation,
+      _$run,
+      (MutationTarget _$target) =>
+          () => _$run(_$target),
     );
   }
 
   MutationListenable<
     void,
-    Future<void> Function(MutationTarget target),
+    Future<void> Function(MutationTarget _$target),
     Future<void> Function()
   >
   get normal {
-    final mutation = $Mutations.ofProvider<void>(this, 'normal');
-    Future<void> run(MutationTarget target) {
-      return mutation.run(target, (tsx) {
-        return tsx.get(this.notifier).normal();
+    final _$mutation = $Mutations.ofProvider<void>(this, 'normal');
+    Future<void> _$run(MutationTarget _$target) {
+      return _$mutation.run(_$target, (_$tsx) {
+        return _$tsx.get(this.notifier).normal();
       });
     }
 
     return MutationListenable(
-      mutation,
-      run,
-      (MutationTarget target) =>
-          () => run(target),
+      _$mutation,
+      _$run,
+      (MutationTarget _$target) =>
+          () => _$run(_$target),
     );
   }
 
   MutationListenable<
     void,
-    Future<void> Function(MutationTarget target),
+    Future<void> Function(MutationTarget _$target),
     Future<void> Function()
   >
   get withRef {
-    final mutation = $Mutations.ofProvider<void>(this, 'withRef');
-    Future<void> run(MutationTarget target) {
-      return mutation.run(target, (ref) {
-        return ref.get(this.notifier).withRef(ref);
+    final _$mutation = $Mutations.ofProvider<void>(this, 'withRef');
+    Future<void> _$run(MutationTarget _$target) {
+      return _$mutation.run(_$target, (_$tsx) {
+        return _$tsx.get(this.notifier).withRef(_$tsx);
       });
     }
 
     return MutationListenable(
-      mutation,
-      run,
-      (MutationTarget target) =>
-          () => run(target),
+      _$mutation,
+      _$run,
+      (MutationTarget _$target) =>
+          () => _$run(_$target),
     );
   }
 
   MutationListenable<
     T,
-    Future<T> Function(MutationTarget target),
+    Future<T> Function(MutationTarget _$target),
     Future<T> Function()
   >
   generic<T>() {
-    final mutation = $Mutations.ofProvider<T>(this, 'generic');
-    Future<T> run(MutationTarget target) {
-      return mutation.run(target, (tsx) {
-        return tsx.get(this.notifier).generic<T>();
+    final _$mutation = $Mutations.ofProvider<T>(this, 'generic');
+    Future<T> _$run(MutationTarget _$target) {
+      return _$mutation.run(_$target, (_$tsx) {
+        return _$tsx.get(this.notifier).generic<T>();
       });
     }
 
     return MutationListenable(
-      mutation,
-      run,
-      (MutationTarget target) =>
-          () => run(target),
+      _$mutation,
+      _$run,
+      (MutationTarget _$target) =>
+          () => _$run(_$target),
     );
   }
 
   MutationListenable<
     void,
     Future<void> Function(
-      MutationTarget target,
+      MutationTarget _$target,
       Object ref,
       Object mutation,
       Object run,
@@ -177,44 +177,48 @@ extension DemoMutations on DemoProvider {
     Future<void> Function(Object ref, Object mutation, Object run)
   >
   get nameCollision {
-    final mutation_0 = $Mutations.ofProvider<void>(this, 'nameCollision');
-    Future<void> run_0(
-      MutationTarget target,
+    final _$mutation = $Mutations.ofProvider<void>(this, 'nameCollision');
+    Future<void> _$run(
+      MutationTarget _$target,
       Object ref,
       Object mutation,
       Object run,
     ) {
-      return mutation_0.run(target, (tsx) {
-        return tsx.get(this.notifier).nameCollision(ref, mutation, run);
+      return _$mutation.run(_$target, (_$tsx) {
+        return _$tsx.get(this.notifier).nameCollision(ref, mutation, run);
       });
     }
 
     return MutationListenable(
-      mutation_0,
-      run_0,
-      (MutationTarget target) =>
+      _$mutation,
+      _$run,
+      (MutationTarget _$target) =>
           (Object ref, Object mutation, Object run) =>
-              run_0(target, ref, mutation, run),
+              _$run(_$target, ref, mutation, run),
     );
   }
 
   MutationListenable<
     void,
     Future<void> Function(
-      MutationTarget target,
+      MutationTarget _$target,
       int param, {
       int? optionalParam,
     }),
     Future<void> Function(int param, {int? optionalParam})
   >
   keyed(String key, {String? namedKey}) {
-    final mutation = $Mutations.ofProvider<void>(this, 'keyed', (
+    final _$mutation = $Mutations.ofProvider<void>(this, 'keyed', (
       key,
       namedKey: namedKey,
     ));
-    Future<void> run(MutationTarget target, int param, {int? optionalParam}) {
-      return mutation.run(target, (tsx) {
-        return tsx
+    Future<void> _$run(
+      MutationTarget _$target,
+      int param, {
+      int? optionalParam,
+    }) {
+      return _$mutation.run(_$target, (_$tsx) {
+        return _$tsx
             .get(this.notifier)
             .keyed(
               key,
@@ -226,11 +230,11 @@ extension DemoMutations on DemoProvider {
     }
 
     return MutationListenable(
-      mutation,
-      run,
-      (MutationTarget target) =>
+      _$mutation,
+      _$run,
+      (MutationTarget _$target) =>
           (int param, {int? optionalParam}) =>
-              run(target, param, optionalParam: optionalParam),
+              _$run(_$target, param, optionalParam: optionalParam),
     );
   }
 }

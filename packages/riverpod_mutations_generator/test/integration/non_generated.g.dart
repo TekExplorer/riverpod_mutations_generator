@@ -14,7 +14,7 @@ extension DemoFamily2Mutations
   MutationListenable<
     void,
     Future<void> Function(
-      MutationTarget target,
+      MutationTarget _$target,
       int i,
       String? e, {
       required bool b,
@@ -23,25 +23,25 @@ extension DemoFamily2Mutations
     Future<void> Function(int i, String? e, {required bool b, num n})
   >
   get changeFamily {
-    final mutation = $Mutations.ofProvider<void>(this, 'changeFamily');
-    Future<void> run(
-      MutationTarget target,
+    final _$mutation = $Mutations.ofProvider<void>(this, 'changeFamily');
+    Future<void> _$run(
+      MutationTarget _$target,
       int i,
       String? e, {
       required bool b,
       num n = 1,
     }) {
-      return mutation.run(target, (tsx) {
-        return tsx.get(this.notifier).changeFamily(i, e, b: b, n: n);
+      return _$mutation.run(_$target, (_$tsx) {
+        return _$tsx.get(this.notifier).changeFamily(i, e, b: b, n: n);
       });
     }
 
     return MutationListenable(
-      mutation,
-      run,
-      (MutationTarget target) =>
+      _$mutation,
+      _$run,
+      (MutationTarget _$target) =>
           (int i, String? e, {required bool b, num n = 1}) =>
-              run(target, i, e, b: b, n: n),
+              _$run(_$target, i, e, b: b, n: n),
     );
   }
 }

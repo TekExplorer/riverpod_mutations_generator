@@ -11,144 +11,144 @@ part of 'static_test.dart';
 
 MutationListenable<
   void,
-  Future<void> Function(MutationTarget target),
+  Future<void> Function(MutationTarget _$target),
   Future<void> Function()
 >
 get _$Static_test {
-  final mutation = $Mutations.ofFunction<void>(Static._test, 'Static._test');
-  Future<void> run(MutationTarget target) {
-    return mutation.run(target, (tsx) {
+  final _$mutation = $Mutations.ofFunction<void>(Static._test, 'Static._test');
+  Future<void> _$run(MutationTarget _$target) {
+    return _$mutation.run(_$target, (_$tsx) {
       return Static._test();
     });
   }
 
   return MutationListenable(
-    mutation,
-    run,
-    (MutationTarget target) =>
-        () => run(target),
+    _$mutation,
+    _$run,
+    (MutationTarget _$target) =>
+        () => _$run(_$target),
   );
 }
 
 MutationListenable<
   String,
-  Future<String> Function(MutationTarget target, String id),
+  Future<String> Function(MutationTarget _$target, String id),
   Future<String> Function(String id)
 >
 _$Static_test2(String key) {
-  final mutation = $Mutations.ofFunction<String>(
+  final _$mutation = $Mutations.ofFunction<String>(
     Static._test2,
     'Static._test2',
     (key),
   );
-  Future<String> run(MutationTarget target, String id) {
-    return mutation.run(target, (tsx) {
+  Future<String> _$run(MutationTarget _$target, String id) {
+    return _$mutation.run(_$target, (_$tsx) {
       return Static._test2(id, key);
     });
   }
 
   return MutationListenable(
-    mutation,
-    run,
-    (MutationTarget target) =>
-        (String id) => run(target, id),
+    _$mutation,
+    _$run,
+    (MutationTarget _$target) =>
+        (String id) => _$run(_$target, id),
   );
 }
 
 MutationListenable<
   void,
-  Future<void> Function(MutationTarget target),
+  Future<void> Function(MutationTarget _$target),
   Future<void> Function()
 >
 get _$Extension_test {
-  final mutation = $Mutations.ofFunction<void>(
+  final _$mutation = $Mutations.ofFunction<void>(
     Extension._test,
     'Extension._test',
   );
-  Future<void> run(MutationTarget target) {
-    return mutation.run(target, (tsx) {
+  Future<void> _$run(MutationTarget _$target) {
+    return _$mutation.run(_$target, (_$tsx) {
       return Extension._test();
     });
   }
 
   return MutationListenable(
-    mutation,
-    run,
-    (MutationTarget target) =>
-        () => run(target),
+    _$mutation,
+    _$run,
+    (MutationTarget _$target) =>
+        () => _$run(_$target),
   );
 }
 
 MutationListenable<
   String,
-  Future<String> Function(MutationTarget target, String id),
+  Future<String> Function(MutationTarget _$target, String id),
   Future<String> Function(String id)
 >
 _$Extension_test2(String key) {
-  final mutation = $Mutations.ofFunction<String>(
+  final _$mutation = $Mutations.ofFunction<String>(
     Extension._test2,
     'Extension._test2',
     (key),
   );
-  Future<String> run(MutationTarget target, String id) {
-    return mutation.run(target, (tsx) {
+  Future<String> _$run(MutationTarget _$target, String id) {
+    return _$mutation.run(_$target, (_$tsx) {
       return Extension._test2(id, key);
     });
   }
 
   return MutationListenable(
-    mutation,
-    run,
-    (MutationTarget target) =>
-        (String id) => run(target, id),
+    _$mutation,
+    _$run,
+    (MutationTarget _$target) =>
+        (String id) => _$run(_$target, id),
   );
 }
 
 MutationListenable<
   void,
-  Future<void> Function(MutationTarget target),
+  Future<void> Function(MutationTarget _$target),
   Future<void> Function()
 >
 get _$ExtensionType_test {
-  final mutation = $Mutations.ofFunction<void>(
+  final _$mutation = $Mutations.ofFunction<void>(
     ExtensionType._test,
     'ExtensionType._test',
   );
-  Future<void> run(MutationTarget target) {
-    return mutation.run(target, (tsx) {
+  Future<void> _$run(MutationTarget _$target) {
+    return _$mutation.run(_$target, (_$tsx) {
       return ExtensionType._test();
     });
   }
 
   return MutationListenable(
-    mutation,
-    run,
-    (MutationTarget target) =>
-        () => run(target),
+    _$mutation,
+    _$run,
+    (MutationTarget _$target) =>
+        () => _$run(_$target),
   );
 }
 
 MutationListenable<
   String,
-  Future<String> Function(MutationTarget target, String id),
+  Future<String> Function(MutationTarget _$target, String id),
   Future<String> Function(String id)
 >
 _$ExtensionType_test2(String key) {
-  final mutation = $Mutations.ofFunction<String>(
+  final _$mutation = $Mutations.ofFunction<String>(
     ExtensionType._test2,
     'ExtensionType._test2',
     (key),
   );
-  Future<String> run(MutationTarget target, String id) {
-    return mutation.run(target, (tsx) {
+  Future<String> _$run(MutationTarget _$target, String id) {
+    return _$mutation.run(_$target, (_$tsx) {
       return ExtensionType._test2(id, key);
     });
   }
 
   return MutationListenable(
-    mutation,
-    run,
-    (MutationTarget target) =>
-        (String id) => run(target, id),
+    _$mutation,
+    _$run,
+    (MutationTarget _$target) =>
+        (String id) => _$run(_$target, id),
   );
 }

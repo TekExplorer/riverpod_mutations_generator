@@ -73,78 +73,6 @@ class MutationTemplate {
 
   Iterable<String> get $parameterNames => executable.formalParameters.names;
 
-  String get tsx {
-    final refInArguments = executable.formalParameters
-        .where((p) => p.isMutationTsx)
-        .firstOrNull;
-    if (refInArguments != null) return refInArguments.displayName;
-
-    return 'tsx'.makeUnique($parameterNames);
-  }
-
-  late final String target = 'target'.makeUnique($parameterNames);
-  late final String mutation = 'mutation'.makeUnique($parameterNames);
-  late final String run = 'run'.makeUnique($parameterNames);
-
-  Map<String, void Function()> args(
-    AnalyzerBuffer buffer,
-  ) => <String, void Function()>{
-    'PublicParameters': () {
-      buffer.write(executable.endUserParameters.toCode(withParentheses: false));
-    },
-
-    'InvokePublicParameters': () {
-      buffer.write(
-        executable.endUserParameters.toInvocationCode(withParentheses: false),
-      );
-    },
-
-    'ResultT': () {
-      buffer.write(executable.resultT.toCode());
-    },
-    'MutationTarget': () {
-      buffer.write('#{{riverpod|$MutationTarget}}');
-    },
-
-    'MutationListenable': () {
-      buffer.write('#{{riverpod_mutations_annotation|MutationListenable}}');
-    },
-
-    'TypedMutationListenable': () {
-      final String endUserParamsInType = executable.endUserParameters.toCode(
-        withParentheses: false,
-        includeDefaults: false,
-      );
-      buffer.write('''
-  #{{MutationListenable}}<
-    #{{ResultT}},
-    Future<#{{ResultT}}> Function(#{{MutationTarget}} $target, $endUserParamsInType),
-    Future<#{{ResultT}}> Function($endUserParamsInType)
-  >
-''');
-    },
-
-    'CallOriginal': () {
-      final String allParams = [
-        // type parameters
-        if (methodGenerics.isNotEmpty)
-          '<${methodGenerics.toNames().join(', ')}>',
-        executable.formalParameters.toInvocationCode(
-          omitIfEmpty: false,
-          withParentheses: true,
-        ),
-      ].join();
-
-      buffer.write(switch (executable) {
-        MutationMethod() =>
-          '$tsx.get(this.notifier).${executable.name}$allParams',
-        TopLevelFunctionMutation() => '${executable.name}$allParams',
-        StaticMutationMethod executable =>
-          '${executable.interface.name}.${executable.name}$allParams',
-      });
-    },
-  };
-
   /// [$Mutations.ofProvider]
   /// [$Mutations.ofFunction]
   String get constructMutation {
@@ -165,36 +93,14 @@ class MutationTemplate {
     };
   }
 
-  late String getterName = switch (executable) {
-    MutationMethod() => executable.name.public,
-    // _$ClassName_methodName
-    StaticMutationMethod executable =>
-      '_\$${executable.interface.name}_${executable.name.public}',
-    TopLevelFunctionMutation(isPublic: false) => executable.name.public,
-    TopLevelFunctionMutation(isPublic: true) => throw InvalidGenerationSource(
-      'Public functions cannot be used as mutations.',
-      todo:
-          'Make the function private by prefixing its name with an underscore (_).',
-      element: executable.element,
-    ),
-  };
-
-  String get getterDefinition {
-    final String get = isGetter ? 'get ' : '';
-
-    final String keyedArgs = !isGetter
-        ? executable.keyedParameters.toCode()
-        : '';
-
-    final String generics = methodGenerics.toGenericsCode();
-
-    return '$get$getterName$generics$keyedArgs';
-  }
-
-  void writeGetter(AnalyzerBuffer buffer) {
-    buffer.write(args: args(buffer), '''
-  #{{TypedMutationListenable}} $getterDefinition {
-    final $mutation = $constructMutation;
+  static const tsx = r'_$tsx';
+  static const target = r'_$target';
+  static const mutation = r'_$mutation';
+  static const run = r'_$run';
+  static const template =
+      '''
+  #{{TypedMutationListenable}} #{{getterDefinition}} {
+    final $mutation = #{{constructMutation}};
     Future<#{{ResultT}}> $run(#{{MutationTarget}} $target, #{{PublicParameters}}) {
       return $mutation.run($target, ($tsx) {
         return #{{CallOriginal}};
@@ -206,9 +112,90 @@ class MutationTemplate {
       (#{{MutationTarget}} $target) => (#{{PublicParameters}}) => $run($target, #{{InvokePublicParameters}}),
     );
   }
+''';
+  void writeGetter(AnalyzerBuffer buffer) {
+    buffer.write(
+      template,
+      args: <String, void Function()>{
+        'PublicParameters': () => buffer.write(
+          executable.endUserParameters.toCode(withParentheses: false),
+        ),
+
+        'InvokePublicParameters': () => buffer.write(
+          executable.endUserParameters.toInvocationCode(withParentheses: false),
+        ),
+
+        'ResultT': () => buffer.write(executable.resultT.toCode()),
+        'MutationTarget': () => buffer.write('#{{riverpod|$MutationTarget}}'),
+
+        'MutationListenable': () => buffer.write(
+          '#{{riverpod_mutations_annotation|MutationListenable}}',
+        ),
+
+        'TypedMutationListenable': () {
+          final String endUserParamsInType = executable.endUserParameters
+              .toCode(withParentheses: false, includeDefaults: false);
+          buffer.write('''
+  #{{MutationListenable}}<
+    #{{ResultT}},
+    Future<#{{ResultT}}> Function(#{{MutationTarget}} $target, $endUserParamsInType),
+    Future<#{{ResultT}}> Function($endUserParamsInType)
+  >
 ''');
+        },
+
+        'CallOriginal': () {
+          final String allParams = [
+            // type parameters
+            if (methodGenerics.isNotEmpty)
+              '<${methodGenerics.toNames().join(', ')}>',
+            executable.formalParameters.toInvocationCode(
+              omitIfEmpty: false,
+              withParentheses: true,
+              overrideName: (param) => param.isMutationTsx ? tsx : null,
+            ),
+          ].join();
+
+          buffer.write(switch (executable) {
+            MutationMethod() =>
+              '$tsx.get(this.notifier).${executable.name}$allParams',
+            TopLevelFunctionMutation() => '${executable.name}$allParams',
+            StaticMutationMethod executable =>
+              '${executable.interface.name}.${executable.name}$allParams',
+          });
+        },
+        'getterDefinition': () {
+          final String get = isGetter ? 'get ' : '';
+
+          final String getterName = switch (executable) {
+            MutationMethod() => executable.name.public,
+            // _$ClassName_methodName
+            StaticMutationMethod executable =>
+              '_\$${executable.interface.name}_${executable.name.public}',
+            TopLevelFunctionMutation(isPublic: false) => executable.name.public,
+            TopLevelFunctionMutation(isPublic: true) =>
+              throw InvalidGenerationSource(
+                'Public functions cannot be used as mutations.',
+                todo:
+                    'Make the function private by prefixing its name with an underscore (_).',
+                element: executable.element,
+              ),
+          };
+
+          final String generics = methodGenerics.toGenericsCode();
+
+          final String keyedArgs = !isGetter
+              ? executable.keyedParameters.toCode()
+              : '';
+
+          buffer.write('$get$getterName$generics$keyedArgs');
+        },
+        'constructMutation': () => buffer.write(constructMutation),
+      },
+    );
   }
 }
+
 // typedef BufferArgs = Map<String, void Function()>;
 
 // extension on AnalyzerBuffer {

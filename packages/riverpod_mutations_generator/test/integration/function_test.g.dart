@@ -11,46 +11,46 @@ part of 'function_test.dart';
 
 MutationListenable<
   String,
-  Future<String> Function(MutationTarget target, String id),
+  Future<String> Function(MutationTarget _$target, String id),
   Future<String> Function(String id)
 >
 getSomething(String key) {
-  final mutation = $Mutations.ofFunction<String>(
+  final _$mutation = $Mutations.ofFunction<String>(
     _getSomething,
     '_getSomething',
     (key),
   );
-  Future<String> run(MutationTarget target, String id) {
-    return mutation.run(target, (tsx) {
+  Future<String> _$run(MutationTarget _$target, String id) {
+    return _$mutation.run(_$target, (_$tsx) {
       return _getSomething(id, key);
     });
   }
 
   return MutationListenable(
-    mutation,
-    run,
-    (MutationTarget target) =>
-        (String id) => run(target, id),
+    _$mutation,
+    _$run,
+    (MutationTarget _$target) =>
+        (String id) => _$run(_$target, id),
   );
 }
 
 MutationListenable<
   bool,
-  Future<bool> Function(MutationTarget target),
+  Future<bool> Function(MutationTarget _$target),
   Future<bool> Function()
 >
 get usesRef {
-  final mutation = $Mutations.ofFunction<bool>(_usesRef, '_usesRef');
-  Future<bool> run(MutationTarget target) {
-    return mutation.run(target, (ref) {
-      return _usesRef(ref);
+  final _$mutation = $Mutations.ofFunction<bool>(_usesRef, '_usesRef');
+  Future<bool> _$run(MutationTarget _$target) {
+    return _$mutation.run(_$target, (_$tsx) {
+      return _usesRef(_$tsx);
     });
   }
 
   return MutationListenable(
-    mutation,
-    run,
-    (MutationTarget target) =>
-        () => run(target),
+    _$mutation,
+    _$run,
+    (MutationTarget _$target) =>
+        () => _$run(_$target),
   );
 }

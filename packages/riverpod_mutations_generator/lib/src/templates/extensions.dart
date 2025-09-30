@@ -76,11 +76,15 @@ extension ParameterList on Iterable<FormalParameterElement> {
   String toInvocationCode({
     bool omitIfEmpty = false,
     bool withParentheses = true,
+    String? overrideName(FormalParameterElement param)?,
   }) {
     if (omitIfEmpty && isEmpty) return '';
+    String nameFor(FormalParameterElement param) =>
+        overrideName?.call(param) ?? param.displayName;
+
     return (
-      [for (final param in this.positional) param.displayName],
-      {for (final param in this.named) param.displayName: param.displayName},
+      [for (final param in this.positional) nameFor(param)],
+      {for (final param in this.named) param.displayName: nameFor(param)},
     ).toCode(withParentheses: withParentheses);
   }
 }
@@ -144,15 +148,15 @@ extension on String {
     return this;
   }
 
-  String makeUnique(Iterable<String> existingNames) {
-    String newName = this;
-    int counter = 0;
-    while (existingNames.contains(newName)) {
-      newName = '${this}_$counter';
-      counter++;
-    }
-    return newName;
-  }
+  // String makeUnique(Iterable<String> existingNames) {
+  //   String newName = this;
+  //   int counter = 0;
+  //   while (existingNames.contains(newName)) {
+  //     newName = '${this}_$counter';
+  //     counter++;
+  //   }
+  //   return newName;
+  // }
 }
 
 extension on TypeParameterElement {
