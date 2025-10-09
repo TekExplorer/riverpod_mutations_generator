@@ -14,3 +14,4 @@ export 'src/annotations.dart';
 // export 'src/internal_provider.dart' show $proxyMutationPair;
 export 'src/listenable.dart';
 export 'src/mutations_store.dart';
+export 'src/pair/listenable.dart';

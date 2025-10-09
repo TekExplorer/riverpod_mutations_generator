@@ -20,7 +20,7 @@ class DemoFamily2 extends AsyncNotifier<int> {
   AsyncNotifierProvider<DemoFamily2, int> get provider =>
       demoFamily2Provider(key);
 
-  @mutation
+  @mutationPair
   Future<void> changeFamily(
     int i,
     String? e, {

@@ -2,34 +2,27 @@ import 'package:meta/meta.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod/misc.dart';
 
-import 'internal_provider.dart';
-
-sealed class MutationListenable<ResultT, RunT, PairRunT>
+abstract class MutationListenable<ResultT, RunT>
     implements ProviderListenable<MutationState<ResultT>> {
-  factory MutationListenable(
-    Mutation<ResultT> mutation,
-    RunT run,
-    PairRunT Function(MutationTarget target) pair,
-  ) = _MutationListenable;
+  factory MutationListenable(Mutation<ResultT> mutation, RunT run) =
+      _MutationListenable;
+
+  Mutation<ResultT> get mutation;
 
   void reset(MutationTarget target);
 
-  ProviderListenable<(MutationState<ResultT>, PairRunT)> get pair;
   RunT get run;
 }
 
-final class _MutationListenable<ResultT, RunT, PairRunT>
+final class _MutationListenable<ResultT, RunT>
     with
         SyncProviderTransformerMixin<MutationState<ResultT>,
             MutationState<ResultT>>
     implements
-        MutationListenable<ResultT, RunT, PairRunT> {
-  _MutationListenable(
-    this.mutation,
-    this.run,
-    this._pair,
-  );
+        MutationListenable<ResultT, RunT> {
+  _MutationListenable(this.mutation, this.run);
 
+  @override
   final Mutation<ResultT> mutation;
 
   @override
@@ -51,20 +44,11 @@ final class _MutationListenable<ResultT, RunT, PairRunT>
   @override
   final RunT run;
 
-//
-  final PairRunT Function(MutationTarget target) _pair;
-
-  @override
-  ProviderListenable<(MutationState<ResultT>, PairRunT)> get pair =>
-      $proxyMutationPair<ResultT, PairRunT>(mutation, _pair);
-
-  //
-
   @override
   operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is _MutationListenable<ResultT, RunT, PairRunT> &&
+    return other is _MutationListenable<ResultT, RunT> &&
         other.mutation == mutation;
   }
 

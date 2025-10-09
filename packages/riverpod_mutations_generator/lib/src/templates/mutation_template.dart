@@ -64,6 +64,14 @@ extension ${notifierName}Mutations#{{NotifierGenerics}} on #{{on_type}} {
 class MutationTemplate {
   MutationTemplate(this.executable);
   final MutationExecutable executable;
+  MutationAnnotation get annotation {
+    return MutationAnnotation.from(
+      annotation: mutationTypeChecker.firstAnnotationOfExact(
+        executable.element,
+      ),
+      config: Config.current,
+    );
+  }
 
   bool get isGetter =>
       executable.keyedParameters.isEmpty && methodGenerics.isEmpty;
@@ -97,6 +105,7 @@ class MutationTemplate {
   static const target = r'_$target';
   static const mutation = r'_$mutation';
   static const run = r'_$run';
+
   static const template =
       '''
   #{{TypedMutationListenable}} #{{getterDefinition}} {
@@ -106,16 +115,30 @@ class MutationTemplate {
         return #{{CallOriginal}};
       });
     }
-    return #{{MutationListenable}}(
-      $mutation,
-      $run,
+    return #{{MutationListenable}}($mutation, $run);
+  }
+''';
+  static const templatePair =
+      '''
+  #{{TypedMutationPairListenable}} #{{getterDefinition}} {
+    final $mutation = #{{constructMutation}};
+    Future<#{{ResultT}}> $run(#{{MutationTarget}} $target, #{{PublicParameters}}) {
+      return $mutation.run($target, ($tsx) {
+        return #{{CallOriginal}};
+      });
+    }
+    return #{{MutationListenable}}($mutation, $run).\$withPair(
       (#{{MutationTarget}} $target) => (#{{PublicParameters}}) => $run($target, #{{InvokePublicParameters}}),
     );
   }
 ''';
   void writeGetter(AnalyzerBuffer buffer) {
+    print(
+      'Generating mutation for ${executable.name} with options: $annotation',
+    );
+
     buffer.write(
-      template,
+      (annotation.withPair ?? false) ? templatePair : template,
       args: <String, void Function()>{
         'PublicParameters': () => buffer.write(
           executable.endUserParameters.toCode(withParentheses: false),
@@ -137,6 +160,19 @@ class MutationTemplate {
               .toCode(withParentheses: false, includeDefaults: false);
           buffer.write('''
   #{{MutationListenable}}<
+    #{{ResultT}},
+    Future<#{{ResultT}}> Function(#{{MutationTarget}} $target, $endUserParamsInType)
+  >
+''');
+        },
+        'MutationPairListenable': () => buffer.write(
+          '#{{riverpod_mutations_annotation|MutationPairListenable}}',
+        ),
+        'TypedMutationPairListenable': () {
+          final String endUserParamsInType = executable.endUserParameters
+              .toCode(withParentheses: false, includeDefaults: false);
+          buffer.write('''
+  #{{MutationPairListenable}}<
     #{{ResultT}},
     Future<#{{ResultT}}> Function(#{{MutationTarget}} $target, $endUserParamsInType),
     Future<#{{ResultT}}> Function($endUserParamsInType)

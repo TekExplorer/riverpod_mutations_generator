@@ -9,7 +9,7 @@ part of 'static_test.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-MutationListenable<
+MutationPairListenable<
   void,
   Future<void> Function(MutationTarget _$target),
   Future<void> Function()
@@ -22,15 +22,13 @@ get _$Static_test {
     });
   }
 
-  return MutationListenable(
-    _$mutation,
-    _$run,
+  return MutationListenable(_$mutation, _$run).$withPair(
     (MutationTarget _$target) =>
         () => _$run(_$target),
   );
 }
 
-MutationListenable<
+MutationPairListenable<
   String,
   Future<String> Function(MutationTarget _$target, String id),
   Future<String> Function(String id)
@@ -47,15 +45,13 @@ _$Static_test2(String key) {
     });
   }
 
-  return MutationListenable(
-    _$mutation,
-    _$run,
+  return MutationListenable(_$mutation, _$run).$withPair(
     (MutationTarget _$target) =>
         (String id) => _$run(_$target, id),
   );
 }
 
-MutationListenable<
+MutationPairListenable<
   void,
   Future<void> Function(MutationTarget _$target),
   Future<void> Function()
@@ -71,15 +67,13 @@ get _$Extension_test {
     });
   }
 
-  return MutationListenable(
-    _$mutation,
-    _$run,
+  return MutationListenable(_$mutation, _$run).$withPair(
     (MutationTarget _$target) =>
         () => _$run(_$target),
   );
 }
 
-MutationListenable<
+MutationPairListenable<
   String,
   Future<String> Function(MutationTarget _$target, String id),
   Future<String> Function(String id)
@@ -96,15 +90,13 @@ _$Extension_test2(String key) {
     });
   }
 
-  return MutationListenable(
-    _$mutation,
-    _$run,
+  return MutationListenable(_$mutation, _$run).$withPair(
     (MutationTarget _$target) =>
         (String id) => _$run(_$target, id),
   );
 }
 
-MutationListenable<
+MutationPairListenable<
   void,
   Future<void> Function(MutationTarget _$target),
   Future<void> Function()
@@ -120,15 +112,13 @@ get _$ExtensionType_test {
     });
   }
 
-  return MutationListenable(
-    _$mutation,
-    _$run,
+  return MutationListenable(_$mutation, _$run).$withPair(
     (MutationTarget _$target) =>
         () => _$run(_$target),
   );
 }
 
-MutationListenable<
+MutationPairListenable<
   String,
   Future<String> Function(MutationTarget _$target, String id),
   Future<String> Function(String id)
@@ -145,9 +135,7 @@ _$ExtensionType_test2(String key) {
     });
   }
 
-  return MutationListenable(
-    _$mutation,
-    _$run,
+  return MutationListenable(_$mutation, _$run).$withPair(
     (MutationTarget _$target) =>
         (String id) => _$run(_$target, id),
   );

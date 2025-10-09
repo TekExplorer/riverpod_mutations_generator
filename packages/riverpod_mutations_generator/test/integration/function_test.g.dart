@@ -9,7 +9,7 @@ part of 'function_test.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-MutationListenable<
+MutationPairListenable<
   String,
   Future<String> Function(MutationTarget _$target, String id),
   Future<String> Function(String id)
@@ -26,15 +26,13 @@ getSomething(String key) {
     });
   }
 
-  return MutationListenable(
-    _$mutation,
-    _$run,
+  return MutationListenable(_$mutation, _$run).$withPair(
     (MutationTarget _$target) =>
         (String id) => _$run(_$target, id),
   );
 }
 
-MutationListenable<
+MutationPairListenable<
   bool,
   Future<bool> Function(MutationTarget _$target),
   Future<bool> Function()
@@ -47,9 +45,7 @@ get usesRef {
     });
   }
 
-  return MutationListenable(
-    _$mutation,
-    _$run,
+  return MutationListenable(_$mutation, _$run).$withPair(
     (MutationTarget _$target) =>
         () => _$run(_$target),
   );

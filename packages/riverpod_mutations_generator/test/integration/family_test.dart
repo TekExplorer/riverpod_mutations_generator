@@ -12,7 +12,7 @@ class DemoFamily extends _$DemoFamily {
 
   DemoFamilyProvider get provider => demoFamilyProvider(key);
 
-  @mutation
+  @mutationPair
   Future<void> changeFamily(
     int i,
     String? e, {

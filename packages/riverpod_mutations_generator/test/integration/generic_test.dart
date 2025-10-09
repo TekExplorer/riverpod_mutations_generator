@@ -14,7 +14,7 @@ class DemoGeneric<T> extends _$DemoGeneric<T> {
 
   DemoGenericProvider<T> get provider => demoGenericProvider<T>();
 
-  @mutation
+  @mutationPair
   Future<void> changeGeneric(T value) async {
     provider.changeGeneric
         .check<
@@ -24,7 +24,7 @@ class DemoGeneric<T> extends _$DemoGeneric<T> {
         >();
   }
 
-  @mutation
+  @mutationPair
   Future<(T, R)> generic<R>() {
     provider
         .generic<R>()
@@ -36,7 +36,7 @@ class DemoGeneric<T> extends _$DemoGeneric<T> {
     throw UnimplementedError();
   }
 
-  @mutation
+  @mutationPair
   Future<T> genericShadowed<T>() {
     provider
         .genericShadowed<T>()

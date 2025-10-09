@@ -63,7 +63,7 @@ final class DemoGenericProvider<T>
   }
 }
 
-String _$demoGenericHash() => r'8bd68b55cf7cf2c59dbc6f3e22379b52d0346324';
+String _$demoGenericHash() => r'3415f8f5d91aba993d68554a7b21b896d687c484';
 
 final class DemoGenericFamily extends $Family {
   const DemoGenericFamily._()
@@ -131,7 +131,7 @@ abstract class _$DemoGeneric<T> extends $Notifier<T> {
 // ignore_for_file: type=lint, type=warning
 
 extension DemoGenericMutations<T> on DemoGenericProvider<T> {
-  MutationListenable<
+  MutationPairListenable<
     void,
     Future<void> Function(MutationTarget _$target, T value),
     Future<void> Function(T value)
@@ -144,15 +144,13 @@ extension DemoGenericMutations<T> on DemoGenericProvider<T> {
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
+    return MutationListenable(_$mutation, _$run).$withPair(
       (MutationTarget _$target) =>
           (T value) => _$run(_$target, value),
     );
   }
 
-  MutationListenable<
+  MutationPairListenable<
     (T, R),
     Future<(T, R)> Function(MutationTarget _$target),
     Future<(T, R)> Function()
@@ -165,15 +163,13 @@ extension DemoGenericMutations<T> on DemoGenericProvider<T> {
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
+    return MutationListenable(_$mutation, _$run).$withPair(
       (MutationTarget _$target) =>
           () => _$run(_$target),
     );
   }
 
-  MutationListenable<
+  MutationPairListenable<
     T,
     Future<T> Function(MutationTarget _$target),
     Future<T> Function()
@@ -186,9 +182,7 @@ extension DemoGenericMutations<T> on DemoGenericProvider<T> {
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
+    return MutationListenable(_$mutation, _$run).$withPair(
       (MutationTarget _$target) =>
           () => _$run(_$target),
     );

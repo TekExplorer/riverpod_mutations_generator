@@ -32,7 +32,7 @@ final class DemoProvider extends $AsyncNotifierProvider<Demo, int> {
   Demo create() => Demo();
 }
 
-String _$demoHash() => r'3b56e9bfa022cb257297751a48f32a061dd6cb9e';
+String _$demoHash() => r'74d6ef483dcdfdb2ed688a64f73aad5f2a0c9d2f';
 
 abstract class _$Demo extends $AsyncNotifier<int> {
   FutureOr<int> build();
@@ -61,7 +61,7 @@ abstract class _$Demo extends $AsyncNotifier<int> {
 // ignore_for_file: type=lint, type=warning
 
 extension DemoMutations on DemoProvider {
-  MutationListenable<
+  MutationPairListenable<
     void,
     Future<void> Function(MutationTarget _$target, int i),
     Future<void> Function(int i)
@@ -74,15 +74,13 @@ extension DemoMutations on DemoProvider {
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
+    return MutationListenable(_$mutation, _$run).$withPair(
       (MutationTarget _$target) =>
           (int i) => _$run(_$target, i),
     );
   }
 
-  MutationListenable<
+  MutationPairListenable<
     String?,
     Future<String?> Function(MutationTarget _$target),
     Future<String?> Function()
@@ -95,15 +93,13 @@ extension DemoMutations on DemoProvider {
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
+    return MutationListenable(_$mutation, _$run).$withPair(
       (MutationTarget _$target) =>
           () => _$run(_$target),
     );
   }
 
-  MutationListenable<
+  MutationPairListenable<
     void,
     Future<void> Function(MutationTarget _$target),
     Future<void> Function()
@@ -116,15 +112,13 @@ extension DemoMutations on DemoProvider {
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
+    return MutationListenable(_$mutation, _$run).$withPair(
       (MutationTarget _$target) =>
           () => _$run(_$target),
     );
   }
 
-  MutationListenable<
+  MutationPairListenable<
     void,
     Future<void> Function(MutationTarget _$target),
     Future<void> Function()
@@ -137,15 +131,13 @@ extension DemoMutations on DemoProvider {
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
+    return MutationListenable(_$mutation, _$run).$withPair(
       (MutationTarget _$target) =>
           () => _$run(_$target),
     );
   }
 
-  MutationListenable<
+  MutationPairListenable<
     T,
     Future<T> Function(MutationTarget _$target),
     Future<T> Function()
@@ -158,15 +150,13 @@ extension DemoMutations on DemoProvider {
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
+    return MutationListenable(_$mutation, _$run).$withPair(
       (MutationTarget _$target) =>
           () => _$run(_$target),
     );
   }
 
-  MutationListenable<
+  MutationPairListenable<
     void,
     Future<void> Function(
       MutationTarget _$target,
@@ -189,16 +179,14 @@ extension DemoMutations on DemoProvider {
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
+    return MutationListenable(_$mutation, _$run).$withPair(
       (MutationTarget _$target) =>
           (Object ref, Object mutation, Object run) =>
               _$run(_$target, ref, mutation, run),
     );
   }
 
-  MutationListenable<
+  MutationPairListenable<
     void,
     Future<void> Function(
       MutationTarget _$target,
@@ -229,12 +217,27 @@ extension DemoMutations on DemoProvider {
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
+    return MutationListenable(_$mutation, _$run).$withPair(
       (MutationTarget _$target) =>
           (int param, {int? optionalParam}) =>
               _$run(_$target, param, optionalParam: optionalParam),
     );
+  }
+
+  MutationListenable<
+    String,
+    Future<String> Function(MutationTarget _$target, {int? optionalParam})
+  >
+  notAPair(String key) {
+    final _$mutation = $Mutations.ofProvider<String>(this, 'notAPair', (key));
+    Future<String> _$run(MutationTarget _$target, {int? optionalParam}) {
+      return _$mutation.run(_$target, (_$tsx) {
+        return _$tsx
+            .get(this.notifier)
+            .notAPair(_$tsx, key, optionalParam: optionalParam);
+      });
+    }
+
+    return MutationListenable(_$mutation, _$run);
   }
 }

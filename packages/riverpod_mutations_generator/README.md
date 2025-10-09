@@ -32,7 +32,9 @@ class Todo extends _$Todo {
   // special @mutationKey allows you to convert a specific parameter into a family key,
   // which you provide ahead of time as you would any family
   // this is useful for tracking multiple instances of the same method
-  @mutation
+  // [mutationPair] provides access to `.pair`
+  // use @[mutation] if you don't need it
+  @mutationPair
   Future<void> removeTodo({@mutationKey required int id}) async {...}
 }
 

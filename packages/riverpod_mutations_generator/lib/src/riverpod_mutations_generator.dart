@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer_buffer/analyzer_buffer.dart';
+import 'package:build/build.dart' show BuildStep;
 import 'package:source_gen/source_gen.dart' as sourceGen;
 
+import '../riverpod_mutations_generator.dart';
 import 'templates/templates.dart';
 import 'type_checkers.dart';
 import 'types.dart';
@@ -14,10 +18,18 @@ bool classIsNotifier(ClassElement cls) =>
     cls.allSupertypes.any(anyNotifierTypeChecker.isExactlyType);
 
 class RiverpodMutationsGenerator extends sourceGen.Generator {
-  const RiverpodMutationsGenerator();
+  const RiverpodMutationsGenerator(this.config);
+  final Config config;
 
   @override
   Future<String?> generate(library, buildStep) async {
+    return config.runZoned(() => $generate(library, buildStep));
+  }
+
+  Future<String?> $generate(
+    sourceGen.LibraryReader library,
+    BuildStep buildStep,
+  ) async {
     final notifiers = library.classes
         .where(classIsNotifier)
         .where(classHasMutation)

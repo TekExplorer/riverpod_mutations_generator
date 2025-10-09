@@ -11,7 +11,7 @@ part of 'non_generated.dart';
 
 extension DemoFamily2Mutations
     on $ClassProvider<DemoFamily2, dynamic, dynamic, dynamic> {
-  MutationListenable<
+  MutationPairListenable<
     void,
     Future<void> Function(
       MutationTarget _$target,
@@ -36,9 +36,7 @@ extension DemoFamily2Mutations
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
+    return MutationListenable(_$mutation, _$run).$withPair(
       (MutationTarget _$target) =>
           (int i, String? e, {required bool b, num n = 1}) =>
               _$run(_$target, i, e, b: b, n: n),

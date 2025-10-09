@@ -4,7 +4,7 @@ import 'shared.dart';
 
 part 'function_test.g.dart';
 
-@mutation
+@mutationPair
 Future<String> _getSomething(String id, @mutationKey String key) async {
   getSomething(key)
       .check<
@@ -15,7 +15,7 @@ Future<String> _getSomething(String id, @mutationKey String key) async {
   return 'result';
 }
 
-@mutation
+@mutationPair
 Future<bool> _usesRef(MutationTransaction ref) async {
   usesRef
       .check<

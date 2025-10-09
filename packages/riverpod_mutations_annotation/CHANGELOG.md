@@ -1,5 +1,9 @@
 # Riverpod Mutations Annotation
 
+## 2.0.0-dev.6
+
+Rather than simply providing .pair all the time, you can now use `@mutationPair` or set the associated build.yaml setting globally
+
 ## 2.0.0-dev.5
 
 Bump to riverpod 3.0.0-dev.18

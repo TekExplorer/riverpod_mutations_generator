@@ -104,8 +104,7 @@ String _$exampleHash() => r'8e94925464b940f3e410c2c2054797d4910f3652';
 extension TodoListNotifierMutations on TodoListNotifierProvider {
   MutationListenable<
     void,
-    Future<void> Function(MutationTarget _$target, Todo newTodo),
-    Future<void> Function(Todo newTodo)
+    Future<void> Function(MutationTarget _$target, Todo newTodo)
   >
   get addTodo {
     final _$mutation = $Mutations.ofProvider<void>(this, 'addTodo');
@@ -115,19 +114,10 @@ extension TodoListNotifierMutations on TodoListNotifierProvider {
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
-      (MutationTarget _$target) =>
-          (Todo newTodo) => _$run(_$target, newTodo),
-    );
+    return MutationListenable(_$mutation, _$run);
   }
 
-  MutationListenable<
-    void,
-    Future<void> Function(MutationTarget _$target),
-    Future<void> Function()
-  >
+  MutationListenable<void, Future<void> Function(MutationTarget _$target)>
   removeTodo({required int id}) {
     final _$mutation = $Mutations.ofProvider<void>(this, 'removeTodo', (
       id: id,
@@ -138,11 +128,6 @@ extension TodoListNotifierMutations on TodoListNotifierProvider {
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
-      (MutationTarget _$target) =>
-          () => _$run(_$target),
-    );
+    return MutationListenable(_$mutation, _$run);
   }
 }

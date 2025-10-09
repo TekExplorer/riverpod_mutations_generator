@@ -13,7 +13,7 @@ class Demo extends _$Demo {
 
   DemoProvider get provider => demoProvider;
 
-  @mutation
+  @mutationPair
   Future<void> change(int i) async {
     provider.change
         .check<
@@ -21,9 +21,11 @@ class Demo extends _$Demo {
           Future<void> Function(MutationTarget target, int i),
           Future<void> Function(int i)
         >();
+    await null;
+    state = AsyncData(i);
   }
 
-  @mutation
+  @mutationPair
   Future<String?> nullable() async {
     provider.nullable
         .check<
@@ -34,7 +36,7 @@ class Demo extends _$Demo {
     throw UnimplementedError();
   }
 
-  @mutation
+  @mutationPair
   Future<void> normal() async {
     provider.normal
         .check<
@@ -44,7 +46,7 @@ class Demo extends _$Demo {
         >();
   }
 
-  @mutation
+  @mutationPair
   Future<void> withRef(MutationTransaction ref) async {
     provider.withRef
         .check<
@@ -54,7 +56,7 @@ class Demo extends _$Demo {
         >();
   }
 
-  @mutation
+  @mutationPair
   Future<T> generic<T>() {
     provider
         .generic<T>()
@@ -67,7 +69,7 @@ class Demo extends _$Demo {
     throw UnimplementedError();
   }
 
-  @mutation
+  @mutationPair
   Future<void> nameCollision(Object ref, Object mutation, Object run) async {
     provider.nameCollision
         .check<
@@ -82,7 +84,7 @@ class Demo extends _$Demo {
         >();
   }
 
-  @mutation
+  @mutationPair
   Future<void> keyed(
     @mutationKey String key,
     int param, {
@@ -101,10 +103,19 @@ class Demo extends _$Demo {
           Future<void> Function(int param, {int? optionalParam})
         >();
   }
+
+  @mutation
+  Future<String> notAPair(
+    MutationTransaction tsx,
+    @mutationKey String key, {
+    int? optionalParam,
+  }) async {
+    return 'result';
+  }
 }
 
 void main() {
-  test('test', () async {
+  test('basic functionality test', () async {
     final container = ProviderContainer.test();
     final demoProviderSub = container.listen(demoProvider, (previous, next) {});
     final demoProviderChangeSub = container.listen(
@@ -117,15 +128,22 @@ void main() {
 
     expect(demoProviderChangeSub.read(), isA<MutationIdle<void>>());
 
-    demoProvider.change.run(container, 3);
+    final future = demoProvider.change.run(container, 3);
     expect(demoProviderChangeSub.read(), isA<MutationPending<void>>());
     // await container.pump();
 
+    await future;
     await container.pump();
 
     expect(demoProviderChangeSub.read(), isA<MutationSuccess<void>>());
     expect(demoProviderSub.read(), isA<AsyncData<int>>());
     expect(demoProviderSub.read(), AsyncData<int>(3));
+
+    expect(
+      demoProviderChangeSub.read(),
+      container.read(demoProvider.change),
+      reason: 'same instance',
+    );
 
     demoProviderChangeSub.close();
     await container.pump();

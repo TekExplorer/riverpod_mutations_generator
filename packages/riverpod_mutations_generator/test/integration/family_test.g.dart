@@ -49,7 +49,7 @@ final class DemoFamilyProvider extends $AsyncNotifierProvider<DemoFamily, int> {
   }
 }
 
-String _$demoFamilyHash() => r'c6dd19d746bf9ec20bce3df1c2e6cb8cf5ff2633';
+String _$demoFamilyHash() => r'c8eb1f77a59c3f380e9c46d403bd3ffc66400e1a';
 
 final class DemoFamilyFamily extends $Family
     with
@@ -106,7 +106,7 @@ abstract class _$DemoFamily extends $AsyncNotifier<int> {
 // ignore_for_file: type=lint, type=warning
 
 extension DemoFamilyMutations on DemoFamilyProvider {
-  MutationListenable<
+  MutationPairListenable<
     void,
     Future<void> Function(
       MutationTarget _$target,
@@ -131,9 +131,7 @@ extension DemoFamilyMutations on DemoFamilyProvider {
       });
     }
 
-    return MutationListenable(
-      _$mutation,
-      _$run,
+    return MutationListenable(_$mutation, _$run).$withPair(
       (MutationTarget _$target) =>
           (int i, String? e, {required bool b, num n = 1}) =>
               _$run(_$target, i, e, b: b, n: n),
