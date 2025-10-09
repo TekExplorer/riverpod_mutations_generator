@@ -1,5 +1,11 @@
 # Riverpod Mutations Generator
 
+## 2.0.0-dev.6
+
+`.pair` is now an option you can invoke using either a build.yaml setting, or by using `@mutationPair` instead of `@mutation`
+
+This keeps normal usage pure.
+
 ## 2.0.0-dev.5
 
 Bump to riverpod 3.0.0 proper
