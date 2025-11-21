@@ -10,3 +10,4 @@ import '../type_checkers.dart';
 
 part 'extensions.dart';
 part 'mutation_template.dart';
+part 'notifier_template.dart';

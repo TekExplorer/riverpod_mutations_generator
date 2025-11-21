@@ -9,14 +9,14 @@ First, import both this and `riverpod_mutations_annotation`
 
 ```yaml
 dependencies:
-  riverpod: ^3.0.0-dev.17 # Your preferred riverpod package
-  riverpod_annotation: ^3.0.0-dev.17
-  riverpod_mutations_annotation: ^2.0.0-dev.4
+  riverpod: ^3.0.0
+  riverpod_annotation: ^3.0.0
+  riverpod_mutations_annotation: ^2.0.0-dev.6
 
 dev_dependencies:
   build_runner: ^2.3.3
-  riverpod_generator: ^3.0.0-dev.17
-  riverpod_mutations_generator: ^2.0.0-dev.3
+  riverpod_generator: ^3.0.0
+  riverpod_mutations_generator: ^2.0.0-dev.6
 ```
 
 ```dart
