@@ -16,7 +16,7 @@ Builder riverpodMutationsBuilder(
   String Function(String, Version) formatOutput = _formatOutput,
 }) {
   return SharedPartBuilder(
-    [RiverpodMutationsGenerator(Config.fromJson(options.config))],
+    [RiverpodMutationsGenerator(GeneratorConfig.fromJson(options.config))],
     'riverpod_mutations',
     allowSyntaxErrors: true,
     formatOutput: formatOutput,
@@ -38,21 +38,30 @@ $code
   }
 }
 
-final class Config {
-  Config.fromJson(Map<String, Object?> json)
-    : withPair = json['with_pair'] as bool?;
+final class GeneratorConfig {
+  GeneratorConfig.fromJson(Map<String, Object?> json)
+    : this(withPair: json['with_pair'] as bool?);
 
-  const Config(this.withPair);
+  const GeneratorConfig({this.withPair});
+
   final bool? withPair;
 
   T runZoned<T>(T Function() fn) =>
-      async.runZoned(fn, zoneValues: {Config: this});
+      async.runZoned(fn, zoneValues: {GeneratorConfig: this});
 
-  static Config? get current => Zone.current[Config] as Config?;
+  static GeneratorConfig get current =>
+      Zone.current[GeneratorConfig] as GeneratorConfig? ??
+      const GeneratorConfig();
+
+  @override
+  String toString() => 'GeneratorConfig(withPair: $withPair)';
 }
 
 class MutationAnnotation {
-  factory MutationAnnotation.from({DartObject? annotation, Config? config}) {
+  factory MutationAnnotation.from({
+    DartObject? annotation,
+    GeneratorConfig? config,
+  }) {
     return MutationAnnotation.merge([
       MutationAnnotation.fromMetadata(annotation),
       MutationAnnotation.fromConfig(config),
@@ -62,7 +71,8 @@ class MutationAnnotation {
   MutationAnnotation.fromMetadata(DartObject? annotation)
     : withPair = annotation?.getField('withPair')?.toBoolValue();
 
-  MutationAnnotation.fromConfig([Config? config]) : withPair = config?.withPair;
+  MutationAnnotation.fromConfig([GeneratorConfig? config])
+    : withPair = (config ?? GeneratorConfig.current).withPair;
 
   factory MutationAnnotation.merge(Iterable<MutationAnnotation> annotations) {
     return annotations.reduce((value, element) {

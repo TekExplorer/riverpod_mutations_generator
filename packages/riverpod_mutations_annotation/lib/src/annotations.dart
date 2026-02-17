@@ -16,5 +16,5 @@ final class _MutationKey {
   const _MutationKey();
 }
 
-@experimental
+// @experimental
 const mutationKey = _MutationKey();

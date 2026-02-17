@@ -19,7 +19,7 @@ bool classIsNotifier(ClassElement cls) =>
 
 class RiverpodMutationsGenerator extends sourceGen.Generator {
   const RiverpodMutationsGenerator(this.config);
-  final Config config;
+  final GeneratorConfig config;
 
   @override
   Future<String?> generate(library, buildStep) async {

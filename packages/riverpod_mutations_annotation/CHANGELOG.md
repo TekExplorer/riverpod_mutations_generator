@@ -1,5 +1,11 @@
 # Riverpod Mutations Annotation
 
+## 2.0.0
+
+Support riverpod_mutations_generator v2
+Support using `@mutationPair` for access to the original record pattern.
+See the generator's changelog for more info.
+
 ## 2.0.0-dev.6
 
 Rather than simply providing .pair all the time, you can now use `@mutationPair` or set the associated build.yaml setting globally

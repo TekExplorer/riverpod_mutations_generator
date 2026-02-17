@@ -6,6 +6,8 @@ targets:
           provider_name_strip_pattern: Notifier$
       riverpod_mutations_generator:
         enabled: true
+        options:
+          with_pair: true
         generate_for:
           exclude:
             - test

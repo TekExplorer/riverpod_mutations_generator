@@ -3,3 +3,4 @@ linter:
   rules:
     # We don't really have public API
     public_member_api_docs: false
+

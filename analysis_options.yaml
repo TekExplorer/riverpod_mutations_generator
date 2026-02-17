@@ -1,0 +1,5 @@
+plugins:
+  riverpod_mutations_generator:
+    path: ./packages/riverpod_mutations_generator
+    diagnostics:
+      this_is_a_build_method: true

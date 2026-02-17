@@ -1,5 +1,15 @@
 # Riverpod Mutations Generator
 
+## 2.0.0
+
+- Support riverpod 3.0.0 and riverpod_generator 4.0.0
+- Support non-generated providers
+- Support static methods and global functions
+- You can run the mutation by calling `todoProvider.addTodo.run(ref, Todo())`
+- Resetting mutations can be done with `todoProvider.addTodo.reset(ref)`
+- The original mutation object is accessible at `todoProvider.addTodo.mutation`. if desired
+- Added `@mutationPair` and a `with_pair: true` build.yaml config for gaining access to `final (state, run) = ref.watch(mutation.pair)`
+
 ## 2.0.0-dev.6
 
 `.pair` is now an option you can invoke using either a build.yaml setting, or by using `@mutationPair` instead of `@mutation`

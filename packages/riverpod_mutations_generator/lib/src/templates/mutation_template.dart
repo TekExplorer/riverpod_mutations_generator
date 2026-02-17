@@ -8,7 +8,7 @@ class MutationTemplate {
       annotation: mutationTypeChecker.firstAnnotationOfExact(
         executable.element,
       ),
-      config: Config.current,
+      config: GeneratorConfig.current,
     );
   }
 
@@ -72,10 +72,6 @@ class MutationTemplate {
   }
 ''';
   void writeGetter(AnalyzerBuffer buffer) {
-    print(
-      'Generating mutation for ${executable.name} with options: $annotation',
-    );
-
     buffer.write(
       (annotation.withPair ?? false) ? templatePair : template,
       args: <String, void Function()>{
