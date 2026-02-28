@@ -52,7 +52,7 @@ class RiverpodMutationsGenerator extends sourceGen.Generator {
       return null;
     }
 
-    final buffer = AnalyzerBuffer.part2(
+    final buffer = AnalyzerBuffer.part(
       library.element,
       header: '''
 // ignore_for_file: type=lint, type=warning

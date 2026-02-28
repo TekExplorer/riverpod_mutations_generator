@@ -3,6 +3,7 @@
 ## 2.0.1
 
 _Actually_ support riverpod generator/annotation v4
+Upgrade `analyzer_buffer` dependency
 
 ## 2.0.0
 
