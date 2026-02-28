@@ -1,5 +1,9 @@
 # Riverpod Mutations Annotation
 
+## 2.0.2
+
+Remove dependency on riverpod_generator
+
 ## 2.0.1
 
 _Actually_ support riverpod generator/annotation v4

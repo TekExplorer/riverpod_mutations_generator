@@ -1,45 +1,44 @@
 import 'package:meta/meta.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:riverpod/misc.dart';
+import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_mutations_annotation/riverpod_mutations_annotation.dart';
 
-part 'internal_provider.g.dart';
-
 @internal
-ProviderListenable<(MutationState<R>, F)> $proxyMutationPair<R, F>(
-  Mutation<R> mutation,
-  F Function(MutationTarget target) fn,
-) =>
-    _mutationsProvider<R, F>(mutation, Ignore(fn));
+final class $MutationPairProxy<R, F>
+    with
+        SyncProviderTransformerMixin<(ProviderContainer, MutationState<R>),
+            (MutationState<R>, F)> {
+  $MutationPairProxy(this.mutation, this.fn);
 
-@riverpod
-class _Mutations<R, F> extends _$Mutations<R, F> {
+  final Mutation<R> mutation;
+  final F Function(MutationTarget target) fn;
+
   @override
-  (MutationState<R>, F) build(
-    Mutation<R> mutation,
-    Ignore<F Function(MutationTarget target)> fn,
-  ) =>
-      (
-        ref.watch(mutation),
-        fn.value(ref), //
+  late final source = Provider.autoDispose((ref) {
+    return (ref.container, ref.watch(mutation));
+  });
+
+  // TODO: there is no access to the container in the context, so this is a workaround
+  @override
+  transform(context) => ProviderTransformer(
+        initState: (self) {
+          final (container, mutationState) = context.sourceState.requireValue;
+          return (mutationState, fn(container));
+        },
+        listener: (self, prev, next) {
+          final (_, prevMutationState) = prev.requireValue;
+          final (container, nextMutationState) = next.requireValue;
+          if (prevMutationState != nextMutationState) {
+            self.state = AsyncData((nextMutationState, fn(container)));
+          }
+        },
       );
 
   @override
-  bool updateShouldNotify(
-    (MutationState<R>, F) previous,
-    (MutationState<R>, F) next,
-  ) =>
-      previous.$1 != next.$1;
-}
-
-final class Ignore<T> {
-  Ignore(this.value);
-  final T value;
+  operator ==(Object other) {
+    return other is $MutationPairProxy<R, F> && other.mutation == mutation;
+  }
 
   @override
-  int get hashCode => T.hashCode;
-
-  @override
-  operator ==(covariant Ignore other) => _eqT(other) && other._eqT(this);
-
-  bool _eqT(Object other) => other is Ignore<T>;
+  int get hashCode => mutation.hashCode;
 }

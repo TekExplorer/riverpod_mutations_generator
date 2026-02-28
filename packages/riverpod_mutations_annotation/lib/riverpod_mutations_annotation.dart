@@ -8,10 +8,7 @@ export 'package:riverpod/riverpod.dart' show Provider;
 export 'package:riverpod_annotation/riverpod_annotation.dart'
     show $ClassProvider;
 
-// export 'package:riverpod_annotation/riverpod_annotation.dart';
-
 export 'src/annotations.dart';
-// export 'src/internal_provider.dart' show $proxyMutationPair;
 export 'src/listenable.dart';
 export 'src/mutations_store.dart';
 export 'src/pair/listenable.dart';

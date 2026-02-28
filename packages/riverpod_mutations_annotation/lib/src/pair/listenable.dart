@@ -10,9 +10,8 @@ extension MutationListenableX<ResultT, RunT>
   @internal
   MutationPairListenable<ResultT, RunT, PairRunT> $withPair<PairRunT>(
     PairRunT Function(MutationTarget target) pair,
-  ) {
-    return MutationPairListenable<ResultT, RunT, PairRunT>(this, pair);
-  }
+  ) =>
+      MutationPairListenable<ResultT, RunT, PairRunT>(this, pair);
 }
 
 abstract class MutationPairListenable<ResultT, RunT, PairRunT>
@@ -26,6 +25,7 @@ abstract class MutationPairListenable<ResultT, RunT, PairRunT>
   void reset(MutationTarget target);
 
   ProviderListenable<(MutationState<ResultT>, PairRunT)> get pair;
+
   @override
   RunT get run;
 }
@@ -60,7 +60,7 @@ final class _MutationPairListenable<ResultT, RunT, PairRunT>
 
   @override
   ProviderListenable<(MutationState<ResultT>, PairRunT)> get pair =>
-      $proxyMutationPair<ResultT, PairRunT>(mutation, _pair);
+      $MutationPairProxy(mutation, _pair);
 
   //
   @override
