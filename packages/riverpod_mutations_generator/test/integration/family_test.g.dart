@@ -10,10 +10,10 @@ part of 'family_test.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(DemoFamily)
-const demoFamilyProvider = DemoFamilyFamily._();
+final demoFamilyProvider = DemoFamilyFamily._();
 
 final class DemoFamilyProvider extends $AsyncNotifierProvider<DemoFamily, int> {
-  const DemoFamilyProvider._({
+  DemoFamilyProvider._({
     required DemoFamilyFamily super.from,
     required bool super.argument,
   }) : super(
@@ -60,7 +60,7 @@ final class DemoFamilyFamily extends $Family
           FutureOr<int>,
           bool
         > {
-  const DemoFamilyFamily._()
+  DemoFamilyFamily._()
     : super(
         retry: null,
         name: r'demoFamilyProvider',
@@ -84,7 +84,6 @@ abstract class _$DemoFamily extends $AsyncNotifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref = this.ref as $Ref<AsyncValue<int>, int>;
     final element =
         ref.element
@@ -94,7 +93,7 @@ abstract class _$DemoFamily extends $AsyncNotifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }
 

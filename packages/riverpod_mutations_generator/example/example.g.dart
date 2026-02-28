@@ -10,11 +10,11 @@ part of 'example.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(TodoListNotifier)
-const todoListProvider = TodoListNotifierProvider._();
+final todoListProvider = TodoListNotifierProvider._();
 
 final class TodoListNotifierProvider
     extends $AsyncNotifierProvider<TodoListNotifier, List<Todo>> {
-  const TodoListNotifierProvider._()
+  TodoListNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -40,7 +40,6 @@ abstract class _$TodoListNotifier extends $AsyncNotifier<List<Todo>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AsyncValue<List<Todo>>, List<Todo>>;
     final element =
         ref.element
@@ -50,16 +49,16 @@ abstract class _$TodoListNotifier extends $AsyncNotifier<List<Todo>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(example)
-const exampleProvider = ExampleProvider._();
+final exampleProvider = ExampleProvider._();
 
 final class ExampleProvider extends $FunctionalProvider<void, void, void>
     with $Provider<void> {
-  const ExampleProvider._()
+  ExampleProvider._()
     : super(
         from: null,
         argument: null,

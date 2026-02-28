@@ -10,11 +10,11 @@ part of 'generic_test.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(DemoGeneric)
-const demoGenericProvider = DemoGenericFamily._();
+final demoGenericProvider = DemoGenericFamily._();
 
 final class DemoGenericProvider<T>
     extends $NotifierProvider<DemoGeneric<T>, T> {
-  const DemoGenericProvider._({required DemoGenericFamily super.from})
+  DemoGenericProvider._({required DemoGenericFamily super.from})
     : super(
         argument: null,
         retry: null,
@@ -66,7 +66,7 @@ final class DemoGenericProvider<T>
 String _$demoGenericHash() => r'3415f8f5d91aba993d68554a7b21b896d687c484';
 
 final class DemoGenericFamily extends $Family {
-  const DemoGenericFamily._()
+  DemoGenericFamily._()
     : super(
         retry: null,
         name: r'demoGenericProvider',
@@ -114,12 +114,11 @@ abstract class _$DemoGeneric<T> extends $Notifier<T> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<T, T>;
     final element =
         ref.element
             as $ClassProviderElement<AnyNotifier<T, T>, T, Object?, Object?>;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 

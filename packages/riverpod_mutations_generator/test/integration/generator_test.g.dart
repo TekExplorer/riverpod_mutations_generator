@@ -10,10 +10,10 @@ part of 'generator_test.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(Demo)
-const demoProvider = DemoProvider._();
+final demoProvider = DemoProvider._();
 
 final class DemoProvider extends $AsyncNotifierProvider<Demo, int> {
-  const DemoProvider._()
+  DemoProvider._()
     : super(
         from: null,
         argument: null,
@@ -39,7 +39,6 @@ abstract class _$Demo extends $AsyncNotifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AsyncValue<int>, int>;
     final element =
         ref.element
@@ -49,7 +48,7 @@ abstract class _$Demo extends $AsyncNotifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 

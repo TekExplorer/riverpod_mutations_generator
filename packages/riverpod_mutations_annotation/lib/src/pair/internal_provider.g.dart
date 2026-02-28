@@ -6,12 +6,19 @@ part of 'internal_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-@ProviderFor(_Mutations)
-const _mutationsProvider = _MutationsFamily._();
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-final class _MutationsProvider<R, F>
-    extends $NotifierProvider<_Mutations<R, F>, (MutationState<R>, F)> {
-  const _MutationsProvider._(
+@ProviderFor(_Mutations)
+final _mutationsProvider = _MutationsFamily._();
+
+final class _MutationsProvider<R, F> extends $NotifierProvider<
+    _Mutations<R, F>,
+    (
+      MutationState<R>,
+      F,
+    )> {
+  _MutationsProvider._(
       {required _MutationsFamily super.from,
       required (
         Mutation<R>,
@@ -45,10 +52,18 @@ final class _MutationsProvider<R, F>
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue((MutationState<R>, F) value) {
+  Override overrideWithValue(
+      (
+        MutationState<R>,
+        F,
+      ) value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<(MutationState<R>, F)>(value),
+      providerOverride: $SyncValueProvider<
+          (
+            MutationState<R>,
+            F,
+          )>(value),
     );
   }
 
@@ -68,7 +83,7 @@ final class _MutationsProvider<R, F>
 String _$_mutationsHash() => r'519e47d01b508b4e37d6ba8db50ef2a5ddbb4900';
 
 final class _MutationsFamily extends $Family {
-  const _MutationsFamily._()
+  _MutationsFamily._()
       : super(
           retry: null,
           name: r'_mutationsProvider',
@@ -105,8 +120,11 @@ final class _MutationsFamily extends $Family {
 
   /// {@macro riverpod.override_with_build}
   Override overrideWithBuild(
-          (MutationState<R>, F) Function<R, F>(
-                  Ref ref, _Mutations<R, F> notifier)
+          (
+            MutationState<R>,
+            F,
+          )
+                  Function<R, F>(Ref ref, _Mutations<R, F> notifier)
               build) =>
       $FamilyOverride(
           from: this,
@@ -121,7 +139,11 @@ final class _MutationsFamily extends $Family {
           });
 }
 
-abstract class _$Mutations<R, F> extends $Notifier<(MutationState<R>, F)> {
+abstract class _$Mutations<R, F> extends $Notifier<
+    (
+      MutationState<R>,
+      F,
+    )> {
   late final _$args = ref.$arg as (
     Mutation<R>,
     Ignore<F Function(MutationTarget target)>,
@@ -129,26 +151,46 @@ abstract class _$Mutations<R, F> extends $Notifier<(MutationState<R>, F)> {
   Mutation<R> get mutation => _$args.$1;
   Ignore<F Function(MutationTarget target)> get fn => _$args.$2;
 
-  (MutationState<R>, F) build(
+  (
+    MutationState<R>,
+    F,
+  ) build(
     Mutation<R> mutation,
     Ignore<F Function(MutationTarget target)> fn,
   );
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(
-      _$args.$1,
-      _$args.$2,
-    );
-    final ref = this.ref as $Ref<(MutationState<R>, F), (MutationState<R>, F)>;
+    final ref = this.ref as $Ref<
+        (
+          MutationState<R>,
+          F,
+        ),
+        (
+          MutationState<R>,
+          F,
+        )>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<(MutationState<R>, F), (MutationState<R>, F)>,
-        (MutationState<R>, F),
+        AnyNotifier<
+            (
+              MutationState<R>,
+              F,
+            ),
+            (
+              MutationState<R>,
+              F,
+            )>,
+        (
+          MutationState<R>,
+          F,
+        ),
         Object?,
         Object?>;
-    element.handleValue(ref, created);
+    element.handleCreate(
+        ref,
+        () => build(
+              _$args.$1,
+              _$args.$2,
+            ));
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

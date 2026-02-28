@@ -1,5 +1,9 @@
 # Riverpod Mutations Generator
 
+## 2.0.1
+
+_Actually_ support riverpod generator/annotation v4
+
 ## 2.0.0
 
 - Support riverpod 3.0.0 and riverpod_generator 4.0.0
